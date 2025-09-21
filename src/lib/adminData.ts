@@ -256,8 +256,26 @@ const initialClients: Client[] = [
   }
 ]
 
-// Data management functions
+// Import cloud-based data manager
+import { AdminDataManagerCloud } from './adminDataCloud'
+
+// Hybrid data management functions - uses cloud storage with localStorage fallback
 export class AdminDataManager {
+  private static useCloudStorage = true
+  
+  // Check if cloud storage is available
+  private static async checkCloudStorage(): Promise<boolean> {
+    if (typeof window === 'undefined') return false
+    
+    try {
+      const response = await fetch('/api/blogs')
+      return response.ok
+    } catch (error) {
+      console.warn('Cloud storage unavailable, falling back to localStorage')
+      this.useCloudStorage = false
+      return false
+    }
+  }
   private static STORAGE_KEYS = {
     BLOGS: 'admin_blogs',
     FAQS: 'admin_faqs',
@@ -268,14 +286,24 @@ export class AdminDataManager {
   }
 
   // Blog management
-  static getBlogs(): BlogPost[] {
+  static async getBlogs(): Promise<BlogPost[]> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.getBlogs()
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return initialBlogs
     const stored = localStorage.getItem(this.STORAGE_KEYS.BLOGS)
     return stored ? JSON.parse(stored) : initialBlogs
   }
 
-  static saveBlog(blog: Omit<BlogPost, 'id'> | BlogPost): BlogPost {
-    const blogs = this.getBlogs()
+  static async saveBlog(blog: Omit<BlogPost, 'id'> | BlogPost): Promise<BlogPost | null> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.saveBlog(blog)
+    }
+    
+    // Fallback to localStorage
+    const blogs = await this.getBlogs()
     
     if ('id' in blog) {
       // Update existing blog
@@ -298,8 +326,13 @@ export class AdminDataManager {
     }
   }
 
-  static deleteBlog(id: number): boolean {
-    const blogs = this.getBlogs()
+  static async deleteBlog(id: number): Promise<boolean> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.deleteBlog(id)
+    }
+    
+    // Fallback to localStorage
+    const blogs = await this.getBlogs()
     const filteredBlogs = blogs.filter(b => b.id !== id)
     this.saveBlogs(filteredBlogs)
     return true
@@ -312,14 +345,24 @@ export class AdminDataManager {
   }
 
   // FAQ management
-  static getFAQs(): FAQ[] {
+  static async getFAQs(): Promise<FAQ[]> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.getFAQs()
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return initialFAQs
     const stored = localStorage.getItem(this.STORAGE_KEYS.FAQS)
     return stored ? JSON.parse(stored) : initialFAQs
   }
 
-  static saveFAQ(faq: Omit<FAQ, 'id' | 'createdAt' | 'updatedAt'> | FAQ): FAQ {
-    const faqs = this.getFAQs()
+  static async saveFAQ(faq: Omit<FAQ, 'id' | 'createdAt' | 'updatedAt'> | FAQ): Promise<FAQ | null> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.saveFAQ(faq)
+    }
+    
+    // Fallback to localStorage
+    const faqs = await this.getFAQs()
     const now = new Date().toISOString()
     
     if ('id' in faq) {
@@ -344,8 +387,13 @@ export class AdminDataManager {
     }
   }
 
-  static deleteFAQ(id: number): boolean {
-    const faqs = this.getFAQs()
+  static async deleteFAQ(id: number): Promise<boolean> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.deleteFAQ(id)
+    }
+    
+    // Fallback to localStorage
+    const faqs = await this.getFAQs()
     const filteredFAQs = faqs.filter(f => f.id !== id)
     this.saveFAQs(filteredFAQs)
     return true
@@ -358,14 +406,25 @@ export class AdminDataManager {
   }
 
   // Image management
-  static getImages(): ImageFile[] {
+  static async getImages(): Promise<ImageFile[]> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.getImages()
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return initialImages
     const stored = localStorage.getItem(this.STORAGE_KEYS.IMAGES)
     return stored ? JSON.parse(stored) : initialImages
   }
 
-  static saveImage(image: Omit<ImageFile, 'id'> | ImageFile): ImageFile {
-    const images = this.getImages()
+  static async saveImage(image: Omit<ImageFile, 'id'> | ImageFile): Promise<ImageFile | null> {
+    if (await this.checkCloudStorage()) {
+      // For cloud storage, use the upload API instead
+      return null // This method is not used for cloud storage
+    }
+    
+    // Fallback to localStorage
+    const images = await this.getImages()
     
     if ('id' in image) {
       // Update existing image
@@ -387,8 +446,13 @@ export class AdminDataManager {
     }
   }
 
-  static deleteImage(id: number): boolean {
-    const images = this.getImages()
+  static async deleteImage(id: number): Promise<boolean> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.deleteImage(id)
+    }
+    
+    // Fallback to localStorage
+    const images = await this.getImages()
     const filteredImages = images.filter(i => i.id !== id)
     this.saveImages(filteredImages)
     return true
@@ -401,14 +465,24 @@ export class AdminDataManager {
   }
 
   // Contact submissions management
-  static getContactSubmissions(): ContactSubmission[] {
+  static async getContactSubmissions(): Promise<ContactSubmission[]> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.getContactSubmissions()
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return []
     const stored = localStorage.getItem(this.STORAGE_KEYS.CONTACTS)
     return stored ? JSON.parse(stored) : []
   }
 
-  static saveContactSubmission(submission: Omit<ContactSubmission, 'id'> | ContactSubmission): ContactSubmission {
-    const submissions = this.getContactSubmissions()
+  static async saveContactSubmission(submission: Omit<ContactSubmission, 'id'> | ContactSubmission): Promise<ContactSubmission | null> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.saveContactSubmission(submission)
+    }
+    
+    // Fallback to localStorage
+    const submissions = await this.getContactSubmissions()
     
     if ('id' in submission) {
       // Update existing submission
@@ -430,8 +504,13 @@ export class AdminDataManager {
     }
   }
 
-  static deleteContactSubmission(id: number): boolean {
-    const submissions = this.getContactSubmissions()
+  static async deleteContactSubmission(id: number): Promise<boolean> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.deleteContactSubmission(id)
+    }
+    
+    // Fallback to localStorage
+    const submissions = await this.getContactSubmissions()
     const filteredSubmissions = submissions.filter(s => s.id !== id)
     this.saveContactSubmissions(filteredSubmissions)
     return true
@@ -444,14 +523,24 @@ export class AdminDataManager {
   }
 
   // Client management
-  static getClients(): Client[] {
+  static async getClients(): Promise<Client[]> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.getClients()
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return initialClients
     const stored = localStorage.getItem(this.STORAGE_KEYS.CLIENTS)
     return stored ? JSON.parse(stored) : initialClients
   }
 
-  static saveClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'> | Client): Client {
-    const clients = this.getClients()
+  static async saveClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'> | Client): Promise<Client | null> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.saveClient(client)
+    }
+    
+    // Fallback to localStorage
+    const clients = await this.getClients()
     const now = new Date().toISOString()
     
     if ('id' in client) {
@@ -476,8 +565,13 @@ export class AdminDataManager {
     }
   }
 
-  static deleteClient(id: number): boolean {
-    const clients = this.getClients()
+  static async deleteClient(id: number): Promise<boolean> {
+    if (await this.checkCloudStorage()) {
+      return await AdminDataManagerCloud.deleteClient(id)
+    }
+    
+    // Fallback to localStorage
+    const clients = await this.getClients()
     const filteredClients = clients.filter(c => c.id !== id)
     this.saveClients(filteredClients)
     return true
@@ -539,7 +633,13 @@ export class AdminDataManager {
   }
 
   // Initialize data if not exists
-  static initializeData(): void {
+  static async initializeData(): Promise<void> {
+    if (await this.checkCloudStorage()) {
+      await AdminDataManagerCloud.initializeData()
+      return
+    }
+    
+    // Fallback to localStorage initialization
     if (typeof window === 'undefined') return
     
     if (!localStorage.getItem(this.STORAGE_KEYS.BLOGS)) {
