@@ -138,13 +138,16 @@ export default function FAQPage() {
 
   useEffect(() => {
     // Load FAQs from admin data
-    AdminDataManager.initializeData()
-    const adminFaqs = AdminDataManager.getFAQs()
+    const loadFAQs = async () => {
+      await AdminDataManager.initializeData()
+      const adminFaqs = await AdminDataManager.getFAQs()
     
     // Filter only active FAQs
     const activeFaqs = adminFaqs.filter(faq => faq.isActive)
     setFaqs(activeFaqs)
     setLoading(false)
+    }
+    loadFAQs()
   }, [])
 
   const toggleFAQ = (index: number) => {

@@ -96,7 +96,7 @@ export default function ContactPage() {
       })
 
       // Save to local admin data for the admin panel
-      AdminDataManager.saveContactSubmission({
+      await AdminDataManager.saveContactSubmission({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,

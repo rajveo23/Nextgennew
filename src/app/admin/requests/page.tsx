@@ -25,8 +25,12 @@ export default function UserRequestsPage() {
 
   useEffect(() => {
     // Load contact submissions from admin data
-    AdminDataManager.initializeData()
-    setSubmissions(AdminDataManager.getContactSubmissions())
+    const loadSubmissions = async () => {
+      await AdminDataManager.initializeData()
+      const submissionsData = await AdminDataManager.getContactSubmissions()
+      setSubmissions(submissionsData)
+    }
+    loadSubmissions()
   }, [])
 
   const filteredSubmissions = submissions.filter(submission => {
@@ -38,19 +42,21 @@ export default function UserRequestsPage() {
     return matchesSearch && matchesStatus
   }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this submission?')) {
-      AdminDataManager.deleteContactSubmission(id)
-      setSubmissions(AdminDataManager.getContactSubmissions())
+      await AdminDataManager.deleteContactSubmission(id)
+      const submissionsData = await AdminDataManager.getContactSubmissions()
+      setSubmissions(submissionsData)
     }
   }
 
-  const handleStatusChange = (id: number, newStatus: 'new' | 'read' | 'responded') => {
+  const handleStatusChange = async (id: number, newStatus: 'new' | 'read' | 'responded') => {
     const submission = submissions.find(s => s.id === id)
     if (submission) {
       const updatedSubmission = { ...submission, status: newStatus }
-      AdminDataManager.saveContactSubmission(updatedSubmission)
-      setSubmissions(AdminDataManager.getContactSubmissions())
+      await AdminDataManager.saveContactSubmission(updatedSubmission)
+      const submissionsData = await AdminDataManager.getContactSubmissions()
+      setSubmissions(submissionsData)
     }
   }
 

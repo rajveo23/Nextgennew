@@ -30,13 +30,14 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Load dynamic data
-    AdminDataManager.initializeData()
-    
-    const blogs = AdminDataManager.getBlogs()
-    const faqs = AdminDataManager.getFAQs()
-    const images = AdminDataManager.getImages()
-    const contacts = AdminDataManager.getContactSubmissions()
-    const clients = AdminDataManager.getClients()
+    const loadData = async () => {
+      await AdminDataManager.initializeData()
+      
+      const blogs = await AdminDataManager.getBlogs()
+      const faqs = await AdminDataManager.getFAQs()
+      const images = await AdminDataManager.getImages()
+      const contacts = await AdminDataManager.getContactSubmissions()
+      const clients = await AdminDataManager.getClients()
     
     // Update stats with real data
     setStats([
@@ -110,6 +111,8 @@ export default function AdminDashboard() {
     activities.push(...recentFAQs)
 
     setRecentActivity(activities.slice(0, 4))
+    }
+    loadData()
   }, [])
 
   const quickActions = [
