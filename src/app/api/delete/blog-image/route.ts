@@ -1,42 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { unlink } from 'fs/promises'
-import path from 'path'
+import { v2 as cloudinary } from 'cloudinary'
+
+// Check if Cloudinary is configured
+const isCloudinaryConfigured = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET
+)
+
+if (!isCloudinaryConfigured) {
+  console.warn('Cloudinary not configured - Blog image deletion will fail')
+} else {
+  // Configure Cloudinary only if credentials are available
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  })
+}
 
 export async function DELETE(request: NextRequest) {
   try {
+    if (!isCloudinaryConfigured) {
+      return NextResponse.json(
+        { error: 'Image deletion service not configured. Please set up Cloudinary environment variables.' },
+        { status: 503 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
-    const filename = searchParams.get('filename')
+    const publicId = searchParams.get('publicId')
     
-    if (!filename) {
+    if (!publicId) {
       return NextResponse.json(
-        { error: 'No filename provided' },
+        { error: 'No publicId provided' },
         { status: 400 }
       )
     }
-
-    // Security check: ensure filename doesn't contain path traversal
-    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
-      return NextResponse.json(
-        { error: 'Invalid filename' },
-        { status: 400 }
-      )
-    }
-
-    // Construct file path
-    const filePath = path.join(process.cwd(), 'public', 'uploads', 'blogs', filename)
 
     try {
-      // Delete the file
-      await unlink(filePath)
+      // Delete the image from Cloudinary
+      const result = await cloudinary.uploader.destroy(publicId)
       
-      return NextResponse.json({
-        success: true,
-        message: 'Image deleted successfully'
-      })
+      if (result.result === 'ok') {
+        return NextResponse.json({
+          success: true,
+          message: 'Image deleted successfully'
+        })
+      } else {
+        return NextResponse.json(
+          { error: 'Failed to delete image from cloud storage' },
+          { status: 400 }
+        )
+      }
     } catch (error) {
-      // File might not exist
+      console.error('Cloudinary delete error:', error)
       return NextResponse.json(
-        { error: 'File not found or already deleted' },
+        { error: 'Image not found or already deleted' },
         { status: 404 }
       )
     }
