@@ -14,7 +14,9 @@
     "react-dom": "^18",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",
-    "@heroicons/react": "^2.0.18"
+    "@heroicons/react": "^2.0.18",
+    "mongodb": "^6.3.0",
+    "cloudinary": "^1.41.3"
   },
   "devDependencies": {
     "typescript": "^5",

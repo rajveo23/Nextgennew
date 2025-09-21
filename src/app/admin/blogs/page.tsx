@@ -27,6 +27,7 @@ interface BlogFormData {
   category: string
   status: 'published' | 'draft' | 'scheduled'
   image?: string
+  imageFilename?: string
   tags: string[]
 }
 
@@ -162,29 +163,49 @@ export default function BlogManagement() {
     setUploadingImage(true)
 
     try {
-      // Convert to base64 for preview and storage
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImagePreview(result)
-        setFormData(prev => ({ ...prev, image: result }))
-        setUploadingImage(false)
+      // Upload to server
+      const formData = new FormData()
+      formData.append('image', file)
+
+      const response = await fetch('/api/upload/blog-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Set the uploaded image URL
+        setImagePreview(result.url)
+        setFormData(prev => ({ ...prev, image: result.url }))
+        
+        // Store filename for potential deletion
+        setFormData(prev => ({ ...prev, imageFilename: result.filename }))
+      } else {
+        alert(result.error || 'Failed to upload image')
       }
-      reader.onerror = () => {
-        alert('Error reading file')
-        setUploadingImage(false)
-      }
-      reader.readAsDataURL(file)
     } catch (error) {
       console.error('Upload error:', error)
       alert('Error uploading image')
+    } finally {
       setUploadingImage(false)
     }
   }
 
-  const removeImage = () => {
+  const removeImage = async () => {
+    // If there's a filename, delete the file from server
+    if (formData.imageFilename) {
+      try {
+        await fetch(`/api/delete/blog-image?filename=${formData.imageFilename}`, {
+          method: 'DELETE',
+        })
+      } catch (error) {
+        console.error('Error deleting image:', error)
+      }
+    }
+    
     setImagePreview('')
-    setFormData(prev => ({ ...prev, image: '' }))
+    setFormData(prev => ({ ...prev, image: '', imageFilename: '' }))
   }
 
   const getStatusColor = (status: string) => {
