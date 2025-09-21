@@ -13,6 +13,8 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
+    // Allow local images from uploads directory
+    unoptimized: false,
   },
   // Optimize for Vercel deployment
   output: 'standalone',
