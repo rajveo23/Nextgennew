@@ -22,31 +22,34 @@ export default function BlogPostPage() {
   const [relatedBlogs, setRelatedBlogs] = useState<BlogPost[]>([])
 
   useEffect(() => {
-    if (slug) {
-      console.log('Loading blog with slug:', slug)
-      AdminDataManager.initializeData()
-      const blogs = AdminDataManager.getBlogs()
-      console.log('Available blogs:', blogs.map(b => ({ id: b.id, title: b.title, slug: b.slug, status: b.status })))
-      
-      // Find the blog by slug
-      const foundBlog = blogs.find(b => b.slug === slug && b.status === 'published')
-      console.log('Found blog:', foundBlog)
-      setBlog(foundBlog || null)
-      
-      // Get related blogs (same category, excluding current)
-      if (foundBlog) {
-        const related = blogs
-          .filter(b => 
-            b.category === foundBlog.category && 
-            b.id !== foundBlog.id && 
-            b.status === 'published'
-          )
-          .slice(0, 3)
-        setRelatedBlogs(related)
+    const loadBlog = async () => {
+      if (slug) {
+        console.log('Loading blog with slug:', slug)
+        await AdminDataManager.initializeData()
+        const blogs = await AdminDataManager.getBlogs()
+        console.log('Available blogs:', blogs.map(b => ({ id: b.id, title: b.title, slug: b.slug, status: b.status })))
+        
+        // Find the blog by slug
+        const foundBlog = blogs.find(b => b.slug === slug && b.status === 'published')
+        console.log('Found blog:', foundBlog)
+        setBlog(foundBlog || null)
+        
+        // Get related blogs (same category, excluding current)
+        if (foundBlog) {
+          const related = blogs
+            .filter(b => 
+              b.category === foundBlog.category && 
+              b.id !== foundBlog.id && 
+              b.status === 'published'
+            )
+            .slice(0, 3)
+          setRelatedBlogs(related)
+        }
+        
+        setLoading(false)
       }
-      
-      setLoading(false)
     }
+    loadBlog()
   }, [slug])
 
   if (loading) {

@@ -102,10 +102,10 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadClients = () => {
+    const loadClients = async () => {
       try {
-        AdminDataManager.initializeData()
-        const clientData = AdminDataManager.getClients()
+        await AdminDataManager.initializeData()
+        const clientData = await AdminDataManager.getClients()
         setClients(clientData.filter(client => client.isActive))
       } catch (error) {
         console.error('Error loading clients:', error)

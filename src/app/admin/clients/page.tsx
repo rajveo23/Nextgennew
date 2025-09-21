@@ -29,10 +29,10 @@ export default function AdminClientsPage() {
     loadClients()
   }, [])
 
-  const loadClients = () => {
+  const loadClients = async () => {
     try {
-      AdminDataManager.initializeData()
-      const clientData = AdminDataManager.getClients()
+      await AdminDataManager.initializeData()
+      const clientData = await AdminDataManager.getClients()
       setClients(clientData)
     } catch (error) {
       console.error('Error loading clients:', error)
@@ -41,25 +41,29 @@ export default function AdminClientsPage() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
       if (editingClient) {
         // Update existing client
-        const updatedClient = AdminDataManager.saveClient({
+        const updatedClient = await AdminDataManager.saveClient({
           ...editingClient,
           ...formData,
           serialNumber: parseInt(formData.serialNumber)
         })
-        setClients(prev => prev.map(c => c.id === updatedClient.id ? updatedClient : c))
+        if (updatedClient) {
+          setClients(prev => prev.map(c => c.id === updatedClient.id ? updatedClient : c))
+        }
       } else {
         // Create new client
-        const newClient = AdminDataManager.saveClient({
+        const newClient = await AdminDataManager.saveClient({
           ...formData,
           serialNumber: parseInt(formData.serialNumber)
         })
-        setClients(prev => [...prev, newClient])
+        if (newClient) {
+          setClients(prev => [...prev, newClient])
+        }
       }
       
       resetForm()
@@ -81,9 +85,9 @@ export default function AdminClientsPage() {
     setShowModal(true)
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this client?')) {
-      AdminDataManager.deleteClient(id)
+      await AdminDataManager.deleteClient(id)
       setClients(prev => prev.filter(c => c.id !== id))
     }
   }

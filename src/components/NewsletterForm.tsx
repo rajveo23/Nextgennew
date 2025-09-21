@@ -8,26 +8,33 @@ export default function NewsletterForm() {
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!email) {
+      setMessage('Please enter your email address')
+      return
+    }
+    
     setIsSubmitting(true)
     setSubmitStatus('idle')
     
     try {
       // Initialize data manager
-      AdminDataManager.initializeData()
+      await AdminDataManager.initializeData()
       
       // Save newsletter subscription
-      AdminDataManager.saveNewsletterSubscription({
+      await AdminDataManager.saveNewsletterSubscription({
         email: email,
         timestamp: new Date().toISOString(),
         status: 'active',
-        source: 'blog_newsletter'
+        source: 'blog_page'
       })
       
       // Also save as contact submission for admin panel
-      AdminDataManager.saveContactSubmission({
+      await AdminDataManager.saveContactSubmission({
         name: 'Newsletter Subscriber',
         email: email,
         message: 'Newsletter subscription from blog page',

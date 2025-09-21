@@ -24,8 +24,12 @@ export default function FAQManagement() {
 
   useEffect(() => {
     // Initialize data and load FAQs
-    AdminDataManager.initializeData()
-    setFAQs(AdminDataManager.getFAQs())
+    const loadFAQs = async () => {
+      await AdminDataManager.initializeData()
+      const faqsData = await AdminDataManager.getFAQs()
+      setFAQs(faqsData)
+    }
+    loadFAQs()
   }, [])
 
   const filteredFAQs = faqs.filter(faq => {
@@ -36,27 +40,29 @@ export default function FAQManagement() {
     return matchesSearch && matchesCategory
   }).sort((a, b) => a.order - b.order)
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this FAQ?')) {
-      AdminDataManager.deleteFAQ(id)
-      setFAQs(AdminDataManager.getFAQs())
+      await AdminDataManager.deleteFAQ(id)
+      const faqsData = await AdminDataManager.getFAQs()
+      setFAQs(faqsData)
     }
   }
 
-  const handleToggleActive = (id: number) => {
+  const handleToggleActive = async (id: number) => {
     const faq = faqs.find(f => f.id === id)
     if (faq) {
       const updatedFAQ = { ...faq, isActive: !faq.isActive }
-      AdminDataManager.saveFAQ(updatedFAQ)
-      setFAQs(AdminDataManager.getFAQs())
+      await AdminDataManager.saveFAQ(updatedFAQ)
+      const faqsData = await AdminDataManager.getFAQs()
+      setFAQs(faqsData)
     }
   }
 
-  const handleSave = (faqData: Partial<FAQ>) => {
+  const handleSave = async (faqData: Partial<FAQ>) => {
     if (editingFAQ) {
       // Update existing FAQ
       const updatedFAQ = { ...editingFAQ, ...faqData }
-      AdminDataManager.saveFAQ(updatedFAQ)
+      await AdminDataManager.saveFAQ(updatedFAQ)
       setEditingFAQ(null)
     } else {
       // Add new FAQ
@@ -67,10 +73,11 @@ export default function FAQManagement() {
         order: faqs.length + 1,
         isActive: true
       }
-      AdminDataManager.saveFAQ(newFAQData)
+      await AdminDataManager.saveFAQ(newFAQData)
       setShowAddForm(false)
     }
-    setFAQs(AdminDataManager.getFAQs())
+    const faqsData = await AdminDataManager.getFAQs()
+    setFAQs(faqsData)
   }
 
   return (

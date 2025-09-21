@@ -110,8 +110,9 @@ export default function BlogPage() {
 
   useEffect(() => {
     // Load blogs from admin data
-    AdminDataManager.initializeData()
-    const adminBlogs = AdminDataManager.getBlogs()
+    const loadBlogs = async () => {
+      await AdminDataManager.initializeData()
+      const adminBlogs = await AdminDataManager.getBlogs()
     
     // Convert admin blog format to display format and filter published posts
     const publishedBlogs = adminBlogs
@@ -130,6 +131,8 @@ export default function BlogPage() {
     
     setBlogPosts(publishedBlogs)
     setLoading(false)
+    }
+    loadBlogs()
   }, [])
 
   if (loading) {

@@ -53,8 +53,12 @@ export default function BlogManagement() {
 
   useEffect(() => {
     // Load blogs from admin data
-    AdminDataManager.initializeData()
-    setBlogs(AdminDataManager.getBlogs())
+    const loadBlogs = async () => {
+      await AdminDataManager.initializeData()
+      const blogsData = await AdminDataManager.getBlogs()
+      setBlogs(blogsData)
+    }
+    loadBlogs()
   }, [])
 
   const filteredBlogs = blogs.filter(blog => {
@@ -66,14 +70,15 @@ export default function BlogManagement() {
     return matchesSearch && matchesCategory && matchesStatus
   })
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
-      AdminDataManager.deleteBlog(id)
-      setBlogs(AdminDataManager.getBlogs())
+      await AdminDataManager.deleteBlog(id)
+      const blogsData = await AdminDataManager.getBlogs()
+      setBlogs(blogsData)
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (editingBlog) {
@@ -83,7 +88,7 @@ export default function BlogManagement() {
         ...formData,
         slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       }
-      AdminDataManager.saveBlog(updatedBlog)
+      await AdminDataManager.saveBlog(updatedBlog)
       setEditingBlog(null)
     } else {
       // Create new blog
@@ -94,7 +99,7 @@ export default function BlogManagement() {
         publishDate: new Date().toISOString().split('T')[0],
         views: 0
       }
-      AdminDataManager.saveBlog(newBlog)
+      await AdminDataManager.saveBlog(newBlog)
       setShowAddForm(false)
     }
     
@@ -109,7 +114,8 @@ export default function BlogManagement() {
       image: '',
       tags: []
     })
-    setBlogs(AdminDataManager.getBlogs())
+    const blogsData = await AdminDataManager.getBlogs()
+    setBlogs(blogsData)
   }
 
   const handleEdit = (blog: BlogPost) => {
