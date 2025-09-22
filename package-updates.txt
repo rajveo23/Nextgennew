@@ -1,0 +1,14 @@
+# Add these dependencies to your package.json
+
+# MySQL Database
+npm install mysql2
+
+# File upload handling
+npm install multer
+npm install @types/multer
+
+# Image processing (optional)
+npm install sharp
+
+# Remove Supabase (after migration)
+npm uninstall @supabase/supabase-js
