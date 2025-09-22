@@ -1,10 +1,17 @@
 import { supabase, supabaseAdmin, isSupabaseConfigured, Client, BlogPost, FAQ, ContactSubmission, NewsletterSubscription } from './supabase'
 
+// Temporarily use supabase (anon key) instead of supabaseAdmin (service role) for all operations
+const db = supabase
+
 export class DatabaseService {
   
   // Check if Supabase is configured before operations
   private static checkConfiguration() {
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured()) {
+      console.error('Supabase Configuration Check Failed:')
+      console.error('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing')
+      console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing')
+      console.error('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Missing')
       throw new Error('Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY environment variables.')
     }
   }
@@ -22,7 +29,8 @@ export class DatabaseService {
   }
 
   static async createClient(client: Omit<Client, 'id' | 'created_at' | 'updated_at'>): Promise<Client> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('clients')
       .insert(client)
       .select()
@@ -33,7 +41,8 @@ export class DatabaseService {
   }
 
   static async updateClient(id: string, updates: Partial<Client>): Promise<Client> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('clients')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -45,7 +54,8 @@ export class DatabaseService {
   }
 
   static async deleteClient(id: string): Promise<void> {
-    const { error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { error } = await db
       .from('clients')
       .update({ is_active: false })
       .eq('id', id)
@@ -55,6 +65,7 @@ export class DatabaseService {
 
   // Blog operations
   static async getBlogPosts(): Promise<BlogPost[]> {
+    this.checkConfiguration()
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -66,7 +77,8 @@ export class DatabaseService {
   }
 
   static async getAllBlogPosts(): Promise<BlogPost[]> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('blog_posts')
       .select('*')
       .order('created_at', { ascending: false })
@@ -76,6 +88,7 @@ export class DatabaseService {
   }
 
   static async getBlogPost(slug: string): Promise<BlogPost | null> {
+    this.checkConfiguration()
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -88,7 +101,8 @@ export class DatabaseService {
   }
 
   static async getBlogPostById(id: string): Promise<BlogPost | null> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('blog_posts')
       .select('*')
       .eq('id', id)
@@ -99,7 +113,8 @@ export class DatabaseService {
   }
 
   static async createBlogPost(post: Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>): Promise<BlogPost> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('blog_posts')
       .insert(post)
       .select()
@@ -110,7 +125,8 @@ export class DatabaseService {
   }
 
   static async updateBlogPost(id: string, updates: Partial<BlogPost>): Promise<BlogPost> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('blog_posts')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -122,7 +138,8 @@ export class DatabaseService {
   }
 
   static async deleteBlogPost(id: string): Promise<void> {
-    const { error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { error } = await db
       .from('blog_posts')
       .delete()
       .eq('id', id)
@@ -132,6 +149,7 @@ export class DatabaseService {
 
   // FAQ operations
   static async getFAQs(): Promise<FAQ[]> {
+    this.checkConfiguration()
     const { data, error } = await supabase
       .from('faqs')
       .select('*')
@@ -143,7 +161,8 @@ export class DatabaseService {
   }
 
   static async getAllFAQs(): Promise<FAQ[]> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('faqs')
       .select('*')
       .order('order_index')
@@ -153,7 +172,8 @@ export class DatabaseService {
   }
 
   static async createFAQ(faq: Omit<FAQ, 'id' | 'created_at' | 'updated_at'>): Promise<FAQ> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('faqs')
       .insert(faq)
       .select()
@@ -164,7 +184,8 @@ export class DatabaseService {
   }
 
   static async updateFAQ(id: string, updates: Partial<FAQ>): Promise<FAQ> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('faqs')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -176,7 +197,8 @@ export class DatabaseService {
   }
 
   static async deleteFAQ(id: string): Promise<void> {
-    const { error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { error } = await db
       .from('faqs')
       .delete()
       .eq('id', id)
@@ -195,6 +217,7 @@ export class DatabaseService {
     source?: string
     newsletter?: boolean
   }): Promise<void> {
+    this.checkConfiguration()
     const { error } = await supabase
       .from('contact_submissions')
       .insert({
@@ -207,7 +230,8 @@ export class DatabaseService {
   }
 
   static async getContactSubmissions(): Promise<ContactSubmission[]> {
-    const { data, error } = await supabaseAdmin
+    this.checkConfiguration()
+    const { data, error } = await db
       .from('contact_submissions')
       .select('*')
       .order('created_at', { ascending: false })
@@ -217,7 +241,7 @@ export class DatabaseService {
   }
 
   static async updateContactSubmission(id: string, updates: Partial<ContactSubmission>): Promise<ContactSubmission> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await db
       .from('contact_submissions')
       .update(updates)
       .eq('id', id)
@@ -229,7 +253,7 @@ export class DatabaseService {
   }
 
   static async deleteContactSubmission(id: string): Promise<void> {
-    const { error } = await supabaseAdmin
+    const { error } = await db
       .from('contact_submissions')
       .delete()
       .eq('id', id)
@@ -251,7 +275,7 @@ export class DatabaseService {
   }
 
   static async getNewsletterSubscriptions(): Promise<NewsletterSubscription[]> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await db
       .from('newsletter_subscriptions')
       .select('*')
       .eq('is_active', true)
@@ -262,7 +286,7 @@ export class DatabaseService {
   }
 
   static async updateNewsletterSubscription(id: string, updates: Partial<NewsletterSubscription>): Promise<NewsletterSubscription> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await db
       .from('newsletter_subscriptions')
       .update(updates)
       .eq('id', id)
@@ -274,7 +298,7 @@ export class DatabaseService {
   }
 
   static async unsubscribeFromNewsletter(email: string): Promise<void> {
-    const { error } = await supabaseAdmin
+    const { error } = await db
       .from('newsletter_subscriptions')
       .update({ is_active: false })
       .eq('email', email)

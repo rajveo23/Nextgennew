@@ -1,0 +1,94 @@
+import mysql from 'mysql2/promise'
+
+// MySQL connection configuration
+const dbConfig = {
+  host: process.env.MYSQL_HOST || 'localhost',
+  user: process.env.MYSQL_USER || 'root',
+  password: process.env.MYSQL_PASSWORD || '',
+  database: process.env.MYSQL_DATABASE || 'nextgen_registry',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+}
+
+// Create connection pool
+const pool = mysql.createPool(dbConfig)
+
+// Test connection
+export async function testConnection() {
+  try {
+    const connection = await pool.getConnection()
+    console.log('✅ MySQL connected successfully')
+    connection.release()
+    return true
+  } catch (error) {
+    console.error('❌ MySQL connection failed:', error)
+    return false
+  }
+}
+
+// Execute query with error handling
+export async function executeQuery(query: string, params: any[] = []) {
+  try {
+    const [results] = await pool.execute(query, params)
+    return { success: true, data: results }
+  } catch (error) {
+    console.error('Database query error:', error)
+    return { success: false, error: error }
+  }
+}
+
+// Get single record
+export async function getOne(query: string, params: any[] = []) {
+  const result = await executeQuery(query, params)
+  if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+    return result.data[0]
+  }
+  return null
+}
+
+// Get multiple records
+export async function getMany(query: string, params: any[] = []) {
+  const result = await executeQuery(query, params)
+  if (result.success && Array.isArray(result.data)) {
+    return result.data
+  }
+  return []
+}
+
+// Insert record
+export async function insertOne(table: string, data: Record<string, any>) {
+  const fields = Object.keys(data).join(', ')
+  const placeholders = Object.keys(data).map(() => '?').join(', ')
+  const values = Object.values(data)
+  
+  const query = `INSERT INTO ${table} (${fields}) VALUES (${placeholders})`
+  const result = await executeQuery(query, values)
+  
+  if (result.success) {
+    return { success: true, insertId: (result.data as any).insertId }
+  }
+  return { success: false, error: result.error }
+}
+
+// Update record
+export async function updateOne(table: string, data: Record<string, any>, where: Record<string, any>) {
+  const setClause = Object.keys(data).map(key => `${key} = ?`).join(', ')
+  const whereClause = Object.keys(where).map(key => `${key} = ?`).join(' AND ')
+  
+  const query = `UPDATE ${table} SET ${setClause} WHERE ${whereClause}`
+  const values = [...Object.values(data), ...Object.values(where)]
+  
+  return await executeQuery(query, values)
+}
+
+// Delete record
+export async function deleteOne(table: string, where: Record<string, any>) {
+  const whereClause = Object.keys(where).map(key => `${key} = ?`).join(' AND ')
+  const query = `DELETE FROM ${table} WHERE ${whereClause}`
+  const values = Object.values(where)
+  
+  return await executeQuery(query, values)
+}
+
+export default pool

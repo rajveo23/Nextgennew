@@ -1,4 +1,4 @@
-import { supabase, supabaseAdmin, FileUpload } from './supabase'
+import { supabase, supabaseAdmin, isSupabaseConfigured, FileUpload } from './supabase'
 
 export class StorageService {
   // Upload file to Supabase Storage
@@ -17,6 +17,14 @@ export class StorageService {
       })
 
     if (error) throw error
+
+    // If Supabase is not configured, return a placeholder URL
+    if (!isSupabaseConfigured()) {
+      return {
+        url: 'https://via.placeholder.com/150',
+        path: fileName
+      }
+    }
 
     // Get public URL
     const { data: { publicUrl } } = supabaseAdmin.storage

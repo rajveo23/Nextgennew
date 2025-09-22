@@ -437,6 +437,50 @@ export default function ContactPage() {
                   <li>• Dedicated relationship manager assigned</li>
                 </ul>
               </div>
+
+              {/* Bank Details */}
+              <div className="card p-8 bg-gradient-to-br from-green-50 to-blue-50">
+                <div className="flex items-center mb-4">
+                  <BuildingOfficeIcon className="w-8 h-8 text-green-600 mr-3" />
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Bank Details
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-4">
+                  For direct payments and fund transfers:
+                </p>
+                <div className="bg-white rounded-lg p-4 border border-green-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-semibold text-gray-900">Beneficiary Name:</span>
+                      <p className="text-gray-700 mt-1">NEXTGEN SHARE REGISTRY PVT. LTD.</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Bank Name:</span>
+                      <p className="text-gray-700 mt-1">AU Small Finance Bank</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Branch:</span>
+                      <p className="text-gray-700 mt-1">Karol Bagh, New Delhi 110005</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">IFSC Code:</span>
+                      <p className="text-gray-700 mt-1 font-mono">AUBL0002103</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Account Number:</span>
+                      <p className="text-gray-700 mt-1 font-mono">2402210359934516</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Account Type:</span>
+                      <p className="text-gray-700 mt-1">Current</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  * Please share payment confirmation details via email for quick processing
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>

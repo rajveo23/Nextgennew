@@ -1,0 +1,170 @@
+import { NextRequest, NextResponse } from 'next/server'
+// import { DatabaseService } from '@/lib/database-mysql' // Disabled for now
+
+// GET /api/blogs-mysql - Get all blogs (MySQL version) - DISABLED FOR BUILD
+export async function GET() {
+  return NextResponse.json({ 
+    error: 'MySQL version not available yet. Use Supabase version.' 
+  }, { status: 501 })
+  
+  /*
+  try {
+    const blogs = await DatabaseService.getAllBlogPosts()
+    
+    // Format for frontend compatibility
+    const formattedBlogs = blogs.map(blog => ({
+      id: blog.id,
+      title: blog.title,
+      slug: blog.slug,
+      excerpt: blog.excerpt || '',
+      content: blog.content,
+      status: blog.status,
+      author: blog.author,
+      publishDate: blog.publish_date || blog.created_at.split('T')[0],
+      category: blog.category || 'General',
+      views: blog.views,
+      image: blog.featured_image_url,
+      tags: blog.tags,
+      date: blog.created_at,
+      readTime: `${Math.ceil(blog.content.length / 200)} min read`,
+      featured: blog.published
+    }))
+    
+    return NextResponse.json(formattedBlogs)
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+    return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 })
+  }
+}
+
+// POST /api/blogs-mysql - Create new blog (MySQL version)
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    
+    // Convert frontend format to database format
+    const blogData = {
+      title: body.title,
+      slug: body.slug,
+      content: body.content,
+      excerpt: body.excerpt,
+      featured_image_url: body.image,
+      author: body.author || 'NextGen Registry',
+      published: body.status === 'published',
+      status: body.status || 'draft',
+      publish_date: body.publishDate,
+      category: body.category,
+      views: body.views || 0,
+      tags: body.tags || []
+    }
+    
+    const newBlog = await DatabaseService.createBlogPost(blogData)
+    
+    // Convert back to frontend format
+    const formattedBlog = {
+      id: newBlog.id,
+      title: newBlog.title,
+      slug: newBlog.slug,
+      excerpt: newBlog.excerpt || '',
+      content: newBlog.content,
+      status: newBlog.status,
+      author: newBlog.author,
+      publishDate: newBlog.publish_date || newBlog.created_at.split('T')[0],
+      category: newBlog.category || 'General',
+      views: newBlog.views,
+      image: newBlog.featured_image_url,
+      tags: newBlog.tags,
+      date: newBlog.created_at,
+      readTime: `${Math.ceil(newBlog.content.length / 200)} min read`,
+      featured: newBlog.published
+    }
+    
+    return NextResponse.json(formattedBlog, { status: 201 })
+  } catch (error) {
+    console.error('Error creating blog:', error)
+    return NextResponse.json({ error: 'Failed to create blog' }, { status: 500 })
+  }
+}
+
+// PUT /api/blogs-mysql - Update existing blog (MySQL version)
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, ...updateData } = body
+    
+    // Convert frontend format to database format
+    const dbUpdateData = {
+      title: updateData.title,
+      slug: updateData.slug,
+      content: updateData.content,
+      excerpt: updateData.excerpt,
+      featured_image_url: updateData.image,
+      author: updateData.author,
+      published: updateData.status === 'published',
+      status: updateData.status,
+      publish_date: updateData.publishDate,
+      category: updateData.category,
+      views: updateData.views,
+      tags: updateData.tags || []
+    }
+    
+    const updatedBlog = await DatabaseService.updateBlogPost(parseInt(id), dbUpdateData)
+    
+    // Convert back to frontend format
+    const formattedBlog = {
+      id: updatedBlog.id,
+      title: updatedBlog.title,
+      slug: updatedBlog.slug,
+      excerpt: updatedBlog.excerpt || '',
+      content: updatedBlog.content,
+      status: updatedBlog.status,
+      author: updatedBlog.author,
+      publishDate: updatedBlog.publish_date || updatedBlog.created_at.split('T')[0],
+      category: updatedBlog.category || 'General',
+      views: updatedBlog.views,
+      image: updatedBlog.featured_image_url,
+      tags: updatedBlog.tags,
+      date: updatedBlog.created_at,
+      readTime: `${Math.ceil(updatedBlog.content.length / 200)} min read`,
+      featured: updatedBlog.published
+    }
+    
+    return NextResponse.json(formattedBlog)
+  } catch (error) {
+    console.error('Error updating blog:', error)
+    return NextResponse.json({ error: 'Failed to update blog' }, { status: 500 })
+  }
+}
+
+// DELETE /api/blogs-mysql - Delete blog (MySQL version)
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) {
+      return NextResponse.json({ error: 'Blog ID is required' }, { status: 400 })
+    }
+    
+    await DatabaseService.deleteBlogPost(parseInt(id))
+    
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting blog:', error)
+    return NextResponse.json({ error: 'Failed to delete blog' }, { status: 500 })
+  }
+  */
+}
+
+// POST and PUT functions also disabled
+export async function POST() {
+  return NextResponse.json({ error: 'MySQL version not available yet.' }, { status: 501 })
+}
+
+export async function PUT() {
+  return NextResponse.json({ error: 'MySQL version not available yet.' }, { status: 501 })
+}
+
+export async function DELETE() {
+  return NextResponse.json({ error: 'MySQL version not available yet.' }, { status: 501 })
+}

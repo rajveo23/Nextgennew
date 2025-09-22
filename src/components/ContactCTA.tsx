@@ -57,28 +57,29 @@ export default function ContactCTA() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Contact Information */}
           <motion.div
+            className="text-center lg:text-left"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
+            <div className="space-y-8 max-w-md mx-auto lg:mx-0">
+              <div className="flex items-start space-x-4 justify-center lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <PhoneIcon className="w-6 h-6 text-white" />
                 </div>
-                <div>
+                <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Phone</h3>
                   <p className="text-gray-200">+91-8178653316</p>
                   <p className="text-gray-200">011-45060667</p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-4 justify-center lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <EnvelopeIcon className="w-6 h-6 text-white" />
                 </div>
-                <div>
+                <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
                   <p className="text-gray-200">Info@nextgenregistry.com</p>
                   <p className="text-gray-200 text-sm mt-1">
@@ -87,11 +88,11 @@ export default function ContactCTA() {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-4 justify-center lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <MapPinIcon className="w-6 h-6 text-white" />
                 </div>
-                <div>
+                <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Address</h3>
                   <p className="text-gray-200 leading-relaxed">
                     301, 3RD FLOOR, PRATAP CHAMBERS,<br />
@@ -105,13 +106,13 @@ export default function ContactCTA() {
 
           {/* CTA Buttons */}
           <motion.div
-            className="text-center lg:text-left"
+            className="text-center"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-md mx-auto">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href="/contact" className="btn-secondary text-lg px-8 py-4 inline-block w-full sm:w-auto">
                   Contact Us Today

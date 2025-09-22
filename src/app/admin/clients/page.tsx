@@ -7,7 +7,9 @@ import {
   PencilIcon, 
   TrashIcon,
   MagnifyingGlassIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  DocumentArrowUpIcon,
+  CloudArrowUpIcon
 } from '@heroicons/react/24/outline'
 import { AdminDataManager, Client } from '@/lib/adminData'
 
@@ -24,6 +26,10 @@ export default function AdminClientsPage() {
     isinOfTheCompany: '',
     isActive: true
   })
+  const [showCsvModal, setShowCsvModal] = useState(false)
+  const [csvFile, setCsvFile] = useState<File | null>(null)
+  const [csvUploading, setCsvUploading] = useState(false)
+  const [csvResult, setCsvResult] = useState<any>(null)
 
   useEffect(() => {
     loadClients()
@@ -101,6 +107,47 @@ export default function AdminClientsPage() {
       isActive: true
     })
     setEditingClient(null)
+  }
+
+  const handleCsvUpload = async () => {
+    if (!csvFile) return
+
+    setCsvUploading(true)
+    setCsvResult(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('csvFile', csvFile)
+
+      const response = await fetch('/api/clients/csv-direct', {
+        method: 'POST',
+        body: formData
+      })
+
+      const result = await response.json()
+      setCsvResult(result)
+
+      if (result.success) {
+        // Reload clients to show new data
+        await loadClients()
+      }
+    } catch (error) {
+      console.error('CSV upload error:', error)
+      setCsvResult({
+        success: false,
+        error: 'Failed to upload CSV file'
+      })
+    } finally {
+      setCsvUploading(false)
+    }
+  }
+
+  const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setCsvFile(file)
+      setCsvResult(null)
+    }
   }
 
   const filteredClients = clients.filter(client =>
@@ -188,16 +235,25 @@ export default function AdminClientsPage() {
           />
         </div>
         
-        <button
-          onClick={() => {
-            resetForm()
-            setShowModal(true)
-          }}
-          className="btn-primary flex items-center gap-2"
-        >
-          <PlusIcon className="h-5 w-5" />
-          Add Client
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowCsvModal(true)}
+            className="btn-secondary flex items-center gap-2"
+          >
+            <DocumentArrowUpIcon className="h-5 w-5" />
+            Upload CSV
+          </button>
+          <button
+            onClick={() => {
+              resetForm()
+              setShowModal(true)
+            }}
+            className="btn-primary flex items-center gap-2"
+          >
+            <PlusIcon className="h-5 w-5" />
+            Add Client
+          </button>
+        </div>
       </div>
 
       {/* Clients Table */}
@@ -385,6 +441,149 @@ export default function AdminClientsPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSV Upload Modal */}
+      {showCsvModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Upload Clients CSV</h2>
+                <button
+                  onClick={() => {
+                    setShowCsvModal(false)
+                    setCsvFile(null)
+                    setCsvResult(null)
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {/* Instructions */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-medium text-blue-900 mb-2">CSV Format Requirements:</h3>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• <strong>serial_number</strong> - Unique client serial number</li>
+                    <li>• <strong>issuer_client_company_name</strong> - Company name</li>
+                    <li>• <strong>type_of_security</strong> - EQUITY, PREFERENCE, or DEBENTURE</li>
+                    <li>• <strong>isin_of_the_company</strong> - ISIN code</li>
+                  </ul>
+                  <p className="text-xs text-blue-600 mt-2">
+                    Example: 1001,ABC COMPANY LIMITED,EQUITY,INE123A01012
+                  </p>
+                  <div className="mt-3">
+                    <a
+                      href="/sample-clients.csv"
+                      download="sample-clients.csv"
+                      className="text-sm text-primary-600 hover:text-primary-700 underline"
+                    >
+                      📥 Download Sample CSV Template
+                    </a>
+                  </div>
+                </div>
+
+                {/* File Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select CSV File
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                    <div className="text-center">
+                      <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
+                      <div className="mt-4">
+                        <label htmlFor="csv-upload" className="cursor-pointer">
+                          <span className="mt-2 block text-sm font-medium text-gray-900">
+                            {csvFile ? csvFile.name : 'Choose CSV file or drag and drop'}
+                          </span>
+                          <input
+                            id="csv-upload"
+                            type="file"
+                            accept=".csv"
+                            onChange={handleCsvFileChange}
+                            className="sr-only"
+                          />
+                        </label>
+                        <p className="mt-1 text-xs text-gray-500">CSV files only</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Upload Button */}
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCsvModal(false)
+                      setCsvFile(null)
+                      setCsvResult(null)
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCsvUpload}
+                    disabled={!csvFile || csvUploading}
+                    className={`px-4 py-2 text-sm font-medium text-white rounded-md ${
+                      !csvFile || csvUploading
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-primary-600 hover:bg-primary-700'
+                    }`}
+                  >
+                    {csvUploading ? 'Uploading...' : 'Upload CSV'}
+                  </button>
+                </div>
+
+                {/* Results */}
+                {csvResult && (
+                  <div className={`mt-4 p-4 rounded-lg ${
+                    csvResult.success ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+                  }`}>
+                    <h4 className={`font-medium ${
+                      csvResult.success ? 'text-green-900' : 'text-red-900'
+                    }`}>
+                      {csvResult.success ? 'Upload Successful!' : 'Upload Failed'}
+                    </h4>
+                    
+                    {csvResult.results && (
+                      <div className={`mt-2 text-sm ${
+                        csvResult.success ? 'text-green-800' : 'text-red-800'
+                      }`}>
+                        <p>Total Rows: {csvResult.results.totalRows}</p>
+                        <p>Valid Rows: {csvResult.results.validRows}</p>
+                        <p>Successfully Added: {csvResult.results.successful}</p>
+                        <p>Failed: {csvResult.results.failed}</p>
+                      </div>
+                    )}
+
+                    {csvResult.results?.errors && csvResult.results.errors.length > 0 && (
+                      <div className="mt-3">
+                        <details className="text-sm">
+                          <summary className="cursor-pointer font-medium">
+                            View Errors ({csvResult.results.errors.length})
+                          </summary>
+                          <ul className="mt-2 space-y-1 text-xs">
+                            {csvResult.results.errors.slice(0, 10).map((error: string, index: number) => (
+                              <li key={index} className="text-red-700">• {error}</li>
+                            ))}
+                            {csvResult.results.errors.length > 10 && (
+                              <li className="text-red-600">... and {csvResult.results.errors.length - 10} more</li>
+                            )}
+                          </ul>
+                        </details>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
