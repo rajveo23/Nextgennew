@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove experimental appDir as it's stable in Next.js 14
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
     remotePatterns: [
@@ -13,17 +12,16 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
-    // Allow local images from uploads directory
     unoptimized: false,
   },
-  // Optimize for Vercel deployment
-  output: 'standalone',
   // Enable SWC minification
   swcMinify: true,
-  // Compress images
-  compress: true,
   // Enable React strict mode
   reactStrictMode: true,
+  // Ensure proper module resolution
+  experimental: {
+    esmExternals: false,
+  },
 }
 
 module.exports = nextConfig
