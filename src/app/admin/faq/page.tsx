@@ -10,7 +10,7 @@ import {
   ChevronUpIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
-import { AdminDataManager, FAQ } from '@/lib/adminData'
+import { AdminDataManager, FAQ } from '../../../lib/adminData'
 
 const categories = ['All', 'ISIN Services', 'RTA Services', 'Demat Services', 'Corporate Actions', 'General']
 

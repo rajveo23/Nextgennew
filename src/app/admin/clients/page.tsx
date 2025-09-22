@@ -11,7 +11,7 @@ import {
   DocumentArrowUpIcon,
   CloudArrowUpIcon
 } from '@heroicons/react/24/outline'
-import { AdminDataManager, Client } from '@/lib/adminData'
+import { AdminDataManager, Client } from '../../../lib/adminData'
 
 export default function AdminClientsPage() {
   const [clients, setClients] = useState<Client[]>([])

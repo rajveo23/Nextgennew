@@ -4,25 +4,15 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   PhotoIcon,
-  TrashIcon,
   EyeIcon,
   CloudArrowUpIcon,
   MagnifyingGlassIcon,
   FolderIcon,
-  DocumentDuplicateIcon
+  DocumentDuplicateIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline'
-import FileUpload from '@/components/FileUpload'
-
-interface ImageFile {
-  id: number
-  name: string
-  url: string
-  size: number
-  uploadDate: string
-  category: string
-  alt: string
-  dimensions: string
-}
+import { AdminDataManager, ImageFile } from '../../../lib/adminData'
+import FileUpload from '../../../components/FileUpload'
 
 const mockImages: ImageFile[] = [
   {

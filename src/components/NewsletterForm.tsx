@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { AdminDataManager } from '@/lib/adminData'
+import { AdminDataManager } from '../lib/adminData'
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('')

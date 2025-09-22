@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AdminDataManager, ContactSubmission } from '@/lib/adminData'
+import { AdminDataManager, ContactSubmission } from '../../../lib/adminData'
 import {
   EnvelopeIcon,
   PhoneIcon,

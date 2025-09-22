@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { AdminDataManager, FAQ } from '@/lib/adminData'
+import { AdminDataManager, FAQ } from '../../lib/adminData'
 import { 
   ChevronDownIcon, 
   QuestionMarkCircleIcon,

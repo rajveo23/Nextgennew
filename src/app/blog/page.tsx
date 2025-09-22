@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import NewsletterForm from '@/components/NewsletterForm'
-import { AdminDataManager, BlogPost } from '@/lib/adminData'
+import NewsletterForm from '../../components/NewsletterForm'
+import { AdminDataManager, BlogPost } from '../../lib/adminData'
 import { 
   CalendarDaysIcon, 
   ClockIcon, 

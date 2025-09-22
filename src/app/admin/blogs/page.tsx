@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AdminDataManager, BlogPost } from '@/lib/adminData'
+import { AdminDataManager, BlogPost } from '../../../lib/adminData'
 import {
   PlusIcon,
   PencilIcon,

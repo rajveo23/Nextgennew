@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { AdminDataManager, BlogPost, FAQ, ImageFile, ContactSubmission, Client } from '@/lib/adminData'
+import { AdminDataManager, BlogPost, FAQ, ImageFile, ContactSubmission, Client } from '../../lib/adminData'
 import {
   DocumentTextIcon,
   PhotoIcon,

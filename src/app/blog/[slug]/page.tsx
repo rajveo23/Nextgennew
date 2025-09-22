@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { AdminDataManager, BlogPost } from '@/lib/adminData'
+import { AdminDataManager, BlogPost } from '../../../lib/adminData'
 import {
   CalendarDaysIcon,
   UserIcon,
