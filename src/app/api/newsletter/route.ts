@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { DatabaseService } from '@/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email } = body
+    const { email, source } = body
 
     // Validate required fields
     if (!email) {
@@ -22,29 +23,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would typically:
-    // 1. Check if email already exists in newsletter list
-    // 2. Add to newsletter database
-    // 3. Send welcome email
-    // 4. Integrate with email marketing service (Mailchimp, SendGrid, etc.)
-    
-    // For now, we'll just log the subscription and return success
-    console.log('Newsletter subscription:', {
-      email,
-      timestamp: new Date().toISOString(),
-      source: 'website'
-    })
+    try {
+      // Add to newsletter database using Supabase
+      await DatabaseService.subscribeToNewsletter(email, source || 'website')
 
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 800))
-
-    return NextResponse.json(
-      { 
-        message: 'Successfully subscribed to newsletter!',
-        success: true 
-      },
-      { status: 200 }
-    )
+      return NextResponse.json(
+        { 
+          message: 'Successfully subscribed to newsletter!',
+          success: true 
+        },
+        { status: 200 }
+      )
+    } catch (error: any) {
+      // Handle duplicate email error
+      if (error.message?.includes('duplicate') || error.code === '23505') {
+        return NextResponse.json(
+          { 
+            message: 'You are already subscribed to our newsletter!',
+            success: true 
+          },
+          { status: 200 }
+        )
+      }
+      throw error
+    }
 
   } catch (error) {
     console.error('Newsletter subscription error:', error)

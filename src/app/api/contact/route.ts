@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { DatabaseService } from '@/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, phone, company, service, message } = body
+    const { name, email, phone, company, service, message, newsletter } = body
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -22,24 +23,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send email notification
-    // 3. Integrate with CRM
-    
-    // For now, we'll just log the data and return success
-    console.log('Contact form submission:', {
+    // Save contact submission to Supabase
+    await DatabaseService.createContactSubmission({
       name,
       email,
       phone,
       company,
       service,
       message,
-      timestamp: new Date().toISOString()
+      newsletter,
+      source: 'website'
     })
 
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // If newsletter subscription is requested, add to newsletter
+    if (newsletter) {
+      try {
+        await DatabaseService.subscribeToNewsletter(email, 'contact-form')
+      } catch (error) {
+        // Don't fail the contact submission if newsletter subscription fails
+        console.error('Newsletter subscription failed:', error)
+      }
+    }
 
     return NextResponse.json(
       { 

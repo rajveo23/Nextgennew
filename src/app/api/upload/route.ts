@@ -1,64 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { v2 as cloudinary } from 'cloudinary'
-import { getDatabase } from '@/lib/mongodb'
-import { ImageFile } from '@/lib/adminData'
+import { StorageService } from '@/lib/storage'
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
-
-// POST /api/upload - Upload image to Cloudinary and save metadata to database
+// POST /api/upload - Upload image to Supabase Storage
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
+    const bucket = formData.get('bucket') as string || 'company-assets'
     const category = formData.get('category') as string || 'general'
-    const alt = formData.get('alt') as string || ''
     
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' }, { status: 400 })
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size too large. Maximum 5MB allowed.' }, { status: 400 })
+    }
     
-    // Convert file to base64 for Cloudinary upload
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    const base64 = `data:${file.type};base64,${buffer.toString('base64')}`
+    // Upload to Supabase Storage
+    const uploadResult = await StorageService.uploadFile(bucket, file, `${category}/${Date.now()}-${file.name}`)
     
-    // Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(base64, {
-      folder: 'nextgen-registry',
-      transformation: [
-        { width: 1200, height: 800, crop: 'limit' },
-        { quality: 'auto' },
-        { format: 'auto' }
-      ]
-    })
-    
-    // Save metadata to database
-    const db = await getDatabase()
-    const lastImage = await db.collection('images').findOne({}, { sort: { id: -1 } })
-    const newId = (lastImage?.id || 0) + 1
-    
-    const imageData: ImageFile = {
-      id: newId,
+    // Return legacy format for compatibility
+    const imageData = {
+      id: Date.now(), // Temporary ID for legacy compatibility
       name: file.name,
-      url: uploadResult.secure_url,
+      url: uploadResult.url,
       size: file.size,
       uploadDate: new Date().toISOString(),
       category,
-      alt,
-      dimensions: `${uploadResult.width}x${uploadResult.height}`
+      alt: file.name,
+      dimensions: '0x0', // We don't automatically detect dimensions in Supabase
+      path: uploadResult.path
     }
-    
-    await db.collection('images').insertOne(imageData)
     
     return NextResponse.json({
       success: true,
       image: imageData,
-      cloudinaryId: uploadResult.public_id
+      path: uploadResult.path
     })
   } catch (error) {
     console.error('Error uploading image:', error)
@@ -69,14 +54,19 @@ export async function POST(request: NextRequest) {
 // GET /api/upload - Get all images
 export async function GET() {
   try {
-    const db = await getDatabase()
-    const images = await db.collection<ImageFile>('images').find({}).sort({ uploadDate: -1 }).toArray()
+    const files = await StorageService.getImages()
     
-    // Convert MongoDB _id to id for consistency
-    const formattedImages = images.map(image => ({
-      ...image,
-      id: image.id || Math.floor(Math.random() * 1000000),
-      _id: undefined
+    // Convert to legacy format for compatibility
+    const formattedImages = files.map(file => ({
+      id: parseInt(file.id.replace(/-/g, '').substring(0, 8), 16),
+      name: file.filename,
+      url: StorageService.getPublicUrl('company-assets', file.file_path),
+      size: file.file_size || 0,
+      uploadDate: file.created_at,
+      category: 'general',
+      alt: file.filename,
+      dimensions: '0x0',
+      path: file.file_path
     }))
     
     return NextResponse.json(formattedImages)
@@ -91,28 +81,31 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
-    const cloudinaryId = searchParams.get('cloudinaryId')
+    const path = searchParams.get('path')
     
-    if (!id) {
-      return NextResponse.json({ error: 'Image ID is required' }, { status: 400 })
+    if (!id && !path) {
+      return NextResponse.json({ error: 'Image ID or path is required' }, { status: 400 })
     }
     
-    // Delete from Cloudinary if cloudinaryId is provided
-    if (cloudinaryId) {
-      try {
-        await cloudinary.uploader.destroy(cloudinaryId)
-      } catch (cloudinaryError) {
-        console.error('Error deleting from Cloudinary:', cloudinaryError)
-        // Continue with database deletion even if Cloudinary deletion fails
+    let success = false
+    
+    if (path) {
+      // Delete by path (preferred method)
+      success = await StorageService.deleteImage(path)
+    } else if (id) {
+      // Delete by ID (fallback method)
+      const files = await StorageService.getImages()
+      const file = files.find(f => 
+        parseInt(f.id.replace(/-/g, '').substring(0, 8), 16) === parseInt(id)
+      )
+      
+      if (file) {
+        success = await StorageService.deleteImage(file.file_path)
       }
     }
     
-    // Delete from database
-    const db = await getDatabase()
-    const result = await db.collection('images').deleteOne({ id: parseInt(id) })
-    
-    if (result.deletedCount === 0) {
-      return NextResponse.json({ error: 'Image not found' }, { status: 404 })
+    if (!success) {
+      return NextResponse.json({ error: 'Image not found or failed to delete' }, { status: 404 })
     }
     
     return NextResponse.json({ success: true })

@@ -1,60 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { v2 as cloudinary } from 'cloudinary'
-
-// Check if Cloudinary is configured
-const isCloudinaryConfigured = !!(
-  process.env.CLOUDINARY_CLOUD_NAME &&
-  process.env.CLOUDINARY_API_KEY &&
-  process.env.CLOUDINARY_API_SECRET
-)
-
-if (!isCloudinaryConfigured) {
-  console.warn('Cloudinary not configured - Blog image deletion will fail')
-} else {
-  // Configure Cloudinary only if credentials are available
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  })
-}
+import { StorageService } from '@/lib/storage'
 
 export async function DELETE(request: NextRequest) {
   try {
-    if (!isCloudinaryConfigured) {
-      return NextResponse.json(
-        { error: 'Image deletion service not configured. Please set up Cloudinary environment variables.' },
-        { status: 503 }
-      )
-    }
-
     const { searchParams } = new URL(request.url)
-    const publicId = searchParams.get('publicId')
+    const path = searchParams.get('path')
     
-    if (!publicId) {
+    if (!path) {
       return NextResponse.json(
-        { error: 'No publicId provided' },
+        { error: 'No file path provided' },
         { status: 400 }
       )
     }
 
     try {
-      // Delete the image from Cloudinary
-      const result = await cloudinary.uploader.destroy(publicId)
+      // Delete the image from Supabase Storage
+      const success = await StorageService.deleteImage(path)
       
-      if (result.result === 'ok') {
+      if (success) {
         return NextResponse.json({
           success: true,
           message: 'Image deleted successfully'
         })
       } else {
         return NextResponse.json(
-          { error: 'Failed to delete image from cloud storage' },
+          { error: 'Failed to delete image from storage' },
           { status: 400 }
         )
       }
     } catch (error) {
-      console.error('Cloudinary delete error:', error)
+      console.error('Supabase storage delete error:', error)
       return NextResponse.json(
         { error: 'Image not found or already deleted' },
         { status: 404 }

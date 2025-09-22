@@ -158,7 +158,7 @@ export default function WhyChooseUs() {
               <div className="text-gray-600">Years Experience</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">1000+</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">1500+</div>
               <div className="text-gray-600">Clients Served</div>
             </div>
             <div>

@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background with gradient */}
       <div className="absolute inset-0 gradient-bg"></div>
       

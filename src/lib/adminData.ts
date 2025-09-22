@@ -1,187 +1,198 @@
-// Cloud-only data management for admin panel
-// This version removes all localStorage fallbacks and uses only MongoDB + Cloudinary
+// Supabase-based data management for admin panel
+// This version uses Supabase instead of MongoDB + Cloudinary
 
-import { AdminDataManagerCloud } from './adminDataCloud'
+import { AdminDataManagerSupabase } from './adminDataSupabase'
 
-// Re-export types from adminDataCloud
+// Re-export types from adminDataSupabase
 export type {
-  BlogPost,
-  FAQ,
-  ImageFile,
-  ContactSubmission,
-  Client,
-  NewsletterSubscription
-} from './adminDataCloud'
+  LegacyBlogPost as BlogPost,
+  LegacyFAQ as FAQ,
+  LegacyImageFile as ImageFile,
+  LegacyContactSubmission as ContactSubmission,
+  LegacyClient as Client,
+  LegacyNewsletterSubscription as NewsletterSubscription
+} from './adminDataSupabase'
 
-// Cloud-only data management functions
+// Supabase-based data management functions
 export class AdminDataManager {
-  // Blog management - Cloud only
-  static async getBlogs(): Promise<import('./adminDataCloud').BlogPost[]> {
+  // Blog management - Supabase
+  static async getBlogs(): Promise<import('./adminDataSupabase').LegacyBlogPost[]> {
     try {
-      return await AdminDataManagerCloud.getBlogs()
+      return await AdminDataManagerSupabase.getBlogs()
     } catch (error) {
-      console.error('Failed to fetch blogs from cloud:', error)
-      throw new Error('Unable to fetch blogs. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to fetch blogs from Supabase:', error)
+      throw new Error('Unable to fetch blogs. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async saveBlog(blog: Omit<import('./adminDataCloud').BlogPost, 'id'> | import('./adminDataCloud').BlogPost): Promise<import('./adminDataCloud').BlogPost | null> {
+  static async saveBlog(blog: Omit<import('./adminDataSupabase').LegacyBlogPost, 'id'> | import('./adminDataSupabase').LegacyBlogPost): Promise<import('./adminDataSupabase').LegacyBlogPost | null> {
     try {
-      return await AdminDataManagerCloud.saveBlog(blog)
+      return await AdminDataManagerSupabase.saveBlog(blog)
     } catch (error) {
-      console.error('Failed to save blog to cloud:', error)
-      throw new Error('Unable to save blog. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to save blog to Supabase:', error)
+      throw new Error('Unable to save blog. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
   static async deleteBlog(id: number): Promise<boolean> {
     try {
-      return await AdminDataManagerCloud.deleteBlog(id)
+      return await AdminDataManagerSupabase.deleteBlog(id)
     } catch (error) {
-      console.error('Failed to delete blog from cloud:', error)
-      throw new Error('Unable to delete blog. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to delete blog from Supabase:', error)
+      throw new Error('Unable to delete blog. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // FAQ management - Cloud only
-  static async getFAQs(): Promise<import('./adminDataCloud').FAQ[]> {
+  // FAQ management - Supabase
+  static async getFAQs(): Promise<import('./adminDataSupabase').LegacyFAQ[]> {
     try {
-      return await AdminDataManagerCloud.getFAQs()
+      return await AdminDataManagerSupabase.getFAQs()
     } catch (error) {
-      console.error('Failed to fetch FAQs from cloud:', error)
-      throw new Error('Unable to fetch FAQs. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to fetch FAQs from Supabase:', error)
+      throw new Error('Unable to fetch FAQs. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async saveFAQ(faq: Omit<import('./adminDataCloud').FAQ, 'id' | 'createdAt' | 'updatedAt'> | import('./adminDataCloud').FAQ): Promise<import('./adminDataCloud').FAQ | null> {
+  static async saveFAQ(faq: Omit<import('./adminDataSupabase').LegacyFAQ, 'id' | 'createdAt' | 'updatedAt'> | import('./adminDataSupabase').LegacyFAQ): Promise<import('./adminDataSupabase').LegacyFAQ | null> {
     try {
-      return await AdminDataManagerCloud.saveFAQ(faq)
+      return await AdminDataManagerSupabase.saveFAQ(faq)
     } catch (error) {
-      console.error('Failed to save FAQ to cloud:', error)
-      throw new Error('Unable to save FAQ. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to save FAQ to Supabase:', error)
+      throw new Error('Unable to save FAQ. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
   static async deleteFAQ(id: number): Promise<boolean> {
     try {
-      return await AdminDataManagerCloud.deleteFAQ(id)
+      return await AdminDataManagerSupabase.deleteFAQ(id)
     } catch (error) {
-      console.error('Failed to delete FAQ from cloud:', error)
-      throw new Error('Unable to delete FAQ. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to delete FAQ from Supabase:', error)
+      throw new Error('Unable to delete FAQ. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // Image management - Cloud only
-  static async getImages(): Promise<import('./adminDataCloud').ImageFile[]> {
+  // Image management - Supabase Storage
+  static async getImages(): Promise<import('./adminDataSupabase').LegacyImageFile[]> {
     try {
-      return await AdminDataManagerCloud.getImages()
+      return await AdminDataManagerSupabase.getImages()
     } catch (error) {
-      console.error('Failed to fetch images from cloud:', error)
-      throw new Error('Unable to fetch images. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to fetch images from Supabase:', error)
+      throw new Error('Unable to fetch images. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async uploadImage(file: File, category: string = 'general', alt: string = ''): Promise<import('./adminDataCloud').ImageFile | null> {
+  static async uploadImage(file: File, category: string = 'general', alt: string = ''): Promise<import('./adminDataSupabase').LegacyImageFile | null> {
     try {
-      return await AdminDataManagerCloud.uploadImage(file, category, alt)
+      return await AdminDataManagerSupabase.uploadImage(file, category, alt)
     } catch (error) {
-      console.error('Failed to upload image to cloud:', error)
-      throw new Error('Unable to upload image. Please check your internet connection and ensure Cloudinary is configured.')
+      console.error('Failed to upload image to Supabase:', error)
+      throw new Error('Unable to upload image. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async deleteImage(id: number, cloudinaryId?: string): Promise<boolean> {
+  static async deleteImage(id: number, path?: string): Promise<boolean> {
     try {
-      return await AdminDataManagerCloud.deleteImage(id, cloudinaryId)
+      return await AdminDataManagerSupabase.deleteImage(id, path)
     } catch (error) {
-      console.error('Failed to delete image from cloud:', error)
-      throw new Error('Unable to delete image. Please check your internet connection and ensure Cloudinary is configured.')
+      console.error('Failed to delete image from Supabase:', error)
+      throw new Error('Unable to delete image. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // Contact submissions management - Cloud only
-  static async getContactSubmissions(): Promise<import('./adminDataCloud').ContactSubmission[]> {
+  // Contact submissions management - Supabase
+  static async getContactSubmissions(): Promise<import('./adminDataSupabase').LegacyContactSubmission[]> {
     try {
-      return await AdminDataManagerCloud.getContactSubmissions()
+      return await AdminDataManagerSupabase.getContactSubmissions()
     } catch (error) {
-      console.error('Failed to fetch contact submissions from cloud:', error)
-      throw new Error('Unable to fetch contact submissions. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to fetch contact submissions from Supabase:', error)
+      throw new Error('Unable to fetch contact submissions. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async saveContactSubmission(submission: Omit<import('./adminDataCloud').ContactSubmission, 'id'> | import('./adminDataCloud').ContactSubmission): Promise<import('./adminDataCloud').ContactSubmission | null> {
+  static async saveContactSubmission(submission: Omit<import('./adminDataSupabase').LegacyContactSubmission, 'id'> | import('./adminDataSupabase').LegacyContactSubmission): Promise<import('./adminDataSupabase').LegacyContactSubmission | null> {
     try {
-      return await AdminDataManagerCloud.saveContactSubmission(submission)
+      return await AdminDataManagerSupabase.saveContactSubmission(submission)
     } catch (error) {
-      console.error('Failed to save contact submission to cloud:', error)
-      throw new Error('Unable to save contact submission. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to save contact submission to Supabase:', error)
+      throw new Error('Unable to save contact submission. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
   static async deleteContactSubmission(id: number): Promise<boolean> {
     try {
-      return await AdminDataManagerCloud.deleteContactSubmission(id)
+      return await AdminDataManagerSupabase.deleteContactSubmission(id)
     } catch (error) {
-      console.error('Failed to delete contact submission from cloud:', error)
-      throw new Error('Unable to delete contact submission. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to delete contact submission from Supabase:', error)
+      throw new Error('Unable to delete contact submission. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // Client management - Cloud only
-  static async getClients(): Promise<import('./adminDataCloud').Client[]> {
+  // Client management - Supabase
+  static async getClients(): Promise<import('./adminDataSupabase').LegacyClient[]> {
     try {
-      return await AdminDataManagerCloud.getClients()
+      return await AdminDataManagerSupabase.getClients()
     } catch (error) {
-      console.error('Failed to fetch clients from cloud:', error)
-      throw new Error('Unable to fetch clients. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to fetch clients from Supabase:', error)
+      throw new Error('Unable to fetch clients. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  static async saveClient(client: Omit<import('./adminDataCloud').Client, 'id' | 'createdAt' | 'updatedAt'> | import('./adminDataCloud').Client): Promise<import('./adminDataCloud').Client | null> {
+  static async saveClient(client: Omit<import('./adminDataSupabase').LegacyClient, 'id' | 'createdAt' | 'updatedAt'> | import('./adminDataSupabase').LegacyClient): Promise<import('./adminDataSupabase').LegacyClient | null> {
     try {
-      return await AdminDataManagerCloud.saveClient(client)
+      return await AdminDataManagerSupabase.saveClient(client)
     } catch (error) {
-      console.error('Failed to save client to cloud:', error)
-      throw new Error('Unable to save client. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to save client to Supabase:', error)
+      throw new Error('Unable to save client. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
   static async deleteClient(id: number): Promise<boolean> {
     try {
-      return await AdminDataManagerCloud.deleteClient(id)
+      return await AdminDataManagerSupabase.deleteClient(id)
     } catch (error) {
-      console.error('Failed to delete client from cloud:', error)
-      throw new Error('Unable to delete client. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to delete client from Supabase:', error)
+      throw new Error('Unable to delete client. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // Initialize data - Cloud only
+  // Initialize data - Supabase
   static async initializeData(): Promise<void> {
     try {
-      const result = await AdminDataManagerCloud.initializeData()
+      const result = await AdminDataManagerSupabase.initializeData()
       if (!result) {
         throw new Error('Database initialization failed')
       }
     } catch (error) {
-      console.error('Failed to initialize cloud data:', error)
-      throw new Error('Unable to initialize data. Please check your internet connection and ensure MongoDB is configured.')
+      console.error('Failed to initialize Supabase data:', error)
+      throw new Error('Unable to initialize data. Please check your internet connection and ensure Supabase is configured.')
     }
   }
 
-  // Newsletter subscriptions - Not implemented in cloud version yet
-  // These methods are placeholders for future implementation
-  static async getNewsletterSubscriptions(): Promise<import('./adminDataCloud').NewsletterSubscription[]> {
-    console.warn('Newsletter subscriptions not implemented in cloud version yet')
-    return []
+  // Newsletter subscriptions - Supabase implementation
+  static async getNewsletterSubscriptions(): Promise<import('./adminDataSupabase').LegacyNewsletterSubscription[]> {
+    try {
+      return await AdminDataManagerSupabase.getNewsletterSubscriptions()
+    } catch (error) {
+      console.error('Failed to fetch newsletter subscriptions from Supabase:', error)
+      return []
+    }
   }
 
-  static async saveNewsletterSubscription(subscription: Omit<import('./adminDataCloud').NewsletterSubscription, 'id'> | import('./adminDataCloud').NewsletterSubscription): Promise<import('./adminDataCloud').NewsletterSubscription | null> {
-    console.warn('Newsletter subscription saving not implemented in cloud version yet')
-    return null
+  static async saveNewsletterSubscription(subscription: Omit<import('./adminDataSupabase').LegacyNewsletterSubscription, 'id'> | import('./adminDataSupabase').LegacyNewsletterSubscription): Promise<import('./adminDataSupabase').LegacyNewsletterSubscription | null> {
+    try {
+      return await AdminDataManagerSupabase.saveNewsletterSubscription(subscription)
+    } catch (error) {
+      console.error('Failed to save newsletter subscription to Supabase:', error)
+      return null
+    }
   }
 
   static async deleteNewsletterSubscription(id: number): Promise<boolean> {
-    console.warn('Newsletter subscription deletion not implemented in cloud version yet')
-    return false
+    try {
+      return await AdminDataManagerSupabase.deleteNewsletterSubscription(id)
+    } catch (error) {
+      console.error('Failed to delete newsletter subscription from Supabase:', error)
+      return false
+    }
   }
 }
