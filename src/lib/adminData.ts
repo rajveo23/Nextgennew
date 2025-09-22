@@ -1,23 +1,101 @@
 // Supabase-based data management for admin panel
 // This version uses Supabase with proper error handling
 
-// Import with try-catch to handle missing dependencies
+// Dynamic import to handle missing dependencies
 let AdminDataManagerSupabase: any = null
+let supabaseTypes: any = {}
+
+// Try to import Supabase dependencies
 try {
-  AdminDataManagerSupabase = require('./adminDataSupabase').AdminDataManagerSupabase
+  const supabaseModule = require('./adminDataSupabase')
+  AdminDataManagerSupabase = supabaseModule.AdminDataManagerSupabase
+  supabaseTypes = supabaseModule
 } catch (error) {
-  console.warn('Supabase dependencies not available, using fallback')
+  console.warn('Supabase dependencies not available, using fallback types')
 }
 
-// Re-export types with fallback
-export type {
-  LegacyBlogPost as BlogPost,
-  LegacyFAQ as FAQ,
-  LegacyImageFile as ImageFile,
-  LegacyContactSubmission as ContactSubmission,
-  LegacyClient as Client,
-  LegacyNewsletterSubscription as NewsletterSubscription
-} from './adminDataSupabase'
+// Type definitions with fallback
+export interface BlogPost {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  status: 'published' | 'draft' | 'scheduled'
+  author: string
+  publishDate: string
+  category: string
+  views: number
+  image?: string
+  imageFilename?: string
+  tags: string[]
+  date?: string
+  readTime?: string
+  featured?: boolean
+}
+
+export interface FAQ {
+  id: number
+  question: string
+  answer: string
+  category: string
+  order: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ImageFile {
+  id: number
+  name: string
+  url: string
+  size: number
+  uploadDate: string
+  category: string
+  alt: string
+  dimensions: string
+}
+
+export interface ContactSubmission {
+  id: number
+  name: string
+  email: string
+  phone?: string
+  company?: string
+  service?: string
+  message: string
+  timestamp: string
+  status: 'new' | 'read' | 'responded'
+  source: string
+  newsletter?: boolean
+}
+
+export interface Client {
+  id: number
+  serialNumber: number
+  issuerClientCompanyName: string
+  typeOfSecurity: string
+  isinOfTheCompany: string
+  createdAt: string
+  updatedAt: string
+  isActive: boolean
+}
+
+export interface NewsletterSubscription {
+  id: number
+  email: string
+  timestamp: string
+  status: 'active' | 'unsubscribed'
+  source: string
+}
+
+// Re-export Supabase types with fallback
+export type LegacyBlogPost = BlogPost
+export type LegacyFAQ = FAQ
+export type LegacyImageFile = ImageFile
+export type LegacyContactSubmission = ContactSubmission
+export type LegacyClient = Client
+export type LegacyNewsletterSubscription = NewsletterSubscription
 
 // Supabase-based data management functions with fallback
 export class AdminDataManager {

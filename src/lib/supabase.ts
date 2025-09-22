@@ -12,12 +12,13 @@ const isSupabaseConfigured = () => {
          !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('placeholder')
 }
 
-// Only create clients if properly configured
+// Only create clients if properly configured and in browser environment
 let supabase: any = null
 let supabaseAdmin: any = null
 
-try {
-  if (isSupabaseConfigured()) {
+// Only initialize Supabase on the client side or when properly configured
+if (typeof window !== 'undefined' || isSupabaseConfigured()) {
+  try {
     supabase = createClient(supabaseUrl, supabaseAnonKey)
     supabaseAdmin = createClient(
       supabaseUrl,
@@ -29,9 +30,9 @@ try {
         }
       }
     )
+  } catch (error) {
+    console.warn('Supabase client creation failed:', error)
   }
-} catch (error) {
-  console.warn('Supabase client creation failed:', error)
 }
 
 export { supabase, supabaseAdmin, isSupabaseConfigured }
