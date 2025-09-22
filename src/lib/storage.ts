@@ -9,6 +9,14 @@ export class StorageService {
   ): Promise<{ url: string; path: string }> {
     const fileName = path || `${Date.now()}-${file.name}`
     
+    // If Supabase is not configured, return a placeholder URL
+    if (!isSupabaseConfigured() || !supabaseAdmin) {
+      return {
+        url: 'https://via.placeholder.com/150',
+        path: fileName
+      }
+    }
+    
     const { data, error } = await supabaseAdmin.storage
       .from(bucket)
       .upload(fileName, file, {
@@ -17,14 +25,6 @@ export class StorageService {
       })
 
     if (error) throw error
-
-    // If Supabase is not configured, return a placeholder URL
-    if (!isSupabaseConfigured()) {
-      return {
-        url: 'https://via.placeholder.com/150',
-        path: fileName
-      }
-    }
 
     // Get public URL
     const { data: { publicUrl } } = supabaseAdmin.storage

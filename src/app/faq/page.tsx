@@ -140,10 +140,10 @@ export default function FAQPage() {
     // Load FAQs from admin data
     const loadFAQs = async () => {
       await AdminDataManager.initializeData()
-      const adminFaqs = await AdminDataManager.getFAQs()
+      const adminFaqs: FAQ[] = await AdminDataManager.getFAQs()
     
     // Filter only active FAQs
-    const activeFaqs = adminFaqs.filter(faq => faq.isActive)
+    const activeFaqs = adminFaqs.filter((faq: FAQ) => faq.isActive)
     setFaqs(activeFaqs)
     setLoading(false)
     }

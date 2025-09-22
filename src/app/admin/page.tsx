@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { AdminDataManager } from '@/lib/adminData'
+import { AdminDataManager, BlogPost, FAQ, ImageFile, ContactSubmission, Client } from '@/lib/adminData'
 import {
   DocumentTextIcon,
   PhotoIcon,
@@ -33,11 +33,11 @@ export default function AdminDashboard() {
     const loadData = async () => {
       await AdminDataManager.initializeData()
       
-      const blogs = await AdminDataManager.getBlogs()
-      const faqs = await AdminDataManager.getFAQs()
-      const images = await AdminDataManager.getImages()
-      const contacts = await AdminDataManager.getContactSubmissions()
-      const clients = await AdminDataManager.getClients()
+      const blogs: BlogPost[] = await AdminDataManager.getBlogs()
+      const faqs: FAQ[] = await AdminDataManager.getFAQs()
+      const images: ImageFile[] = await AdminDataManager.getImages()
+      const contacts: ContactSubmission[] = await AdminDataManager.getContactSubmissions()
+      const clients: Client[] = await AdminDataManager.getClients()
     
     // Update stats with real data
     setStats([
@@ -45,28 +45,28 @@ export default function AdminDashboard() {
         name: 'Total Blogs', 
         value: blogs.length.toString(), 
         icon: DocumentTextIcon, 
-        change: `+${blogs.filter(b => b.status === 'published').length}`, 
+        change: `+${blogs.filter((b: BlogPost) => b.status === 'published').length}`, 
         changeType: 'increase' 
       },
       { 
         name: 'Clients', 
         value: clients.length.toString(), 
         icon: BuildingOfficeIcon, 
-        change: `+${clients.filter(c => c.isActive).length}`, 
+        change: `+${clients.filter((c: Client) => c.isActive).length}`, 
         changeType: 'increase' 
       },
       { 
         name: 'FAQ Items', 
         value: faqs.length.toString(), 
         icon: QuestionMarkCircleIcon, 
-        change: `+${faqs.filter(f => f.isActive).length}`, 
+        change: `+${faqs.filter((f: FAQ) => f.isActive).length}`, 
         changeType: 'increase' 
       },
       { 
         name: 'User Requests', 
         value: contacts.length.toString(), 
         icon: UserGroupIcon, 
-        change: `+${contacts.filter(c => c.status === 'new').length}`, 
+        change: `+${contacts.filter((c: ContactSubmission) => c.status === 'new').length}`, 
         changeType: 'increase' 
       },
     ])
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
     const activities = []
     
     // Add recent blogs
-    const recentBlogs = blogs.slice(0, 2).map(blog => ({
+    const recentBlogs = blogs.slice(0, 2).map((blog: BlogPost) => ({
       id: `blog-${blog.id}`,
       type: 'blog',
       title: blog.status === 'published' ? 'New blog post published' : 'New blog post created',
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
     activities.push(...recentBlogs)
 
     // Add recent contact submissions
-    const recentContacts = contacts.slice(0, 2).map(contact => ({
+    const recentContacts = contacts.slice(0, 2).map((contact: ContactSubmission) => ({
       id: `contact-${contact.id}`,
       type: 'contact',
       title: 'New contact submission',
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
     activities.push(...recentContacts)
 
     // Add recent FAQs
-    const recentFAQs = faqs.slice(0, 1).map(faq => ({
+    const recentFAQs = faqs.slice(0, 1).map((faq: FAQ) => ({
       id: `faq-${faq.id}`,
       type: 'faq',
       title: 'FAQ updated',

@@ -1,18 +1,14 @@
 import { supabase, supabaseAdmin, isSupabaseConfigured, Client, BlogPost, FAQ, ContactSubmission, NewsletterSubscription } from './supabase'
 
-// Temporarily use supabase (anon key) instead of supabaseAdmin (service role) for all operations
-const db = supabase
+// Use supabase client if available
+const db = supabase || supabaseAdmin
 
 export class DatabaseService {
   
   // Check if Supabase is configured before operations
   private static checkConfiguration() {
-    if (!isSupabaseConfigured()) {
-      console.error('Supabase Configuration Check Failed:')
-      console.error('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing')
-      console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing')
-      console.error('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Missing')
-      throw new Error('Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY environment variables.')
+    if (!isSupabaseConfigured() || !db) {
+      throw new Error('Supabase is not configured or available')
     }
   }
   // Client operations

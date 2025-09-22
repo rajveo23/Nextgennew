@@ -33,7 +33,7 @@ export default function UserRequestsPage() {
     loadSubmissions()
   }, [])
 
-  const filteredSubmissions = submissions.filter(submission => {
+  const filteredSubmissions = submissions.filter((submission: ContactSubmission) => {
     const matchesSearch = submission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          submission.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          submission.message.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,9 +98,9 @@ export default function UserRequestsPage() {
 
   const statusCounts = {
     total: submissions.length,
-    new: submissions.filter(s => s.status === 'new').length,
-    read: submissions.filter(s => s.status === 'read').length,
-    responded: submissions.filter(s => s.status === 'responded').length
+    new: submissions.filter((s: ContactSubmission) => s.status === 'new').length,
+    read: submissions.filter((s: ContactSubmission) => s.status === 'read').length,
+    responded: submissions.filter((s: ContactSubmission) => s.status === 'responded').length
   }
 
   return (

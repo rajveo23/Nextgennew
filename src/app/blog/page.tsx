@@ -112,12 +112,12 @@ export default function BlogPage() {
     // Load blogs from admin data
     const loadBlogs = async () => {
       await AdminDataManager.initializeData()
-      const adminBlogs = await AdminDataManager.getBlogs()
+      const adminBlogs: BlogPost[] = await AdminDataManager.getBlogs()
     
     // Convert admin blog format to display format and filter published posts
     const publishedBlogs = adminBlogs
-      .filter(blog => blog.status === 'published')
-      .map(blog => ({
+      .filter((blog: BlogPost) => blog.status === 'published')
+      .map((blog: BlogPost) => ({
         ...blog,
         date: blog.publishDate,
         readTime: '5 min read', // Default read time

@@ -32,7 +32,7 @@ export default function FAQManagement() {
     loadFAQs()
   }, [])
 
-  const filteredFAQs = faqs.filter(faq => {
+  const filteredFAQs = faqs.filter((faq: FAQ) => {
     const matchesSearch = faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory

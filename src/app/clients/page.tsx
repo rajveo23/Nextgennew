@@ -85,8 +85,8 @@ export default function ClientsPage() {
     const loadClients = async () => {
       try {
         await AdminDataManager.initializeData()
-        const clientData = await AdminDataManager.getClients()
-        setClients(clientData.filter(client => client.isActive))
+        const clientData: Client[] = await AdminDataManager.getClients()
+        setClients(clientData.filter((client: Client) => client.isActive))
       } catch (error) {
         console.error('Error loading clients:', error)
       } finally {

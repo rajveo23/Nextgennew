@@ -59,7 +59,7 @@ export default function AdminClientsPage() {
           serialNumber: parseInt(formData.serialNumber)
         })
         if (updatedClient) {
-          setClients(prev => prev.map(c => c.id === updatedClient.id ? updatedClient : c))
+          setClients(prev => prev.map((c: Client) => c.id === updatedClient.id ? updatedClient : c))
         }
       } else {
         // Create new client
@@ -94,7 +94,7 @@ export default function AdminClientsPage() {
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this client?')) {
       await AdminDataManager.deleteClient(id)
-      setClients(prev => prev.filter(c => c.id !== id))
+      setClients(prev => prev.filter((c: Client) => c.id !== id))
     }
   }
 
@@ -150,7 +150,7 @@ export default function AdminClientsPage() {
     }
   }
 
-  const filteredClients = clients.filter(client =>
+  const filteredClients = clients.filter((client: Client) =>
     client.issuerClientCompanyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.isinOfTheCompany.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.serialNumber.toString().includes(searchTerm)
@@ -158,9 +158,9 @@ export default function AdminClientsPage() {
 
   const stats = {
     total: clients.length,
-    active: clients.filter(c => c.isActive).length,
-    inactive: clients.filter(c => !c.isActive).length,
-    equity: clients.filter(c => c.typeOfSecurity === 'EQUITY').length
+    active: clients.filter((c: Client) => c.isActive).length,
+    inactive: clients.filter((c: Client) => !c.isActive).length,
+    equity: clients.filter((c: Client) => c.typeOfSecurity === 'EQUITY').length
   }
 
   return (

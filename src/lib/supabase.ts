@@ -1,30 +1,40 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTI4MDAsImV4cCI6MTk2MDc2ODgwMH0.placeholder'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY0NTE5MjgwMCwiZXhwIjoxOTYwNzY4ODAwfQ.placeholder'
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = () => {
-  // Since we know the RLS test passed, let's bypass this check for now
-  return true
+  return process.env.NEXT_PUBLIC_SUPABASE_URL && 
+         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
+         !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
+         !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('placeholder')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Only create clients if properly configured
+let supabase: any = null
+let supabaseAdmin: any = null
 
-// For server-side operations with service role
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  supabaseServiceKey,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
+try {
+  if (isSupabaseConfigured()) {
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
+    supabaseAdmin = createClient(
+      supabaseUrl,
+      supabaseServiceKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
   }
-)
+} catch (error) {
+  console.warn('Supabase client creation failed:', error)
+}
 
-export { isSupabaseConfigured }
+export { supabase, supabaseAdmin, isSupabaseConfigured }
 
 // Database types
 export interface Client {
