@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AdminDataManager } from '@/lib/adminData'
+import { AdminDataManager } from '../../../../lib/adminData'
 
 export async function POST(request: NextRequest) {
   try {

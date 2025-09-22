@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { DatabaseService } from '@/lib/database'
-import { supabaseAdmin } from '@/lib/supabase'
+import { DatabaseService } from '../../../lib/database'
+import { supabaseAdmin } from '../../../lib/supabase'
 
 // Initial data converted to Supabase format
 const initialBlogs = [

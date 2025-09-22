@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { StorageService } from '@/lib/storage'
+import { StorageService } from '../../../lib/storage'
 
 // POST /api/upload - Upload image to Supabase Storage
 export async function POST(request: NextRequest) {

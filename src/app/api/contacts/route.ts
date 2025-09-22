@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DatabaseService } from '@/lib/database'
+import { DatabaseService } from '../../../lib/database'
 
 // GET /api/contacts - Get all contact submissions
 export async function GET() {
