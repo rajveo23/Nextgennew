@@ -146,6 +146,10 @@ export default function AboutPage() {
                   </div>
                   <div className="flex items-center">
                     <div className="w-3 h-3 bg-white rounded-full mr-3"></div>
+                    <span>CDSL ID: 000510</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-white rounded-full mr-3"></div>
                     <span>CIN: U66190DL2024PTC431604</span>
                   </div>
                   <div className="flex items-center">

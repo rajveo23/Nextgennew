@@ -412,7 +412,8 @@ export default function ContactPage() {
                     <p className="text-sm">
                       <strong>CIN:</strong> U66190DL2024PTC431604<br />
                       <strong>SEBI Regn. No.:</strong> INR000004422<br />
-                      <strong>NSDL ID:</strong> IN201177
+                      <strong>NSDL ID:</strong> IN201177<br />
+                      <strong>CDSL ID:</strong> 000510
                     </p>
                   </div>
                 </div>

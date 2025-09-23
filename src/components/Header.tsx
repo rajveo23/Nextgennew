@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -37,7 +37,7 @@ export default function Header() {
       scrolled ? 'bg-white/98 backdrop-blur-md shadow-xl border-b border-gray-200' : 'bg-white/90 backdrop-blur-sm shadow-md'
     }`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center group">
@@ -46,7 +46,7 @@ export default function Header() {
                   src="/assets/images/new-logo.png"
                   alt="NextGen Share Registry Pvt Ltd"
                   width={200}
-                  height={60}
+                  height={65}
                   className="h-16 w-auto transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
@@ -54,12 +54,12 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden lg:flex space-x-4">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-800 hover:text-primary-600 px-4 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg hover:bg-primary-50"
+                className="text-gray-800 hover:text-primary-600 px-3 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg hover:bg-primary-50 whitespace-nowrap"
               >
                 {item.name}
                 <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
@@ -67,16 +67,38 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Contact Info */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <div className="text-sm text-gray-600">
+          {/* Contact Info and Client Login */}
+          <div className="hidden xl:flex items-center space-x-3">
+            <div className="text-xs text-gray-600 leading-tight">
               <div>📧 Info@nextgenregistry.com</div>
               <div>📞 +91-8178653316</div>
             </div>
+            <a
+              href="https://login.nextgenregistry.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap"
+            >
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" />
+              Client Login
+            </a>
+          </div>
+
+          {/* Client Login Only for Large screens */}
+          <div className="hidden lg:flex xl:hidden items-center">
+            <a
+              href="https://login.nextgenregistry.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap"
+            >
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" />
+              Client Login
+            </a>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button
               type="button"
               className="text-gray-700 hover:text-primary-600 p-2"
@@ -94,7 +116,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
+        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               <Link
@@ -108,7 +130,17 @@ export default function Header() {
             ))}
             <div className="px-3 py-2 text-sm text-gray-600 border-t border-gray-200 mt-4">
               <div className="mb-1">📧 Info@nextgenregistry.com</div>
-              <div>📞 +91-8178653316</div>
+              <div className="mb-3">📞 +91-8178653316</div>
+              <a
+                href="https://login.nextgenregistry.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 w-full justify-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-2" />
+                Client Login
+              </a>
             </div>
           </div>
         </div>

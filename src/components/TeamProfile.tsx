@@ -131,7 +131,7 @@ export default function TeamProfile() {
                 <strong>NSDL ID:</strong> IN201177
               </div>
               <div>
-                <strong>Location:</strong> New Delhi, India
+                <strong>CDSL ID:</strong> 000510
               </div>
             </div>
           </div>

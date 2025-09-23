@@ -50,6 +50,7 @@ export default function BlogManagement() {
   })
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     // Load blogs from admin data
@@ -96,8 +97,7 @@ export default function BlogManagement() {
         ...formData,
         slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
         author: 'Admin',
-        publishDate: new Date().toISOString().split('T')[0],
-        views: 0
+        publishDate: new Date().toISOString().split('T')[0]
       }
       await AdminDataManager.saveBlog(newBlog)
       setShowAddForm(false)
@@ -330,10 +330,6 @@ export default function BlogManagement() {
                         <TagIcon className="h-4 w-4 mr-1" />
                         {blog.category}
                       </div>
-                      <div className="flex items-center">
-                        <EyeIcon className="h-4 w-4 mr-1" />
-                        {blog.views} views
-                      </div>
                     </div>
                   </div>
                   
@@ -565,18 +561,159 @@ export default function BlogManagement() {
 
               {/* Content */}
               <div>
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-                  Content *
-                </label>
-                <textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData({...formData, content: e.target.value})}
-                  required
-                  rows={10}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="Write your blog content here..."
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                    Content *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview(!showPreview)}
+                    className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  >
+                    <EyeIcon className="h-4 w-4 mr-1" />
+                    {showPreview ? 'Hide Preview' : 'Show Preview'}
+                  </button>
+                </div>
+                <div className="border border-gray-300 rounded-md overflow-hidden">
+                  {/* Formatting toolbar */}
+                  <div className="bg-gray-50 px-3 py-2 border-b border-gray-300 flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById('content') as HTMLTextAreaElement
+                        const start = textarea.selectionStart
+                        const end = textarea.selectionEnd
+                        const selectedText = textarea.value.substring(start, end)
+                        const newText = textarea.value.substring(0, start) + `**${selectedText}**` + textarea.value.substring(end)
+                        setFormData({...formData, content: newText})
+                      }}
+                      className="px-2 py-1 text-xs font-bold bg-white border border-gray-300 rounded hover:bg-gray-100"
+                      title="Bold"
+                    >
+                      B
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById('content') as HTMLTextAreaElement
+                        const start = textarea.selectionStart
+                        const end = textarea.selectionEnd
+                        const selectedText = textarea.value.substring(start, end)
+                        const newText = textarea.value.substring(0, start) + `*${selectedText}*` + textarea.value.substring(end)
+                        setFormData({...formData, content: newText})
+                      }}
+                      className="px-2 py-1 text-xs italic bg-white border border-gray-300 rounded hover:bg-gray-100"
+                      title="Italic"
+                    >
+                      I
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById('content') as HTMLTextAreaElement
+                        const start = textarea.selectionStart
+                        const newText = textarea.value.substring(0, start) + '\n## ' + textarea.value.substring(start)
+                        setFormData({...formData, content: newText})
+                      }}
+                      className="px-2 py-1 text-xs bg-white border border-gray-300 rounded hover:bg-gray-100"
+                      title="Heading"
+                    >
+                      H2
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById('content') as HTMLTextAreaElement
+                        const start = textarea.selectionStart
+                        const newText = textarea.value.substring(0, start) + '\n- ' + textarea.value.substring(start)
+                        setFormData({...formData, content: newText})
+                      }}
+                      className="px-2 py-1 text-xs bg-white border border-gray-300 rounded hover:bg-gray-100"
+                      title="List"
+                    >
+                      List
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById('content') as HTMLTextAreaElement
+                        const start = textarea.selectionStart
+                        const end = textarea.selectionEnd
+                        const selectedText = textarea.value.substring(start, end)
+                        const newText = textarea.value.substring(0, start) + `[${selectedText}](url)` + textarea.value.substring(end)
+                        setFormData({...formData, content: newText})
+                      }}
+                      className="px-2 py-1 text-xs bg-white border border-gray-300 rounded hover:bg-gray-100"
+                      title="Link"
+                    >
+                      Link
+                    </button>
+                  </div>
+                  <textarea
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                    required
+                    rows={15}
+                    className="w-full px-3 py-2 border-0 focus:ring-0 resize-none"
+                    placeholder="Write your blog content here... You can use Markdown formatting:
+
+**Bold text**
+*Italic text*
+## Headings
+- List items
+[Link text](https://example.com)
+
+Start writing your content..."
+                  />
+                </div>
+                
+                {/* Preview */}
+                {showPreview && (
+                  <div className="mt-4 border border-gray-300 rounded-md">
+                    <div className="bg-gray-50 px-3 py-2 border-b border-gray-300">
+                      <h4 className="text-sm font-medium text-gray-700">Preview</h4>
+                    </div>
+                    <div className="p-4 prose prose-sm max-w-none">
+                      {formData.content ? (
+                        <div 
+                          className="space-y-4"
+                          dangerouslySetInnerHTML={{ 
+                            __html: formData.content
+                              // Handle headings first
+                              .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold text-gray-900 mt-4 mb-2">$1</h3>')
+                              .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-gray-900 mt-6 mb-3">$1</h2>')
+                              .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h1>')
+                              // Handle bold and italic
+                              .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>')
+                              .replace(/\*(.*?)\*/g, '<em class="italic text-gray-800">$1</em>')
+                              // Handle lists
+                              .replace(/^- (.*$)/gim, '<li class="ml-4 list-disc text-gray-700">$1</li>')
+                              // Handle links
+                              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:text-primary-800 underline">$1</a>')
+                              // Handle line breaks
+                              .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed">')
+                              .replace(/\n/g, '<br>')
+                              // Wrap in paragraph tags
+                              .replace(/^(.*)/, '<p class="text-gray-700 leading-relaxed">$1</p>')
+                          }} 
+                        />
+                      ) : (
+                        <p className="text-gray-500 italic">Start typing to see preview...</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="mt-2 text-xs text-gray-500">
+                  <p>💡 Tips: Use the toolbar buttons above or type Markdown directly:</p>
+                  <div className="grid grid-cols-2 gap-2 mt-1">
+                    <span>**text** for bold</span>
+                    <span>*text* for italic</span>
+                    <span>## for headings</span>
+                    <span>- for lists</span>
+                  </div>
+                </div>
               </div>
 
               {/* Tags */}
@@ -584,15 +721,77 @@ export default function BlogManagement() {
                 <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
                   Tags
                 </label>
-                <input
-                  type="text"
-                  id="tags"
-                  value={formData.tags.join(', ')}
-                  onChange={(e) => setFormData({...formData, tags: e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="tag1, tag2, tag3"
-                />
-                <p className="text-xs text-gray-500 mt-1">Separate tags with commas</p>
+                <div className="space-y-2">
+                  {/* Tag display */}
+                  {formData.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {formData.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newTags = formData.tags.filter((_, i) => i !== index)
+                              setFormData({...formData, tags: newTags})
+                            }}
+                            className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-primary-600 hover:bg-primary-200 hover:text-primary-800"
+                          >
+                            <XMarkIcon className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Tag input */}
+                  <input
+                    type="text"
+                    id="tags"
+                    value={formData.tags.join(', ')}
+                    onChange={(e) => setFormData({...formData, tags: e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)})}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        const input = e.target as HTMLInputElement
+                        const newTag = input.value.trim()
+                        if (newTag && !formData.tags.includes(newTag)) {
+                          setFormData({...formData, tags: [...formData.tags, newTag]})
+                          input.value = ''
+                        }
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                    placeholder="Type a tag and press Enter, or separate multiple tags with commas"
+                  />
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>Separate tags with commas or press Enter</span>
+                    <span>{formData.tags.length} tags</span>
+                  </div>
+                  
+                  {/* Suggested tags */}
+                  <div className="flex flex-wrap gap-1">
+                    <span className="text-xs text-gray-500">Suggested:</span>
+                    {['ISIN', 'RTA', 'Compliance', 'SEBI', 'Corporate Actions', 'Demat', 'E-Voting'].map(suggestedTag => (
+                      !formData.tags.includes(suggestedTag) && (
+                        <button
+                          key={suggestedTag}
+                          type="button"
+                          onClick={() => {
+                            if (!formData.tags.includes(suggestedTag)) {
+                              setFormData({...formData, tags: [...formData.tags, suggestedTag]})
+                            }
+                          }}
+                          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        >
+                          + {suggestedTag}
+                        </button>
+                      )
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Form Actions */}

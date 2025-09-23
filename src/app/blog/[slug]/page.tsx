@@ -54,7 +54,7 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="pt-20 min-h-screen flex items-center justify-center">
+      <div className="pt-16 min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
@@ -62,7 +62,7 @@ export default function BlogPostPage() {
 
   if (!blog) {
     return (
-      <div className="pt-20 min-h-screen flex items-center justify-center">
+      <div className="pt-16 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist or has been removed.</p>
@@ -93,7 +93,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="pt-20">
+    <div className="pt-16">
       {/* Hero Section */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -140,9 +140,6 @@ export default function BlogPostPage() {
               <div className="flex items-center">
                 <ClockIcon className="h-4 w-4 mr-2" />
                 <span>{Math.ceil(blog.content.length / 1000)} min read</span>
-              </div>
-              <div className="flex items-center">
-                <span>{blog.views} views</span>
               </div>
             </div>
 
@@ -197,9 +194,28 @@ export default function BlogPostPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="prose prose-lg max-w-none"
           >
-            <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {blog.content}
-            </div>
+            <div 
+              className="text-gray-700 leading-relaxed space-y-4"
+              dangerouslySetInnerHTML={{ 
+                __html: blog.content
+                  // Handle headings first
+                  .replace(/^### (.*$)/gim, '<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">$1</h3>')
+                  .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
+                  .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-5">$1</h1>')
+                  // Handle bold and italic
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em class="italic text-gray-800">$1</em>')
+                  // Handle lists
+                  .replace(/^- (.*$)/gim, '<li class="ml-6 list-disc text-gray-700 mb-2">$1</li>')
+                  // Handle links
+                  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:text-primary-800 underline">$1</a>')
+                  // Handle line breaks and paragraphs
+                  .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed mb-4">')
+                  .replace(/\n/g, '<br>')
+                  // Wrap in paragraph tags
+                  .replace(/^(.*)/, '<p class="text-gray-700 leading-relaxed mb-4">$1</p>')
+              }} 
+            />
           </motion.article>
         </div>
       </section>

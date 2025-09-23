@@ -64,6 +64,7 @@ export default function Footer() {
                 <div><strong>CIN:</strong> U66190DL2024PTC431604</div>
                 <div><strong>SEBI Regn. No.:</strong> INR000004422</div>
                 <div><strong>NSDL ID:</strong> IN201177</div>
+                <div><strong>CDSL ID:</strong> 000510</div>
               </div>
             </motion.div>
           </div>

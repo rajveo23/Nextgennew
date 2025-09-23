@@ -15,14 +15,14 @@ import { AdminDataManager, Client } from '../../lib/adminData'
 const clientCategories = [
   {
     icon: BuildingOfficeIcon,
-    title: 'Listed Companies',
-    description: 'Serving major listed companies with comprehensive RTA services including ISIN creation, corporate actions, and shareholder management.',
-    count: '150+',
+    title: 'Bond and Debentures',
+    description: '100+ Bonds & Debentures ISIN creation and allied process from start to end, including to be listed/listed debentures',
+    count: '100+',
     color: 'from-blue-500 to-blue-700'
   },
   {
     icon: ChartBarIcon,
-    title: 'Private Companies',
+    title: 'Companies',
     description: 'Supporting private companies in their journey from incorporation to public listing with expert RTA guidance.',
     count: '1500+',
     color: 'from-green-500 to-green-700'
@@ -80,6 +80,8 @@ const achievements = [
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   useEffect(() => {
     const loadClients = async () => {
@@ -96,6 +98,18 @@ export default function ClientsPage() {
 
     loadClients()
   }, [])
+
+  // Pagination calculations
+  const totalPages = Math.ceil(clients.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentClients = clients.slice(startIndex, endIndex)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    // Scroll to table top
+    document.getElementById('client-table')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <div className="pt-16">
@@ -166,7 +180,7 @@ export default function ClientsPage() {
       </section>
 
       {/* Client Table */}
-      <section className="py-20 bg-white">
+      <section id="client-table" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center mb-16"
@@ -181,6 +195,11 @@ export default function ClientsPage() {
             <p className="text-xl text-gray-600">
               Companies we serve with comprehensive RTA solutions
             </p>
+            {clients.length > 0 && (
+              <p className="text-sm text-gray-500 mt-2">
+                Showing {startIndex + 1} to {Math.min(endIndex, clients.length)} of {clients.length} entries
+              </p>
+            )}
           </motion.div>
 
           {loading ? (
@@ -214,7 +233,7 @@ export default function ClientsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {clients.map((client, index) => (
+                    {currentClients.map((client, index) => (
                       <motion.tr
                         key={client.id}
                         className="hover:bg-gray-50 transition-colors duration-200"
@@ -246,6 +265,97 @@ export default function ClientsPage() {
               {clients.length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-gray-500 text-lg">No clients found</p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                  <div className="flex-1 flex justify-between sm:hidden">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">
+                        Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
+                        <span className="font-medium">{Math.min(endIndex, clients.length)}</span> of{' '}
+                        <span className="font-medium">{clients.length}</span> results
+                      </p>
+                    </div>
+                    <div>
+                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <button
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <span className="sr-only">Previous</span>
+                          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                        
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                          if (
+                            page === 1 ||
+                            page === totalPages ||
+                            (page >= currentPage - 2 && page <= currentPage + 2)
+                          ) {
+                            return (
+                              <button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                                  page === currentPage
+                                    ? 'z-10 bg-primary-50 border-primary-500 text-primary-600'
+                                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                                }`}
+                              >
+                                {page}
+                              </button>
+                            )
+                          } else if (
+                            page === currentPage - 3 ||
+                            page === currentPage + 3
+                          ) {
+                            return (
+                              <span
+                                key={page}
+                                className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                              >
+                                ...
+                              </span>
+                            )
+                          }
+                          return null
+                        })}
+                        
+                        <button
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <span className="sr-only">Next</span>
+                          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </nav>
+                    </div>
+                  </div>
                 </div>
               )}
             </motion.div>

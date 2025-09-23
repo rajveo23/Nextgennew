@@ -4,17 +4,22 @@ import './globals.css'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import PageTransitionProvider from '../components/PageTransitionProvider'
+import { generateMetadata as generateSEOMetadata, seoConfig } from '../lib/seo'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'NextGen Registry - SEBI Registered Registrar & Share Transfer Agent',
-  description: 'NextGen Registry offers best RTA services including ISIN creation, demat services, and e-voting events with fastest turnaround time in the industry.',
-  keywords: 'RTA, Registrar, Share Transfer Agent, ISIN, Demat, SEBI, NextGen Registry',
+  ...generateSEOMetadata(),
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
+  },
+  verification: {
+    google: 'your-google-verification-code', // Add your Google Search Console verification code
+  },
+  other: {
+    'google-site-verification': 'your-google-verification-code', // Add your verification code here
   },
 }
 
@@ -25,6 +30,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(seoConfig.structuredData),
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <Header />
         <PageTransitionProvider>
