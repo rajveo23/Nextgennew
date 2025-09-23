@@ -143,14 +143,6 @@ export default function AdminLogin() {
                 </motion.button>
               </div>
             </form>
-
-            <div className="mt-8 text-center">
-              <div className="text-xs text-gray-500 space-y-1">
-                <p>Demo Credentials:</p>
-                <p>Email: admin@nextgenregistry.com</p>
-                <p>Password: admin123</p>
-              </div>
-            </div>
           </motion.div>
         </div>
 

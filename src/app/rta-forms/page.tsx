@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   DocumentTextIcon, 
@@ -8,59 +9,36 @@ import {
   ShieldCheckIcon,
   UserGroupIcon,
   BanknotesIcon,
-  CloudArrowUpIcon
+  CloudArrowUpIcon,
+  FolderIcon
 } from '@heroicons/react/24/outline'
 
-const formCategories = [
-  {
-    icon: DocumentTextIcon,
-    title: 'ISIN Creation Forms',
-    description: 'Forms required for ISIN creation and listing processes',
-    color: 'from-blue-500 to-blue-700',
-    forms: [
-      { name: 'ISIN Application Form', type: 'PDF', size: '245 KB' },
-      { name: 'Company Details Form', type: 'PDF', size: '180 KB' },
-      { name: 'Auditor Certificate Format', type: 'PDF', size: '120 KB' },
-      { name: 'Board Resolution Format', type: 'DOC', size: '95 KB' }
-    ]
-  },
-  {
-    icon: UserGroupIcon,
-    title: 'Shareholder Services',
-    description: 'Forms for shareholder registration and services',
-    color: 'from-green-500 to-green-700',
-    forms: [
-      { name: 'Shareholder Registration Form', type: 'PDF', size: '320 KB' },
-      { name: 'Address Change Request', type: 'PDF', size: '150 KB' },
-      { name: 'Nomination Form', type: 'PDF', size: '200 KB' },
-      { name: 'Transmission Form', type: 'PDF', size: '180 KB' }
-    ]
-  },
-  {
-    icon: BanknotesIcon,
-    title: 'Corporate Actions',
-    description: 'Forms related to dividends, bonus, and other corporate actions',
-    color: 'from-purple-500 to-purple-700',
-    forms: [
-      { name: 'Dividend Claim Form', type: 'PDF', size: '165 KB' },
-      { name: 'Bonus Issue Form', type: 'PDF', size: '140 KB' },
-      { name: 'Rights Issue Form', type: 'PDF', size: '190 KB' },
-      { name: 'Corporate Action Notice', type: 'PDF', size: '110 KB' }
-    ]
-  },
-  {
-    icon: ClipboardDocumentListIcon,
-    title: 'Compliance Forms',
-    description: 'Regulatory compliance and reporting forms',
-    color: 'from-orange-500 to-orange-700',
-    forms: [
-      { name: 'Annual Return Form', type: 'PDF', size: '280 KB' },
-      { name: 'Compliance Certificate', type: 'PDF', size: '130 KB' },
-      { name: 'SEBI Reporting Form', type: 'PDF', size: '220 KB' },
-      { name: 'Depository Interface Form', type: 'PDF', size: '175 KB' }
-    ]
-  }
-]
+// Icon mapping for form categories
+const iconMap = {
+  DocumentTextIcon,
+  UserGroupIcon,
+  BanknotesIcon,
+  ClipboardDocumentListIcon,
+  FolderIcon
+}
+
+interface Form {
+  id: string
+  name: string
+  file_type: string
+  file_size: string
+  file_url?: string
+  file_path?: string
+}
+
+interface FormCategory {
+  id: string
+  title: string
+  description: string
+  icon_name: string
+  color_gradient: string
+  forms: Form[]
+}
 
 const documents = [
   {
@@ -110,9 +88,44 @@ const instructions = [
 ]
 
 export default function RTAFormsPage() {
-  const handleDownload = async (formName: string) => {
+  const [formCategories, setFormCategories] = useState<FormCategory[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchFormCategories()
+  }, [])
+
+  const fetchFormCategories = async () => {
     try {
-      // Create proper filename
+      const response = await fetch('/api/form-categories-with-forms')
+      const data = await response.json()
+      setFormCategories(data)
+    } catch (error) {
+      console.error('Error fetching form categories:', error)
+      // Fallback to empty array if API fails
+      setFormCategories([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = async (formName: string, fileUrl?: string) => {
+    try {
+      // If we have a file URL from the database, use it directly
+      if (fileUrl) {
+        const link = document.createElement('a')
+        link.href = fileUrl
+        link.download = formName
+        link.target = '_blank'
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        return
+      }
+
+      // Fallback: try to find file by name
       const fileName = formName.replace(/\s+/g, '_').toLowerCase() + '.pdf'
       const formPath = `/forms/${fileName}`
       
@@ -310,63 +323,73 @@ startxref
             </p>
           </motion.div>
 
-          <div className="space-y-12">
-            {formCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.title}
-                className="card p-8"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex items-center mb-6">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-lg flex items-center justify-center mr-4`}>
-                    <category.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
-                    <p className="text-gray-600">{category.description}</p>
-                  </div>
-                </div>
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            </div>
+          ) : (
+            <div className="space-y-12">
+              {formCategories.map((category: FormCategory, categoryIndex: number) => {
+                const IconComponent = iconMap[category.icon_name as keyof typeof iconMap] || DocumentTextIcon
+                
+                return (
+                  <motion.div
+                    key={category.id}
+                    className="card p-8"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="flex items-center mb-6">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${category.color_gradient} rounded-lg flex items-center justify-center mr-4`}>
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
+                        <p className="text-gray-600">{category.description}</p>
+                      </div>
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {category.forms.map((form, formIndex) => (
-                    <motion.div
-                      key={form.name}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all duration-200 group"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4, delay: formIndex * 0.05 }}
-                      viewport={{ once: true }}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <DocumentTextIcon className="w-8 h-8 text-gray-400 group-hover:text-primary-500 transition-colors duration-200" />
-                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          {form.type}
-                        </span>
-                      </div>
-                      
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm leading-tight">
-                        {form.name}
-                      </h4>
-                      
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">{form.size}</span>
-                        <button
-                          onClick={() => handleDownload(form.name)}
-                          className="flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors duration-200"
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {category.forms.map((form: Form, formIndex: number) => (
+                        <motion.div
+                          key={form.id}
+                          className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all duration-200 group"
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.4, delay: formIndex * 0.05 }}
+                          viewport={{ once: true }}
                         >
-                          <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
-                          Download
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                          <div className="flex items-start justify-between mb-3">
+                            <DocumentTextIcon className="w-8 h-8 text-gray-400 group-hover:text-primary-500 transition-colors duration-200" />
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                              {form.file_type}
+                            </span>
+                          </div>
+                          
+                          <h4 className="font-semibold text-gray-900 mb-2 text-sm leading-tight">
+                            {form.name}
+                          </h4>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">{form.file_size}</span>
+                            <button
+                              onClick={() => handleDownload(form.name, form.file_url)}
+                              className="flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors duration-200"
+                            >
+                              <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
+                              Download
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 

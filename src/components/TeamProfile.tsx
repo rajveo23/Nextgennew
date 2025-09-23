@@ -58,7 +58,7 @@ export default function TeamProfile() {
                 {/* Profile Image */}
                 <div className="flex-shrink-0">
                   <div className="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white text-4xl font-bold group-hover:scale-105 transition-transform duration-300">
-                    {member.name.split(' ').map(n => n[0]).join('')}
+                    {member.name === 'Mr. Shaivi Bansal' || member.name === 'Mr. Shivansh Bansal' ? 'SB' : member.name.split(' ').map(n => n[0]).join('')}
                   </div>
                 </div>
 

@@ -1,5 +1,35 @@
 import { supabase, supabaseAdmin, isSupabaseConfigured, Client, BlogPost, FAQ, ContactSubmission, NewsletterSubscription } from './supabase'
 
+// Supabase Storage bucket name for forms
+const FORMS_BUCKET = 'forms'
+
+// Form management types
+export interface FormCategory {
+  id: string
+  title: string
+  description: string
+  icon_name: string
+  color_gradient: string
+  order_index: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface Form {
+  id: string
+  category_id: string
+  name: string
+  file_type: string
+  file_size: string
+  file_url?: string
+  file_path?: string
+  order_index: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 // Use supabase client if available
 const db = supabase || supabaseAdmin
 
@@ -302,10 +332,254 @@ export class DatabaseService {
     if (error) throw error
   }
 
-  // Initialize data (for migration purposes)
+  // Form Category operations
+  static async getFormCategories(): Promise<FormCategory[]> {
+    this.checkConfiguration()
+    const { data, error } = await supabase
+      .from('form_categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async getAllFormCategories(): Promise<FormCategory[]> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('form_categories')
+      .select('*')
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async createFormCategory(category: Omit<FormCategory, 'id' | 'created_at' | 'updated_at'>): Promise<FormCategory> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('form_categories')
+      .insert(category)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async updateFormCategory(id: string, updates: Partial<FormCategory>): Promise<FormCategory> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('form_categories')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async deleteFormCategory(id: string): Promise<void> {
+    this.checkConfiguration()
+    const { error } = await db
+      .from('form_categories')
+      .update({ is_active: false })
+      .eq('id', id)
+
+    if (error) throw error
+  }
+
+  // Form operations
+  static async getForms(): Promise<Form[]> {
+    this.checkConfiguration()
+    const { data, error } = await supabase
+      .from('forms')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async getFormsByCategory(categoryId: string): Promise<Form[]> {
+    this.checkConfiguration()
+    const { data, error } = await supabase
+      .from('forms')
+      .select('*')
+      .eq('category_id', categoryId)
+      .eq('is_active', true)
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async getAllForms(): Promise<Form[]> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('forms')
+      .select('*')
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async createForm(form: Omit<Form, 'id' | 'created_at' | 'updated_at'>): Promise<Form> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('forms')
+      .insert(form)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async updateForm(id: string, updates: Partial<Form>): Promise<Form> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('forms')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async deleteForm(id: string): Promise<void> {
+    this.checkConfiguration()
+    const { error } = await db
+      .from('forms')
+      .update({ is_active: false })
+      .eq('id', id)
+
+    if (error) throw error
+  }
+
+  // Get form categories with their forms
+  static async getFormCategoriesWithForms(): Promise<(FormCategory & { forms: Form[] })[]> {
+    this.checkConfiguration()
+    const { data: categories, error: categoriesError } = await supabase
+      .from('form_categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index')
+
+    if (categoriesError) throw categoriesError
+
+    const categoriesWithForms = await Promise.all(
+      (categories || []).map(async (category: FormCategory) => {
+        const { data: forms, error: formsError } = await supabase
+          .from('forms')
+          .select('*')
+          .eq('category_id', category.id)
+          .eq('is_active', true)
+          .order('order_index')
+
+        if (formsError) throw formsError
+
+        return {
+          ...category,
+          forms: forms || []
+        }
+      })
+    )
+
+    return categoriesWithForms
+  }
+
+  // File upload to Supabase Storage
+  static async uploadFormFile(file: File, fileName: string): Promise<{ url: string; path: string } | null> {
+    this.checkConfiguration()
+    try {
+      const { data, error } = await supabase.storage
+        .from(FORMS_BUCKET)
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (error) {
+        console.error('Upload error:', error)
+        return null
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from(FORMS_BUCKET)
+        .getPublicUrl(fileName)
+
+      return {
+        url: urlData.publicUrl,
+        path: data.path
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      return null
+    }
+  }
+
+  // Delete file from Supabase Storage
+  static async deleteFormFile(filePath: string): Promise<boolean> {
+    this.checkConfiguration()
+    try {
+      const { error } = await supabase.storage
+        .from(FORMS_BUCKET)
+        .remove([filePath])
+
+      if (error) {
+        console.error('Delete file error:', error)
+        return false
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error deleting file:', error)
+      return false
+    }
+  }
+
+  // Initialize data and create storage bucket if needed
   static async initializeData(): Promise<boolean> {
     try {
-      // This can be used to seed initial data if needed
+      // Check if forms bucket exists, create if not
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
+      
+      if (bucketsError) {
+        console.error('Error listing buckets:', bucketsError)
+        return false
+      }
+
+      const formsBucket = buckets?.find((bucket: any) => bucket.name === FORMS_BUCKET)
+      
+      if (!formsBucket) {
+        console.log('Creating forms bucket...')
+        const { error: createError } = await supabase.storage.createBucket(FORMS_BUCKET, {
+          public: true,
+          allowedMimeTypes: [
+            'application/pdf', 
+            'application/msword', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/zip',
+            'application/x-zip-compressed'
+          ]
+        })
+        
+        if (createError) {
+          console.error('Error creating bucket:', createError)
+          return false
+        }
+      }
+
       console.log('Database initialized successfully')
       return true
     } catch (error) {
