@@ -89,10 +89,15 @@ const instructions = [
   }
 ]
 
+// Force dynamic rendering for real-time data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default function RTAFormsPage() {
   const [formCategories, setFormCategories] = useState<FormCategory[]>([])
   const [importantDocuments, setImportantDocuments] = useState<FormCategory[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     fetchFormCategories()
@@ -101,7 +106,15 @@ export default function RTAFormsPage() {
 
   const fetchFormCategories = async () => {
     try {
-      const response = await fetch('/api/form-categories-with-forms')
+      // Add cache busting parameter
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/form-categories-with-forms?t=${timestamp}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      })
       const data = await response.json()
       setFormCategories(data)
     } catch (error) {
@@ -115,7 +128,15 @@ export default function RTAFormsPage() {
 
   const fetchImportantDocuments = async () => {
     try {
-      const response = await fetch('/api/important-documents')
+      // Add cache busting parameter
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/important-documents?t=${timestamp}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      })
       const data = await response.json()
       setImportantDocuments(data)
     } catch (error) {
@@ -156,6 +177,18 @@ export default function RTAFormsPage() {
           ]
         }
       ])
+    }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    try {
+      await Promise.all([
+        fetchFormCategories(),
+        fetchImportantDocuments()
+      ])
+    } finally {
+      setRefreshing(false)
     }
   }
 
@@ -384,12 +417,26 @@ startxref
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Form <span className="text-gradient">Categories</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Organized forms by service category for easy access
-            </p>
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Form <span className="text-gradient">Categories</span>
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Organized forms by service category for easy access
+                </p>
+              </div>
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+              >
+                <svg className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
+            </div>
           </motion.div>
 
           {loading ? (
