@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,10 +17,6 @@ const nextConfig = {
   swcMinify: true,
   // Enable React strict mode
   reactStrictMode: true,
-  // Ensure proper module resolution
-  experimental: {
-    esmExternals: false,
-  },
 }
 
 module.exports = nextConfig
