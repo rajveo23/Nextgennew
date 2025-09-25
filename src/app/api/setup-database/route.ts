@@ -10,7 +10,6 @@ export async function POST() {
       }, { status: 500 })
     }
 
-    console.log('Setting up database tables...')
 
     // Create form_categories table
     const createCategoriesSQL = `

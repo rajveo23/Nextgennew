@@ -72,7 +72,6 @@ export default function FormManagement() {
 
   const fetchCategories = async () => {
     try {
-      console.log('Fetching categories...')
       const response = await fetch('/api/form-categories-with-forms')
       
       if (!response.ok) {
@@ -80,7 +79,6 @@ export default function FormManagement() {
       }
       
       const data = await response.json()
-      console.log('Categories fetched:', data)
       setCategories(data)
     } catch (error) {
       console.error('Error fetching categories:', error)
@@ -93,7 +91,6 @@ export default function FormManagement() {
   const handleCreateCategory = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      console.log('Creating category:', categoryForm)
       const response = await fetch('/api/form-categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,7 +99,6 @@ export default function FormManagement() {
 
       if (response.ok) {
         const result = await response.json()
-        console.log('Category created:', result)
         await fetchCategories()
         setShowCategoryModal(false)
         resetCategoryForm()
@@ -174,7 +170,6 @@ export default function FormManagement() {
         setUploadedFile(result)
         
         // Auto-fill form fields with uploaded file info
-        console.log('Upload result:', result)
         setFormForm(prev => ({
           ...prev,
           name: prev.name || result.originalName.replace(/\.[^/.]+$/, ''), // Remove extension
@@ -198,7 +193,6 @@ export default function FormManagement() {
   const handleCreateForm = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      console.log('Creating form:', formForm)
       const response = await fetch('/api/forms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -207,7 +201,6 @@ export default function FormManagement() {
 
       if (response.ok) {
         const result = await response.json()
-        console.log('Form created:', result)
         await fetchCategories()
         setShowFormModal(false)
         resetFormForm()
@@ -223,7 +216,6 @@ export default function FormManagement() {
     if (!editingForm) return
 
     try {
-      console.log('Updating form:', editingForm.id, formForm)
       const response = await fetch(`/api/forms/${editingForm.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -231,7 +223,6 @@ export default function FormManagement() {
       })
 
       if (response.ok) {
-        console.log('Form updated successfully')
         await fetchCategories()
         setShowFormModal(false)
         setEditingForm(null)
@@ -254,7 +245,6 @@ export default function FormManagement() {
     }
 
     try {
-      console.log('Deleting form:', id)
       // Find the form to get file info for deletion
       const formToDelete = categories
         .flatMap(cat => cat.forms)
@@ -265,14 +255,12 @@ export default function FormManagement() {
       })
 
       if (response.ok) {
-        console.log('Form deleted successfully')
         // If form had a file, try to delete it
         if (formToDelete?.file_path) {
           try {
             await fetch(`/api/delete-form-file?filePath=${encodeURIComponent(formToDelete.file_path)}`, {
               method: 'DELETE'
             })
-            console.log('Associated file deleted')
           } catch (fileError) {
             console.warn('Could not delete associated file:', fileError)
           }

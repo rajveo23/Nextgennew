@@ -194,16 +194,13 @@ export default function RTAFormsPage() {
 
   const handleDownload = async (formName: string, fileUrl?: string) => {
     try {
-      console.log('Attempting download:', { formName, fileUrl })
       
       // If we have a file URL from the database, use it directly
       if (fileUrl && fileUrl.trim() !== '') {
-        console.log('Using file URL:', fileUrl)
         
         // Test if URL is accessible
         try {
           const testResponse = await fetch(fileUrl, { method: 'HEAD' })
-          console.log('URL test response:', testResponse.status)
           
           if (testResponse.ok) {
             const link = document.createElement('a')
@@ -215,16 +212,12 @@ export default function RTAFormsPage() {
             link.click()
             document.body.removeChild(link)
             
-            console.log('Download initiated successfully')
             return
           } else {
-            console.warn('URL not accessible, status:', testResponse.status)
           }
         } catch (urlError) {
-          console.error('URL test failed:', urlError)
         }
       } else {
-        console.log('No file URL provided')
       }
 
       // Fallback: try to find file by name
@@ -417,26 +410,12 @@ startxref
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Form <span className="text-gradient">Categories</span>
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Organized forms by service category for easy access
-                </p>
-              </div>
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
-              >
-                <svg className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                {refreshing ? 'Refreshing...' : 'Refresh'}
-              </button>
-            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Form <span className="text-gradient">Categories</span>
+            </h2>
+            <p className="text-xl text-gray-600">
+              Organized forms by service category for easy access
+            </p>
           </motion.div>
 
           {loading ? (

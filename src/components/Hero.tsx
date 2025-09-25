@@ -2,8 +2,40 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+// Counter Animation Hook
+const useCounter = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0)
+  
+  useEffect(() => {
+    let startTime: number
+    let animationFrame: number
+    
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / duration, 1)
+      
+      setCount(Math.floor(progress * end))
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate)
+      }
+    }
+    
+    animationFrame = requestAnimationFrame(animate)
+    
+    return () => cancelAnimationFrame(animationFrame)
+  }, [end, duration])
+  
+  return count
+}
 
 export default function Hero() {
+  const yearsCount = useCounter(27, 2000)
+  const clientsCount = useCounter(1500, 2500)
+  const accuracyCount = useCounter(99.9, 2000)
+  
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background with gradient */}
@@ -37,84 +69,229 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h1 
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <motion.div 
+            className="text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              NextGen RTA<br />
+              <span className="text-green-400">SEBI Registered</span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-lg md:text-xl text-gray-200 mb-8 max-w-lg"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Registrar & Share Transfer Agent specializing in ISIN generation, demat services, and e-voting events with unmatched speed and accuracy
+            </motion.p>
+            
+            {/* CTA Buttons */}
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link href="/contact" className="px-8 py-4 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors text-center">
+                Get Started
+              </Link>
+              <Link href="/about" className="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-colors text-center">
+                Learn More
+              </Link>
+            </motion.div>
+
+            {/* Stats Row */}
+            <motion.div 
+              className="grid grid-cols-4 gap-6 pt-8 border-t border-white/20"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-2xl font-bold text-green-400">{yearsCount}+</span>
+                </div>
+                <p className="text-xs text-gray-300">Years Experience</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span className="text-2xl font-bold text-green-400">{clientsCount}+</span>
+                </div>
+                <p className="text-xs text-gray-300">Clients Served</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-2xl font-bold text-green-400">{accuracyCount}%</span>
+                </div>
+                <p className="text-xs text-gray-300">Accuracy Rate</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-2xl font-bold text-green-400">24/7</span>
+                </div>
+                <p className="text-xs text-gray-300">Support Available</p>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right Illustration */}
+          <motion.div 
+            className="hidden lg:flex justify-center items-center"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            NextGen Share Registry Pvt Ltd
-            <br />
-            <span className="text-secondary-300">
-              SEBI Registered
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Registrar & Share Transfer Agent for PAN India's Shareholders
-            <br />
-            <span className="text-lg text-gray-300 mt-2 block">
-              Specializing in ISIN generation, demat services, and e-voting events with unmatched speed and accuracy
-            </span>
-          </motion.p>
+            <div className="relative">
+              {/* Main Container */}
+              <div className="relative z-10 flex items-center justify-center">
+                {/* Clipboard */}
+                <motion.div 
+                  className="relative mr-8"
+                  animate={{ 
+                    rotateZ: [-2, 2, -2],
+                    y: [0, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  {/* Clipboard Background */}
+                  <div className="w-48 h-64 bg-white/95 rounded-lg shadow-2xl border-4 border-primary-600 relative transform rotate-[-8deg]">
+                    {/* Clipboard Clip */}
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-primary-600 rounded-t-lg shadow-lg"></div>
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-12 h-4 bg-primary-700 rounded-sm"></div>
+                    
+                    {/* Document Content */}
+                    <div className="p-6 pt-8">
+                      {/* Header Lines */}
+                      <div className="space-y-3 mb-6">
+                        <div className="h-2 bg-gradient-to-r from-blue-200 to-blue-300 rounded w-3/4"></div>
+                        <div className="h-2 bg-gradient-to-r from-blue-200 to-blue-300 rounded w-full"></div>
+                        <div className="h-2 bg-gradient-to-r from-blue-200 to-blue-300 rounded w-5/6"></div>
+                      </div>
+                      
+                      {/* Content Box */}
+                      <div className="w-16 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded mb-4 shadow-sm"></div>
+                      <div className="h-2 bg-gradient-to-r from-blue-200 to-blue-300 rounded w-2/3 mb-2"></div>
+                      <div className="h-2 bg-gradient-to-r from-blue-200 to-blue-300 rounded w-1/2"></div>
+                      
+                      {/* Checkmark */}
+                      <div className="absolute bottom-6 right-6">
+                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
 
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Link href="/contact" className="btn-secondary text-lg px-8 py-4">
-              Get Started
-            </Link>
-            <Link href="/about" className="btn-outline text-white border-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
-              Learn More
-            </Link>
+                {/* Mobile Phone */}
+                <motion.div 
+                  className="relative"
+                  animate={{ 
+                    rotateZ: [3, -3, 3],
+                    y: [0, 8, 0]
+                  }}
+                  transition={{ 
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  {/* Phone Frame */}
+                  <div className="w-32 h-56 bg-gradient-to-b from-primary-600 to-primary-700 rounded-2xl shadow-2xl relative overflow-hidden transform rotate-[12deg]">
+                    {/* Screen */}
+                    <div className="absolute inset-2 bg-white rounded-xl overflow-hidden shadow-inner">
+                      {/* Status Bar */}
+                      <div className="h-6 bg-gradient-to-r from-gray-50 to-gray-100"></div>
+                      
+                      {/* Chart Content */}
+                      <div className="p-4 h-full">
+                        {/* Chart Bars */}
+                        <div className="flex items-end justify-center space-x-2 h-20 mb-4">
+                          <motion.div 
+                            className="w-4 bg-gradient-to-t from-blue-400 to-blue-300 rounded-t"
+                            animate={{ height: [32, 40, 32] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                          />
+                          <motion.div 
+                            className="w-4 bg-gradient-to-t from-blue-500 to-blue-400 rounded-t"
+                            animate={{ height: [48, 56, 48] }}
+                            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                          />
+                          <motion.div 
+                            className="w-4 bg-gradient-to-t from-blue-600 to-blue-500 rounded-t"
+                            animate={{ height: [64, 72, 64] }}
+                            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                          />
+                          <motion.div 
+                            className="w-4 bg-gradient-to-t from-blue-500 to-blue-400 rounded-t"
+                            animate={{ height: [40, 48, 40] }}
+                            transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                          />
+                        </div>
+                        
+                        {/* Growth Arrow */}
+                        <div className="flex justify-center">
+                          <motion.div
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Home Button */}
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-2 bg-primary-800 rounded-full"></div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Dollar Sign Circle - Positioned like in reference */}
+              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-green-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white z-20">
+                <span className="text-3xl font-bold text-white">$</span>
+              </div>
+              
+              {/* Background Decorations */}
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-green-400/10 rounded-full"></div>
+              <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary-400/10 rounded-full"></div>
+              <div className="absolute top-1/2 -right-4 w-16 h-16 bg-secondary-400/10 rounded-full"></div>
+            </div>
           </motion.div>
-
-          <motion.div 
-            className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-secondary-300 mb-2">27+</div>
-              <div className="text-gray-300">Years of Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-secondary-300 mb-2">PAN India</div>
-              <div className="text-gray-300">Service Coverage</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-secondary-300 mb-2">SEBI</div>
-              <div className="text-gray-300">Registered & Compliant</div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/70 rounded-full mt-2"></div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

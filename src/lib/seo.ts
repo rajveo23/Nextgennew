@@ -135,6 +135,7 @@ export const generateMetadata = (page?: {
     : seoConfig.siteUrl
 
   return {
+    metadataBase: new URL(seoConfig.siteUrl),
     title,
     description,
     keywords: keywords.join(', '),

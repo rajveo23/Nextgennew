@@ -16,13 +16,15 @@ import {
   XMarkIcon,
   ArrowRightOnRectangleIcon,
   BuildingOfficeIcon,
-  ClipboardDocumentListIcon
+  ClipboardDocumentListIcon,
+  RectangleGroupIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
   { name: 'Blog Management', href: '/admin/blogs', icon: DocumentTextIcon },
   { name: 'Client Management', href: '/admin/clients', icon: BuildingOfficeIcon },
+  { name: 'Client Logos', href: '/admin/client-logos', icon: RectangleGroupIcon },
   { name: 'Form Management', href: '/admin/forms', icon: ClipboardDocumentListIcon },
   { name: 'Image Gallery', href: '/admin/images', icon: PhotoIcon },
   { name: 'FAQ Management', href: '/admin/faq', icon: QuestionMarkCircleIcon },

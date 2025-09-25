@@ -77,26 +77,52 @@ const achievements = [
   }
 ]
 
+interface ClientLogo {
+  id: string
+  company_name: string
+  company_subtitle?: string
+  logo_url?: string
+  logo_path?: string
+  website_url?: string
+  order_index: number
+  is_active: boolean
+}
+
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([])
+  const [clientLogos, setClientLogos] = useState<ClientLogo[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
   useEffect(() => {
-    const loadClients = async () => {
+    const loadData = async () => {
       try {
+        // Load clients
         await AdminDataManager.initializeData()
         const clientData: Client[] = await AdminDataManager.getClients()
         setClients(clientData.filter((client: Client) => client.isActive))
+
+        // Load client logos
+        const logosResponse = await fetch('/api/client-logos', {
+          cache: 'no-cache',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
+        })
+        if (logosResponse.ok) {
+          const logosData = await logosResponse.json()
+          setClientLogos(logosData)
+        }
       } catch (error) {
-        console.error('Error loading clients:', error)
+        console.error('Error loading data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadClients()
+    loadData()
   }, [])
 
   // Pagination calculations
@@ -179,6 +205,78 @@ export default function ClientsPage() {
         </div>
       </section>
 
+      {/* Some of Our Esteemed Clients */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Some Of Our <span className="text-gradient">Esteemed Clients</span>
+            </h2>
+            <p className="text-xl text-gray-600">
+              Trusted partnerships with leading companies across industries
+            </p>
+          </motion.div>
+
+          {/* Client Logos Grid */}
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            </div>
+          ) : clientLogos.length > 0 ? (
+            <motion.div 
+              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              {clientLogos.map((logo, index) => (
+                <motion.div 
+                  key={logo.id}
+                  className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center justify-center h-24 cursor-pointer"
+                  whileHover={{ scale: 1.05 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  onClick={() => {
+                    if (logo.website_url) {
+                      window.open(logo.website_url, '_blank', 'noopener,noreferrer')
+                    }
+                  }}
+                >
+                  {logo.logo_url ? (
+                    <img 
+                      src={logo.logo_url} 
+                      alt={logo.company_name}
+                      className="max-h-16 max-w-full object-contain"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-800">{logo.company_name}</div>
+                      {logo.company_subtitle && (
+                        <div className="text-xs text-gray-500">{logo.company_subtitle}</div>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No client logos available</p>
+              <p className="text-sm text-gray-400 mt-2">Add client logos through the admin panel</p>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Client Table */}
       <section id="client-table" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -195,11 +293,6 @@ export default function ClientsPage() {
             <p className="text-xl text-gray-600">
               Companies we serve with comprehensive RTA solutions
             </p>
-            {clients.length > 0 && (
-              <p className="text-sm text-gray-500 mt-2">
-                Showing {startIndex + 1} to {Math.min(endIndex, clients.length)} of {clients.length} entries
-              </p>
-            )}
           </motion.div>
 
           {loading ? (
@@ -289,11 +382,6 @@ export default function ClientsPage() {
                   </div>
                   <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
-                        <span className="font-medium">{Math.min(endIndex, clients.length)}</span> of{' '}
-                        <span className="font-medium">{clients.length}</span> results
-                      </p>
                     </div>
                     <div>
                       <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">

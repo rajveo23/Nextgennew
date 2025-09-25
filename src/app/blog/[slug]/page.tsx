@@ -24,14 +24,11 @@ export default function BlogPostPage() {
   useEffect(() => {
     const loadBlog = async () => {
       if (slug) {
-        console.log('Loading blog with slug:', slug)
         await AdminDataManager.initializeData()
         const blogs: BlogPost[] = await AdminDataManager.getBlogs()
-        console.log('Available blogs:', blogs.map((b: BlogPost) => ({ id: b.id, title: b.title, slug: b.slug, status: b.status })))
         
         // Find the blog by slug
         const foundBlog = blogs.find((b: BlogPost) => b.slug === slug && b.status === 'published')
-        console.log('Found blog:', foundBlog)
         setBlog(foundBlog || null)
         
         // Get related blogs (same category, excluding current)

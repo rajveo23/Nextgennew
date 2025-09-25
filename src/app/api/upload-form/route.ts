@@ -46,18 +46,14 @@ export async function POST(request: NextRequest) {
     const fileName = `${timestamp}_${originalName}`
 
     // Initialize database and create bucket if needed
-    console.log('Initializing database and storage...')
     const initResult = await DatabaseService.initializeData()
     if (!initResult) {
-      console.warn('Database initialization failed, but continuing...')
     }
 
     // Upload to Supabase Storage
-    console.log('Uploading file to storage:', fileName)
     const uploadResult = await DatabaseService.uploadFormFile(file, fileName)
     
     if (!uploadResult) {
-      console.error('Upload failed - no result returned')
       return NextResponse.json(
         { error: 'Failed to upload file to storage. Please check if Supabase is configured correctly.' },
         { status: 500 }

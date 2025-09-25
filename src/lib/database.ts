@@ -31,6 +31,19 @@ export interface Form {
   updated_at: string
 }
 
+export interface ClientLogo {
+  id: string
+  company_name: string
+  company_subtitle?: string
+  logo_url?: string
+  logo_path?: string
+  website_url?: string
+  order_index: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 // Use supabaseAdmin for server-side operations, supabase for client-side
 const db = supabaseAdmin || supabase
 
@@ -363,7 +376,6 @@ export class DatabaseService {
   static async createFormCategory(category: Omit<FormCategory, 'id' | 'created_at' | 'updated_at'>): Promise<FormCategory> {
     this.checkConfiguration()
     
-    console.log('Creating form category with data:', category)
     
     const { data, error } = await db
       .from('form_categories')
@@ -376,7 +388,6 @@ export class DatabaseService {
       throw new Error(`Failed to create form category: ${error.message}`)
     }
     
-    console.log('Form category created successfully:', data)
     return data
   }
 
@@ -407,7 +418,6 @@ export class DatabaseService {
 
     // Delete all forms in this category
     if (forms && forms.length > 0) {
-      console.log(`Deleting ${forms.length} forms in category ${id}`)
       for (const form of forms) {
         try {
           await this.deleteForm(form.id)
@@ -425,7 +435,6 @@ export class DatabaseService {
 
     if (error) throw error
     
-    console.log('Form category deleted successfully:', id)
   }
 
   // Form operations
@@ -468,7 +477,6 @@ export class DatabaseService {
   static async createForm(form: Omit<Form, 'id' | 'created_at' | 'updated_at'>): Promise<Form> {
     this.checkConfiguration()
     
-    console.log('Creating form with data:', form)
     
     const { data, error } = await db
       .from('forms')
@@ -481,7 +489,6 @@ export class DatabaseService {
       throw new Error(`Failed to create form: ${error.message}`)
     }
     
-    console.log('Form created successfully:', data)
     return data
   }
 
@@ -516,7 +523,6 @@ export class DatabaseService {
     if (form?.file_path) {
       try {
         await this.deleteFormFile(form.file_path)
-        console.log('Associated file deleted from storage:', form.file_path)
       } catch (fileError) {
         console.warn('Could not delete file from storage:', fileError)
         // Continue with database deletion even if file deletion fails
@@ -531,7 +537,6 @@ export class DatabaseService {
 
     if (error) throw error
     
-    console.log('Form deleted successfully:', id)
   }
 
   // Get form categories with their forms
@@ -566,6 +571,86 @@ export class DatabaseService {
     return categoriesWithForms
   }
 
+  // Client Logo operations
+  static async getClientLogos(): Promise<ClientLogo[]> {
+    this.checkConfiguration()
+    const { data, error } = await supabase
+      .from('client_logos')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async getAllClientLogos(): Promise<ClientLogo[]> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('client_logos')
+      .select('*')
+      .order('order_index')
+
+    if (error) throw error
+    return data || []
+  }
+
+  static async createClientLogo(logo: Omit<ClientLogo, 'id' | 'created_at' | 'updated_at'>): Promise<ClientLogo> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('client_logos')
+      .insert({
+        ...logo,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async updateClientLogo(id: string, updates: Partial<Omit<ClientLogo, 'id' | 'created_at'>>): Promise<ClientLogo> {
+    this.checkConfiguration()
+    const { data, error } = await db
+      .from('client_logos')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  static async deleteClientLogo(id: string): Promise<void> {
+    this.checkConfiguration()
+    
+    // First get the logo to check if it has a file to delete
+    const { data: logo } = await db
+      .from('client_logos')
+      .select('logo_path')
+      .eq('id', id)
+      .single()
+
+    // Delete the logo record
+    const { error } = await db
+      .from('client_logos')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+
+    // Delete the logo file if it exists
+    if (logo?.logo_path) {
+      await this.deleteFormFile(logo.logo_path)
+    }
+  }
+
   // File upload to Supabase Storage
   static async uploadFormFile(file: File, fileName: string): Promise<{ url: string; path: string } | null> {
     this.checkConfiguration()
@@ -582,7 +667,6 @@ export class DatabaseService {
         console.error('Upload error:', error)
         // If bucket doesn't exist, try to create it
         if (error.message?.includes('Bucket not found')) {
-          console.log('Bucket not found, attempting to create...')
           await this.initializeData()
           // Retry upload
           const { data: retryData, error: retryError } = await supabaseAdmin.storage
@@ -639,7 +723,6 @@ export class DatabaseService {
         return false
       }
 
-      console.log('File deleted successfully:', filePath)
       return true
     } catch (error) {
       console.error('Error deleting file:', error)
@@ -666,7 +749,6 @@ export class DatabaseService {
       const formsBucket = buckets?.find((bucket: any) => bucket.name === FORMS_BUCKET)
       
       if (!formsBucket) {
-        console.log('Creating forms bucket...')
         const { error: createError } = await supabaseAdmin.storage.createBucket(FORMS_BUCKET, {
           public: true,
           allowedMimeTypes: [
@@ -685,12 +767,9 @@ export class DatabaseService {
           return false
         }
         
-        console.log('Forms bucket created successfully')
       } else {
-        console.log('Forms bucket already exists')
       }
 
-      console.log('Database initialized successfully')
       return true
     } catch (error) {
       console.error('Error initializing database:', error)
