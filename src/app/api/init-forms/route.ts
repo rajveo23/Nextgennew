@@ -27,6 +27,7 @@ export async function POST() {
             icon_name: 'DocumentTextIcon',
             color_gradient: 'from-blue-500 to-blue-700',
             order_index: 1,
+            is_important_document: false,
             is_active: true
           },
           {
@@ -35,6 +36,7 @@ export async function POST() {
             icon_name: 'UserGroupIcon',
             color_gradient: 'from-green-500 to-green-700',
             order_index: 2,
+            is_important_document: false,
             is_active: true
           }
         ]
