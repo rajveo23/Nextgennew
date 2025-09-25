@@ -6,10 +6,22 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJ
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = () => {
-  return process.env.NEXT_PUBLIC_SUPABASE_URL && 
+  const configured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
          !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
          !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('placeholder')
+  
+  if (!configured) {
+    console.error('Supabase configuration missing:', {
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'SET' : 'MISSING',
+      anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'SET' : 'MISSING',
+      serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'MISSING',
+      urlHasPlaceholder: process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('placeholder'),
+      keyHasPlaceholder: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.includes('placeholder')
+    })
+  }
+  
+  return configured
 }
 
 // Only create clients if properly configured and in browser environment

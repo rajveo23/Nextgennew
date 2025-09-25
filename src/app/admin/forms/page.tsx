@@ -93,6 +93,7 @@ export default function FormManagement() {
   const handleCreateCategory = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      console.log('Creating category:', categoryForm)
       const response = await fetch('/api/form-categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -100,12 +101,20 @@ export default function FormManagement() {
       })
 
       if (response.ok) {
+        const result = await response.json()
+        console.log('Category created:', result)
         await fetchCategories()
         setShowCategoryModal(false)
         resetCategoryForm()
+        alert('Category created successfully!')
+      } else {
+        const error = await response.json()
+        console.error('Create category error:', error)
+        alert(`Failed to create category: ${error.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Error creating category:', error)
+      alert(`Error creating category: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -165,12 +174,13 @@ export default function FormManagement() {
         setUploadedFile(result)
         
         // Auto-fill form fields with uploaded file info
+        console.log('Upload result:', result)
         setFormForm(prev => ({
           ...prev,
           name: prev.name || result.originalName.replace(/\.[^/.]+$/, ''), // Remove extension
           file_type: result.fileType,
           file_size: result.fileSize,
-          file_url: `${window.location.origin}${result.fileUrl}`,
+          file_url: result.fileUrl, // Use fileUrl from upload response
           file_path: result.filePath
         }))
       } else {
@@ -188,6 +198,7 @@ export default function FormManagement() {
   const handleCreateForm = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      console.log('Creating form:', formForm)
       const response = await fetch('/api/forms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -195,6 +206,8 @@ export default function FormManagement() {
       })
 
       if (response.ok) {
+        const result = await response.json()
+        console.log('Form created:', result)
         await fetchCategories()
         setShowFormModal(false)
         resetFormForm()
