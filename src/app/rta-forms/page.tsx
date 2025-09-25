@@ -424,7 +424,9 @@ startxref
             </div>
           ) : (
             <div className="space-y-12">
-              {formCategories.map((category: FormCategory, categoryIndex: number) => {
+              {formCategories
+                .filter((category: FormCategory) => !(category as any).is_important_document)
+                .map((category: FormCategory, categoryIndex: number) => {
                 const IconComponent = iconMap[category.icon_name as keyof typeof iconMap] || DocumentTextIcon
                 
                 return (

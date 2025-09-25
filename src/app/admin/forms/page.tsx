@@ -36,6 +36,7 @@ export default function FormManagement() {
   const [editingCategory, setEditingCategory] = useState<FormCategory | null>(null)
   const [editingForm, setEditingForm] = useState<Form | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('')
+  const [activeTab, setActiveTab] = useState<'regular' | 'important'>('regular')
 
   // Form states
   const [categoryForm, setCategoryForm] = useState({
@@ -386,18 +387,55 @@ export default function FormManagement() {
             Test DB
           </button>
           <button
-            onClick={() => setShowCategoryModal(true)}
+            onClick={() => {
+              setCategoryForm({
+                ...categoryForm,
+                is_important_document: activeTab === 'important'
+              })
+              setShowCategoryModal(true)
+            }}
             className="btn-primary flex items-center gap-2"
           >
             <PlusIcon className="w-5 h-5" />
-            Add Category
+            Add {activeTab === 'important' ? 'Important Document' : 'Category'}
           </button>
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setActiveTab('regular')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'regular'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Regular Forms
+          </button>
+          <button
+            onClick={() => setActiveTab('important')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'important'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Important Documents
+          </button>
+        </nav>
+      </div>
+
       {/* Categories */}
       <div className="space-y-8">
-        {categories.map((category) => {
+        {categories
+          .filter((category) => {
+            const isImportant = (category as any).is_important_document || false
+            return activeTab === 'important' ? isImportant : !isImportant
+          })
+          .map((category) => {
           const IconComponent = iconMap[category.icon_name as keyof typeof iconMap] || DocumentTextIcon
           
           return (
@@ -416,7 +454,14 @@ export default function FormManagement() {
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{category.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xl font-semibold text-gray-900">{category.title}</h3>
+                        {(category as any).is_important_document && (
+                          <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                            Important Document
+                          </span>
+                        )}
+                      </div>
                       <p className="text-gray-600">{category.description}</p>
                     </div>
                   </div>

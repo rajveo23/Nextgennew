@@ -11,7 +11,7 @@ export const revalidate = 0
 
 export async function GET() {
   try {
-    // Get only regular categories (NOT marked as important documents) with their forms
+    // Get all categories with their forms (both regular and important documents)
     const { data: categories, error: categoriesError } = await supabase
       .from('form_categories')
       .select(`
@@ -34,7 +34,6 @@ export async function GET() {
         )
       `)
       .eq('is_active', true)
-      .eq('is_important_document', false)  // Only get non-important document categories
       .order('order_index', { ascending: true })
 
     if (categoriesError) {
