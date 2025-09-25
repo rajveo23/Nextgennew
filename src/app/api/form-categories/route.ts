@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, description, icon_name, color_gradient, order_index } = body
+    const { title, description, icon_name, color_gradient, order_index, is_important_document } = body
 
     if (!title || !description || !icon_name || !color_gradient) {
       return NextResponse.json(
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       icon_name,
       color_gradient,
       order_index: order_index || 0,
+      is_important_document: is_important_document || false,
       is_active: true
     })
 

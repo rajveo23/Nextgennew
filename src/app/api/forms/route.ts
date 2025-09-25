@@ -25,15 +25,31 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/forms - Starting form creation')
+    
     const body = await request.json()
+    console.log('Request body:', body)
+    
     const { category_id, name, file_type, file_size, file_url, file_path, order_index } = body
 
     if (!category_id || !name || !file_type || !file_size) {
+      console.log('Missing required fields:', { category_id, name, file_type, file_size })
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: category_id, name, file_type, file_size are required' },
         { status: 400 }
       )
     }
+
+    console.log('Creating form with data:', {
+      category_id,
+      name,
+      file_type,
+      file_size,
+      file_url,
+      file_path,
+      order_index: order_index || 0,
+      is_active: true
+    })
 
     const form = await DatabaseService.createForm({
       category_id,
@@ -46,11 +62,15 @@ export async function POST(request: NextRequest) {
       is_active: true
     })
 
+    console.log('Form created successfully:', form)
     return NextResponse.json(form, { status: 201 })
   } catch (error) {
     console.error('Error creating form:', error)
     return NextResponse.json(
-      { error: 'Failed to create form' },
+      { 
+        error: 'Failed to create form',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

@@ -29,6 +29,8 @@ interface Form {
   file_size: string
   file_url?: string
   file_path?: string
+  category_id: string
+  order_index: number
 }
 
 interface FormCategory {
@@ -89,10 +91,12 @@ const instructions = [
 
 export default function RTAFormsPage() {
   const [formCategories, setFormCategories] = useState<FormCategory[]>([])
+  const [importantDocuments, setImportantDocuments] = useState<FormCategory[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchFormCategories()
+    fetchImportantDocuments()
   }, [])
 
   const fetchFormCategories = async () => {
@@ -109,20 +113,85 @@ export default function RTAFormsPage() {
     }
   }
 
+  const fetchImportantDocuments = async () => {
+    try {
+      const response = await fetch('/api/important-documents')
+      const data = await response.json()
+      setImportantDocuments(data)
+    } catch (error) {
+      console.error('Error fetching important documents:', error)
+      // Fallback to hardcoded documents if API fails
+      setImportantDocuments([
+        {
+          id: 'investor-charter',
+          title: 'Investor Charter',
+          description: '',
+          icon_name: 'DocumentTextIcon',
+          color_gradient: 'from-blue-500 to-blue-700',
+          forms: [
+            { id: '1', name: 'RTA Investor Charter', file_type: 'PDF', file_size: '245 KB', category_id: 'investor-charter', order_index: 0 },
+            { id: '2', name: 'Grievance Redressal Policy', file_type: 'PDF', file_size: '180 KB', category_id: 'investor-charter', order_index: 1 }
+          ]
+        },
+        {
+          id: 'regulatory-docs',
+          title: 'Regulatory Documents',
+          description: '',
+          icon_name: 'DocumentTextIcon',
+          color_gradient: 'from-green-500 to-green-700',
+          forms: [
+            { id: '3', name: 'SEBI Registration Certificate', file_type: 'PDF', file_size: '320 KB', category_id: 'regulatory-docs', order_index: 0 },
+            { id: '4', name: 'Service Level Agreement', file_type: 'PDF', file_size: '275 KB', category_id: 'regulatory-docs', order_index: 1 }
+          ]
+        },
+        {
+          id: 'process-guides',
+          title: 'Process Guides',
+          description: '',
+          icon_name: 'DocumentTextIcon',
+          color_gradient: 'from-purple-500 to-purple-700',
+          forms: [
+            { id: '5', name: 'ISIN Creation Process Guide', file_type: 'PDF', file_size: '450 KB', category_id: 'process-guides', order_index: 0 },
+            { id: '6', name: 'Demat Process Guide', file_type: 'PDF', file_size: '380 KB', category_id: 'process-guides', order_index: 1 }
+          ]
+        }
+      ])
+    }
+  }
+
   const handleDownload = async (formName: string, fileUrl?: string) => {
     try {
+      console.log('Attempting download:', { formName, fileUrl })
+      
       // If we have a file URL from the database, use it directly
-      if (fileUrl) {
-        const link = document.createElement('a')
-        link.href = fileUrl
-        link.download = formName
-        link.target = '_blank'
+      if (fileUrl && fileUrl.trim() !== '') {
+        console.log('Using file URL:', fileUrl)
         
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        
-        return
+        // Test if URL is accessible
+        try {
+          const testResponse = await fetch(fileUrl, { method: 'HEAD' })
+          console.log('URL test response:', testResponse.status)
+          
+          if (testResponse.ok) {
+            const link = document.createElement('a')
+            link.href = fileUrl
+            link.download = formName
+            link.target = '_blank'
+            
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            
+            console.log('Download initiated successfully')
+            return
+          } else {
+            console.warn('URL not accessible, status:', testResponse.status)
+          }
+        } catch (urlError) {
+          console.error('URL test failed:', urlError)
+        }
+      } else {
+        console.log('No file URL provided')
       }
 
       // Fallback: try to find file by name
@@ -233,11 +302,11 @@ startxref
         // Clean up
         URL.revokeObjectURL(url)
         
-        alert(`Downloading ${formName} form... (Demo version - Please upload actual forms to /public/forms/ directory)`)
+        alert(`📄 ${formName}\n\nDemo version downloaded. To upload actual forms:\n1. Go to /admin/forms\n2. Edit the form\n3. Upload the actual file`)
       }
     } catch (error) {
       console.error('Download error:', error)
-      alert('Sorry, the form download is temporarily unavailable. Please contact us directly for the form.')
+      alert(`📄 ${formName}\n\nDownload failed. Please:\n1. Check if file is uploaded in admin panel\n2. Contact us at info@nextgenregistry.com\n\nError: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -412,9 +481,9 @@ startxref
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {documents.map((docCategory, index) => (
+            {importantDocuments.map((docCategory, index) => (
               <motion.div
-                key={docCategory.category}
+                key={docCategory.id}
                 className="card p-6"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -422,19 +491,19 @@ startxref
                 viewport={{ once: true }}
               >
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {docCategory.category}
+                  {docCategory.title}
                 </h3>
                 
                 <div className="space-y-4">
-                  {docCategory.items.map((item, itemIndex) => (
-                    <div key={item.name} className="border-b border-gray-100 pb-3 last:border-b-0">
+                  {docCategory.forms.map((form, formIndex) => (
+                    <div key={form.id} className="border-b border-gray-100 pb-3 last:border-b-0">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-1">{item.name}</h4>
-                          <p className="text-sm text-gray-600">{item.description}</p>
+                          <h4 className="font-medium text-gray-900 mb-1">{form.name}</h4>
+                          <p className="text-sm text-gray-600">{form.file_size}</p>
                         </div>
                         <button
-                          onClick={() => handleDownload(item.name)}
+                          onClick={() => handleDownload(form.name, form.file_url)}
                           className="ml-3 text-primary-600 hover:text-primary-700 transition-colors duration-200"
                         >
                           <ArrowDownTrayIcon className="w-5 h-5" />

@@ -45,12 +45,21 @@ export async function POST(request: NextRequest) {
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
     const fileName = `${timestamp}_${originalName}`
 
+    // Initialize database and create bucket if needed
+    console.log('Initializing database and storage...')
+    const initResult = await DatabaseService.initializeData()
+    if (!initResult) {
+      console.warn('Database initialization failed, but continuing...')
+    }
+
     // Upload to Supabase Storage
+    console.log('Uploading file to storage:', fileName)
     const uploadResult = await DatabaseService.uploadFormFile(file, fileName)
     
     if (!uploadResult) {
+      console.error('Upload failed - no result returned')
       return NextResponse.json(
-        { error: 'Failed to upload file to storage' },
+        { error: 'Failed to upload file to storage. Please check if Supabase is configured correctly.' },
         { status: 500 }
       )
     }
@@ -85,6 +94,14 @@ export async function POST(request: NextRequest) {
         break
     }
 
+    console.log('File uploaded successfully:', {
+      fileName,
+      filePath: uploadResult.path,
+      fileUrl: uploadResult.url,
+      fileSize,
+      fileType
+    })
+
     return NextResponse.json({
       success: true,
       fileName,
@@ -98,7 +115,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error uploading file:', error)
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { error: `Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     )
   }

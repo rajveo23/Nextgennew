@@ -43,7 +43,8 @@ export default function FormManagement() {
     description: '',
     icon_name: 'DocumentTextIcon',
     color_gradient: 'from-blue-500 to-blue-700',
-    order_index: 0
+    order_index: 0,
+    is_important_document: false
   })
 
   const [formForm, setFormForm] = useState({
@@ -282,7 +283,8 @@ export default function FormManagement() {
       description: '',
       icon_name: 'DocumentTextIcon',
       color_gradient: 'from-blue-500 to-blue-700',
-      order_index: 0
+      order_index: 0,
+      is_important_document: false
     })
   }
 
@@ -306,7 +308,8 @@ export default function FormManagement() {
       description: category.description,
       icon_name: category.icon_name,
       color_gradient: category.color_gradient,
-      order_index: category.order_index
+      order_index: category.order_index,
+      is_important_document: (category as any).is_important_document || false
     })
     setShowCategoryModal(true)
   }
@@ -574,6 +577,22 @@ export default function FormManagement() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                     min="0"
                   />
+                </div>
+                <div>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={categoryForm.is_important_document}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, is_important_document: e.target.checked })}
+                      className="mr-2 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      Mark as Important Document
+                    </span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Important documents will appear in the "Important Documents" section on the RTA Forms page
+                  </p>
                 </div>
               </div>
               <div className="flex justify-end space-x-3 mt-6">

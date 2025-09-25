@@ -26,12 +26,19 @@ export async function DELETE(
 ) {
   try {
     const { id } = params
+    console.log('DELETE /api/forms/[id] - Deleting form:', id)
+    
     await DatabaseService.deleteForm(id)
-    return NextResponse.json({ success: true })
+    console.log('Form deleted successfully:', id)
+    
+    return NextResponse.json({ success: true, message: 'Form deleted successfully' })
   } catch (error) {
     console.error('Error deleting form:', error)
     return NextResponse.json(
-      { error: 'Failed to delete form' },
+      { 
+        error: 'Failed to delete form',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

@@ -126,7 +126,7 @@ export default function ClientsPage() {
               Our <span className="text-secondary-300">Clients</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
-              Trusted by 500+ companies across India for reliable and efficient RTA services
+              Trusted by 1500+ companies across India for reliable and efficient RTA services
             </p>
           </motion.div>
         </div>
