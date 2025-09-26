@@ -4,7 +4,20 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { AdminDataManager, BlogPost } from '../../../lib/adminData'
+interface BlogPost {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  status: 'published' | 'draft' | 'scheduled'
+  author: string
+  publishDate: string
+  category: string
+  views: number
+  image?: string
+  tags: string[]
+}
 import {
   CalendarDaysIcon,
   UserIcon,
@@ -24,26 +37,34 @@ export default function BlogPostPage() {
   useEffect(() => {
     const loadBlog = async () => {
       if (slug) {
-        await AdminDataManager.initializeData()
-        const blogs: BlogPost[] = await AdminDataManager.getBlogs()
-        
-        // Find the blog by slug
-        const foundBlog = blogs.find((b: BlogPost) => b.slug === slug && b.status === 'published')
-        setBlog(foundBlog || null)
-        
-        // Get related blogs (same category, excluding current)
-        if (foundBlog) {
-          const related = blogs
-            .filter((b: BlogPost) => 
-              b.category === foundBlog.category && 
-              b.id !== foundBlog.id && 
-              b.status === 'published'
-            )
-            .slice(0, 3)
-          setRelatedBlogs(related)
+        try {
+          // Fetch all blogs from API
+          const response = await fetch('/api/blogs')
+          if (response.ok) {
+            const blogs: BlogPost[] = await response.json()
+            
+            // Find the blog by slug
+            const foundBlog = blogs.find((b: BlogPost) => b.slug === slug && b.status === 'published')
+            setBlog(foundBlog || null)
+            
+            // Get related blogs (same category, excluding current)
+            if (foundBlog) {
+              const related = blogs
+                .filter((b: BlogPost) => 
+                  b.category === foundBlog.category && 
+                  b.id !== foundBlog.id && 
+                  b.status === 'published'
+                )
+                .slice(0, 3)
+              setRelatedBlogs(related)
+            }
+          }
+        } catch (error) {
+          console.error('Error loading blog:', error)
+          setBlog(null)
+        } finally {
+          setLoading(false)
         }
-        
-        setLoading(false)
       }
     }
     loadBlog()

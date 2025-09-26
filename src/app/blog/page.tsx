@@ -152,9 +152,11 @@ export default function BlogPage() {
                     </div>
                   </div>
                   
-                  <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                    {post.title}
-                  </h2>
+                  <Link href={`/blog/${post.slug}`}>
+                    <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-primary-600 cursor-pointer transition-colors">
+                      {post.title}
+                    </h2>
+                  </Link>
                   
                   <p className="text-gray-600 mb-4 line-clamp-3">
                     {post.excerpt}
