@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>NextGen Registry API Test</h1>
+    
+    <div class="test-section">
+        <h2>Blog API Tests</h2>
+        <button onclick="testBlogsGet()">Test GET /api/blogs</button>
+        <button onclick="testBlogsPost()">Test POST /api/blogs</button>
+        <div id="blog-results" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>FAQ API Tests</h2>
+        <button onclick="testFaqsGet()">Test GET /api/faqs</button>
+        <button onclick="testFaqsPost()">Test POST /api/faqs</button>
+        <div id="faq-results" class="result"></div>
+    </div>
+
+    <script>
+        async function testBlogsGet() {
+            const results = document.getElementById('blog-results');
+            results.innerHTML = 'Testing GET /api/blogs...';
+            
+            try {
+                const response = await fetch('/api/blogs');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.className = 'result success';
+                    results.innerHTML = `
+                        <h3>✅ GET /api/blogs - Success</h3>
+                        <p>Found ${data.length} blog posts</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    results.className = 'result error';
+                    results.innerHTML = `
+                        <h3>❌ GET /api/blogs - Error</h3>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                results.className = 'result error';
+                results.innerHTML = `
+                    <h3>❌ GET /api/blogs - Network Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        async function testBlogsPost() {
+            const results = document.getElementById('blog-results');
+            results.innerHTML = 'Testing POST /api/blogs...';
+            
+            const testBlog = {
+                title: 'Test Blog Post',
+                slug: 'test-blog-post-' + Date.now(),
+                content: 'This is a test blog post content.',
+                excerpt: 'Test excerpt',
+                author: 'Test Author',
+                status: 'draft',
+                category: 'Test',
+                tags: ['test']
+            };
+            
+            try {
+                const response = await fetch('/api/blogs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testBlog)
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.className = 'result success';
+                    results.innerHTML = `
+                        <h3>✅ POST /api/blogs - Success</h3>
+                        <p>Created blog with ID: ${data.id}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    results.className = 'result error';
+                    results.innerHTML = `
+                        <h3>❌ POST /api/blogs - Error</h3>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                results.className = 'result error';
+                results.innerHTML = `
+                    <h3>❌ POST /api/blogs - Network Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        async function testFaqsGet() {
+            const results = document.getElementById('faq-results');
+            results.innerHTML = 'Testing GET /api/faqs...';
+            
+            try {
+                const response = await fetch('/api/faqs');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.className = 'result success';
+                    results.innerHTML = `
+                        <h3>✅ GET /api/faqs - Success</h3>
+                        <p>Found ${data.length} FAQs</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    results.className = 'result error';
+                    results.innerHTML = `
+                        <h3>❌ GET /api/faqs - Error</h3>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                results.className = 'result error';
+                results.innerHTML = `
+                    <h3>❌ GET /api/faqs - Network Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        async function testFaqsPost() {
+            const results = document.getElementById('faq-results');
+            results.innerHTML = 'Testing POST /api/faqs...';
+            
+            const testFaq = {
+                question: 'Test FAQ Question?',
+                answer: 'This is a test FAQ answer.',
+                category: 'Test',
+                order: 1,
+                isActive: true
+            };
+            
+            try {
+                const response = await fetch('/api/faqs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testFaq)
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.className = 'result success';
+                    results.innerHTML = `
+                        <h3>✅ POST /api/faqs - Success</h3>
+                        <p>Created FAQ with ID: ${data.id}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    results.className = 'result error';
+                    results.innerHTML = `
+                        <h3>❌ POST /api/faqs - Error</h3>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                results.className = 'result error';
+                results.innerHTML = `
+                    <h3>❌ POST /api/faqs - Network Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
