@@ -32,8 +32,6 @@ export default function BlogPostPage() {
   const slug = params.slug as string
   const [blog, setBlog] = useState<BlogPost | null>(null)
   const [loading, setLoading] = useState(true)
-  const [relatedBlogs, setRelatedBlogs] = useState<BlogPost[]>([])
-
   useEffect(() => {
     const loadBlog = async () => {
       if (slug) {
@@ -46,18 +44,6 @@ export default function BlogPostPage() {
             // Find the blog by slug
             const foundBlog = blogs.find((b: BlogPost) => b.slug === slug && b.status === 'published')
             setBlog(foundBlog || null)
-            
-            // Get related blogs (same category, excluding current)
-            if (foundBlog) {
-              const related = blogs
-                .filter((b: BlogPost) => 
-                  b.category === foundBlog.category && 
-                  b.id !== foundBlog.id && 
-                  b.status === 'published'
-                )
-                .slice(0, 3)
-              setRelatedBlogs(related)
-            }
           }
         } catch (error) {
           console.error('Error loading blog:', error)
@@ -238,57 +224,6 @@ export default function BlogPostPage() {
         </div>
       </section>
 
-      {/* Related Posts */}
-      {relatedBlogs.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedBlogs.map((relatedBlog, index) => (
-                  <motion.article
-                    key={relatedBlog.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                  >
-                    <div className="h-48 bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                      <div className="text-white text-2xl font-bold">NG</div>
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                          {relatedBlog.category}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(relatedBlog.publishDate).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                        {relatedBlog.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                        {relatedBlog.excerpt}
-                      </p>
-                      <Link
-                        href={`/blog/${relatedBlog.slug}`}
-                        className="text-primary-600 hover:text-primary-700 font-medium text-sm"
-                      >
-                        Read More →
-                      </Link>
-                    </div>
-                  </motion.article>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
 
       {/* Back to Blog */}
       <section className="py-8">
