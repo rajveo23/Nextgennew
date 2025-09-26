@@ -10,7 +10,16 @@ import {
   ChevronUpIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
-import { AdminDataManager, FAQ } from '../../../lib/adminData'
+interface FAQ {
+  id: number
+  question: string
+  answer: string
+  category: string
+  order: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 const categories = ['All', 'ISIN Services', 'RTA Services', 'Demat Services', 'Corporate Actions', 'General']
 
@@ -23,11 +32,17 @@ export default function FAQManagement() {
   const [showAddForm, setShowAddForm] = useState(false)
 
   useEffect(() => {
-    // Initialize data and load FAQs
+    // Load FAQs from API
     const loadFAQs = async () => {
-      await AdminDataManager.initializeData()
-      const faqsData = await AdminDataManager.getFAQs()
-      setFAQs(faqsData)
+      try {
+        const response = await fetch('/api/faqs')
+        if (response.ok) {
+          const faqsData = await response.json()
+          setFAQs(faqsData)
+        }
+      } catch (error) {
+        console.error('Error loading FAQs:', error)
+      }
     }
     loadFAQs()
   }, [])
@@ -42,42 +57,86 @@ export default function FAQManagement() {
 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this FAQ?')) {
-      await AdminDataManager.deleteFAQ(id)
-      const faqsData = await AdminDataManager.getFAQs()
-      setFAQs(faqsData)
+      try {
+        const response = await fetch(`/api/faqs?id=${id}`, {
+          method: 'DELETE'
+        })
+        if (response.ok) {
+          const faqsResponse = await fetch('/api/faqs')
+          if (faqsResponse.ok) {
+            const faqsData = await faqsResponse.json()
+            setFAQs(faqsData)
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting FAQ:', error)
+      }
     }
   }
 
   const handleToggleActive = async (id: number) => {
     const faq = faqs.find(f => f.id === id)
     if (faq) {
-      const updatedFAQ = { ...faq, isActive: !faq.isActive }
-      await AdminDataManager.saveFAQ(updatedFAQ)
-      const faqsData = await AdminDataManager.getFAQs()
-      setFAQs(faqsData)
+      try {
+        const updatedFAQ = { ...faq, isActive: !faq.isActive }
+        const response = await fetch('/api/faqs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedFAQ)
+        })
+        if (response.ok) {
+          const faqsResponse = await fetch('/api/faqs')
+          if (faqsResponse.ok) {
+            const faqsData = await faqsResponse.json()
+            setFAQs(faqsData)
+          }
+        }
+      } catch (error) {
+        console.error('Error toggling FAQ active state:', error)
+      }
     }
   }
 
   const handleSave = async (faqData: Partial<FAQ>) => {
-    if (editingFAQ) {
-      // Update existing FAQ
-      const updatedFAQ = { ...editingFAQ, ...faqData }
-      await AdminDataManager.saveFAQ(updatedFAQ)
-      setEditingFAQ(null)
-    } else {
-      // Add new FAQ
-      const newFAQData = {
-        question: faqData.question || '',
-        answer: faqData.answer || '',
-        category: faqData.category || 'General',
-        order: faqs.length + 1,
-        isActive: true
+    try {
+      if (editingFAQ) {
+        // Update existing FAQ
+        const updatedFAQ = { ...editingFAQ, ...faqData }
+        const response = await fetch('/api/faqs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedFAQ)
+        })
+        if (!response.ok) throw new Error('Failed to update FAQ')
+        setEditingFAQ(null)
+      } else {
+        // Add new FAQ
+        const newFAQData = {
+          question: faqData.question || '',
+          answer: faqData.answer || '',
+          category: faqData.category || 'General',
+          order: faqs.length + 1,
+          isActive: true
+        }
+        const response = await fetch('/api/faqs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newFAQData)
+        })
+        if (!response.ok) throw new Error('Failed to create FAQ')
+        setShowAddForm(false)
       }
-      await AdminDataManager.saveFAQ(newFAQData)
-      setShowAddForm(false)
+      
+      // Reload FAQs
+      const faqsResponse = await fetch('/api/faqs')
+      if (faqsResponse.ok) {
+        const faqsData = await faqsResponse.json()
+        setFAQs(faqsData)
+      }
+    } catch (error) {
+      console.error('Error saving FAQ:', error)
+      alert('Failed to save FAQ. Please try again.')
     }
-    const faqsData = await AdminDataManager.getFAQs()
-    setFAQs(faqsData)
   }
 
   return (

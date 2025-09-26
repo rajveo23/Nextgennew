@@ -2,7 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AdminDataManager, BlogPost } from '../../../lib/adminData'
+interface BlogPost {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  status: 'published' | 'draft' | 'scheduled'
+  author: string
+  publishDate: string
+  category: string
+  views: number
+  image?: string
+  tags: string[]
+}
 import {
   PlusIcon,
   PencilIcon,
@@ -53,11 +66,17 @@ export default function BlogManagement() {
   const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
-    // Load blogs from admin data
+    // Load blogs from API
     const loadBlogs = async () => {
-      await AdminDataManager.initializeData()
-      const blogsData = await AdminDataManager.getBlogs()
-      setBlogs(blogsData)
+      try {
+        const response = await fetch('/api/blogs')
+        if (response.ok) {
+          const blogsData = await response.json()
+          setBlogs(blogsData)
+        }
+      } catch (error) {
+        console.error('Error loading blogs:', error)
+      }
     }
     loadBlogs()
   }, [])
@@ -73,49 +92,86 @@ export default function BlogManagement() {
 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
-      await AdminDataManager.deleteBlog(id)
-      const blogsData = await AdminDataManager.getBlogs()
-      setBlogs(blogsData)
+      try {
+        const response = await fetch(`/api/blogs?id=${id}`, {
+          method: 'DELETE'
+        })
+        if (response.ok) {
+          const blogsResponse = await fetch('/api/blogs')
+          if (blogsResponse.ok) {
+            const blogsData = await blogsResponse.json()
+            setBlogs(blogsData)
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting blog:', error)
+      }
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (editingBlog) {
-      // Update existing blog
-      const updatedBlog = {
-        ...editingBlog,
-        ...formData,
-        slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    try {
+      if (editingBlog) {
+        // Update existing blog
+        const updatedBlog = {
+          id: editingBlog.id,
+          ...formData,
+          slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+          views: editingBlog.views || 0
+        }
+        
+        const response = await fetch('/api/blogs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedBlog)
+        })
+        
+        if (!response.ok) throw new Error('Failed to update blog')
+        setEditingBlog(null)
+      } else {
+        // Create new blog
+        const newBlog = {
+          ...formData,
+          slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+          author: 'Admin',
+          publishDate: new Date().toISOString().split('T')[0],
+          views: 0
+        }
+        
+        const response = await fetch('/api/blogs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newBlog)
+        })
+        
+        if (!response.ok) throw new Error('Failed to create blog')
+        setShowAddForm(false)
       }
-      await AdminDataManager.saveBlog(updatedBlog)
-      setEditingBlog(null)
-    } else {
-      // Create new blog
-      const newBlog = {
-        ...formData,
-        slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        author: 'Admin',
-        publishDate: new Date().toISOString().split('T')[0]
+      
+      // Reset form and reload blogs
+      setFormData({
+        title: '',
+        slug: '',
+        excerpt: '',
+        content: '',
+        category: categories[0],
+        status: 'draft',
+        image: '',
+        tags: []
+      })
+      
+      // Reload blogs from API
+      const blogsResponse = await fetch('/api/blogs')
+      if (blogsResponse.ok) {
+        const blogsData = await blogsResponse.json()
+        setBlogs(blogsData)
       }
-      await AdminDataManager.saveBlog(newBlog)
-      setShowAddForm(false)
+    } catch (error) {
+      console.error('Error saving blog:', error)
+      alert('Failed to save blog. Please try again.')
     }
-    
-    // Reset form and reload blogs
-    setFormData({
-      title: '',
-      slug: '',
-      excerpt: '',
-      content: '',
-      category: categories[0],
-      status: 'draft',
-      image: '',
-      tags: []
-    })
-    const blogsData = await AdminDataManager.getBlogs()
-    setBlogs(blogsData)
   }
 
   const handleEdit = (blog: BlogPost) => {

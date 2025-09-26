@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import NewsletterForm from '../../components/NewsletterForm'
-import { AdminDataManager, BlogPost } from '../../lib/adminData'
 import { 
   CalendarDaysIcon, 
   ClockIcon, 
@@ -13,142 +12,68 @@ import {
   TagIcon
 } from '@heroicons/react/24/outline'
 
-const blogPosts = [
-  {
-    id: 1,
-    title: 'Understanding ISIN Creation Process: A Complete Guide for Companies',
-    excerpt: 'Learn about the step-by-step process of ISIN creation, required documents, timelines, and how NextGen Registry can help streamline your ISIN application.',
-    content: 'ISIN (International Securities Identification Number) is a crucial requirement for any company looking to list their securities or enable demat trading...',
-    author: 'NextGen Team',
-    date: '2024-01-15',
-    readTime: '8 min read',
-    category: 'ISIN Services',
-    tags: ['ISIN', 'Listing', 'Compliance'],
-    featured: true,
-    image: '/api/placeholder/600/400'
-  },
-  {
-    id: 2,
-    title: 'New SEBI Regulations 2024: Impact on RTA Services',
-    excerpt: 'Explore the latest SEBI regulations and their implications for Registrar and Transfer Agent services, including compliance requirements and operational changes.',
-    content: 'The Securities and Exchange Board of India (SEBI) has introduced several new regulations in 2024 that significantly impact RTA operations...',
-    author: 'Compliance Team',
-    date: '2024-01-10',
-    readTime: '6 min read',
-    category: 'Regulations',
-    tags: ['SEBI', 'Compliance', 'Regulations'],
-    featured: false,
-    image: '/api/placeholder/600/400'
-  },
-  {
-    id: 3,
-    title: 'Digital Transformation in Share Registry Management',
-    excerpt: 'Discover how digital technologies are revolutionizing share registry management and improving efficiency in RTA services.',
-    content: 'The digital transformation wave has significantly impacted the financial services sector, and RTA services are no exception...',
-    author: 'Technology Team',
-    date: '2024-01-05',
-    readTime: '7 min read',
-    category: 'Technology',
-    tags: ['Digital', 'Technology', 'Innovation'],
-    featured: false,
-    image: '/api/placeholder/600/400'
-  },
-  {
-    id: 4,
-    title: 'Corporate Actions Made Simple: A Guide for Investors',
-    excerpt: 'Understanding corporate actions like dividends, bonus issues, and rights offerings, and how they affect your investments.',
-    content: 'Corporate actions are events initiated by companies that affect their shareholders and the value of their securities...',
-    author: 'Investment Team',
-    date: '2023-12-28',
-    readTime: '5 min read',
-    category: 'Corporate Actions',
-    tags: ['Dividends', 'Bonus', 'Rights Issue'],
-    featured: false,
-    image: '/api/placeholder/600/400'
-  },
-  {
-    id: 5,
-    title: 'E-Voting in AGMs: Benefits and Best Practices',
-    excerpt: 'Learn about electronic voting in Annual General Meetings, its advantages, and how companies can implement it effectively.',
-    content: 'Electronic voting has become an essential part of modern corporate governance, especially in the post-pandemic era...',
-    author: 'Governance Team',
-    date: '2023-12-20',
-    readTime: '6 min read',
-    category: 'E-Voting',
-    tags: ['E-Voting', 'AGM', 'Governance'],
-    featured: false,
-    image: '/api/placeholder/600/400'
-  },
-  {
-    id: 6,
-    title: 'Demat Account Management: Best Practices for Companies',
-    excerpt: 'Essential guidelines for companies on managing demat accounts, maintaining records, and ensuring compliance with depository requirements.',
-    content: 'Dematerialization has revolutionized the way securities are held and traded in India. For companies, managing demat accounts...',
-    author: 'Operations Team',
-    date: '2023-12-15',
-    readTime: '9 min read',
-    category: 'Demat Services',
-    tags: ['Demat', 'NSDL', 'CDSL'],
-    featured: false,
-    image: '/api/placeholder/600/400'
-  }
-]
-
-const categories = [
-  'All Posts',
-  'ISIN Services',
-  'Regulations',
-  'Technology',
-  'Corporate Actions',
-  'E-Voting',
-  'Demat Services'
-]
+interface BlogPost {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  status: 'published' | 'draft' | 'scheduled'
+  author: string
+  publishDate: string
+  category: string
+  views: number
+  image?: string
+  tags: string[]
+  date?: string
+  readTime?: string
+  featured?: boolean
+}
 
 export default function BlogPage() {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState('All')
 
   useEffect(() => {
-    // Load blogs from admin data
-    const loadBlogs = async () => {
-      await AdminDataManager.initializeData()
-      const adminBlogs: BlogPost[] = await AdminDataManager.getBlogs()
-    
-    // Convert admin blog format to display format and filter published posts
-    const publishedBlogs = adminBlogs
-      .filter((blog: BlogPost) => blog.status === 'published')
-      .map((blog: BlogPost) => ({
-        ...blog,
-        date: blog.publishDate,
-        readTime: '5 min read', // Default read time
-        featured: false // We'll make the first one featured
-      }))
-    
-    // Make the first blog featured if exists
-    if (publishedBlogs.length > 0) {
-      publishedBlogs[0].featured = true
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch('/api/blogs')
+        if (response.ok) {
+          const data = await response.json()
+          // Filter only published blogs
+          const publishedBlogs = data.filter((blog: BlogPost) => blog.status === 'published')
+          setBlogs(publishedBlogs)
+        }
+      } catch (error) {
+        console.error('Error fetching blogs:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-    
-    setBlogPosts(publishedBlogs)
-    setLoading(false)
-    }
-    loadBlogs()
+    fetchBlogs()
   }, [])
+
+  const categories = ['All', ...Array.from(new Set(blogs.map(blog => blog.category)))]
+  
+  const filteredBlogs = selectedCategory === 'All' 
+    ? blogs 
+    : blogs.filter(blog => blog.category === selectedCategory)
 
   if (loading) {
     return (
-      <div className="pt-16 min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading blogs...</p>
+        </div>
       </div>
     )
   }
 
-  const featuredPost = blogPosts.find(post => post.featured)
-  const regularPosts = blogPosts.filter(post => !post.featured)
-
   return (
     <div className="pt-16">
-      {/* Hero Section */}
+      {/* Hero Section - Same as RTA Forms */}
       <section className="py-20 gradient-bg text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -158,249 +83,131 @@ export default function BlogPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              NextGen <span className="text-secondary-300">Blog</span>
+              RTA <span className="text-secondary-300">Insights</span> & Updates
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
-              Stay updated with the latest insights, regulations, and trends in RTA services and capital markets
+              Stay informed with the latest insights, regulatory updates, and industry trends in RTA services
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Featured Post */}
-      {featuredPost && (
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Featured <span className="text-gradient">Article</span>
-              </h2>
-            </motion.div>
-
-            <motion.div
-              className="card overflow-hidden"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="md:flex">
-                <div className="md:w-1/2">
-                  {featuredPost.image ? (
-                    <div className="h-64 md:h-full overflow-hidden">
-                      <img
-                        src={featuredPost.image}
-                        alt={featuredPost.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-64 md:h-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                      <div className="text-white text-6xl font-bold">NG</div>
-                    </div>
-                  )}
-                </div>
-                <div className="md:w-1/2 p-8">
-                  <div className="flex items-center mb-4">
-                    <span className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
-                      {featuredPost.category}
-                    </span>
-                    <span className="ml-3 text-sm text-gray-500">Featured</span>
-                  </div>
-                  
-                  <Link href={`/blog/${featuredPost.slug}`}>
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight hover:text-primary-600 transition-colors duration-200 cursor-pointer">
-                      {featuredPost.title}
-                    </h3>
-                  </Link>
-                  
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {featuredPost.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <UserIcon className="w-4 h-4 mr-1" />
-                        {featuredPost.author}
-                      </div>
-                      <div className="flex items-center">
-                        <CalendarDaysIcon className="w-4 h-4 mr-1" />
-                        {new Date(featuredPost.date || featuredPost.publishDate).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-1" />
-                        {featuredPost.readTime || '5 min read'}
-                      </div>
-                    </div>
-                    
-                    <Link 
-                      href={`/blog/${featuredPost.slug}`}
-                      className="flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200"
-                    >
-                      Read More
-                      <ArrowRightIcon className="w-4 h-4 ml-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* Categories */}
-      <section className="py-12 bg-gray-50">
+      {/* Category Filter - Same style as RTA Forms */}
+      <section className="py-8 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="flex flex-wrap justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            {categories.map((category, index) => (
-              <motion.button
+          <div className="flex flex-wrap justify-center gap-4">
+            {categories.map((category) => (
+              <button
                 key={category}
-                className="px-6 py-2 bg-white text-gray-700 rounded-full hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200 shadow-sm"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                  selectedCategory === category
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                }`}
               >
                 {category}
-              </motion.button>
+              </button>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Blog Posts Grid */}
-      <section className="py-20 bg-white">
+      {/* Blog Content */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Latest <span className="text-gradient">Articles</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Expert insights and updates from the world of RTA services
-            </p>
-          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {regularPosts.map((post, index) => (
+        {/* Blog Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredBlogs.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-600">No blog posts found for the selected category.</p>
+            </div>
+          ) : (
+            filteredBlogs.map((post) => (
               <motion.article
                 key={post.id}
-                className="card overflow-hidden group"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
               >
-                {post.image ? (
-                  <div className="h-48 overflow-hidden">
+                {post.image && (
+                  <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-48 object-cover"
                     />
                   </div>
-                ) : (
-                  <div className="h-48 bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center group-hover:from-primary-600 group-hover:to-secondary-600 transition-all duration-300">
-                    <div className="text-white text-4xl font-bold">NG</div>
-                  </div>
                 )}
-                
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                      {post.category}
-                    </span>
-                    <div className="flex items-center text-xs text-gray-500">
-                      <ClockIcon className="w-3 h-3 mr-1" />
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                    <div className="flex items-center gap-1">
+                      <CalendarDaysIcon className="h-4 w-4" />
+                      {new Date(post.publishDate || post.date || '').toLocaleDateString()}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <ClockIcon className="h-4 w-4" />
                       {post.readTime || '5 min read'}
                     </div>
                   </div>
                   
-                  <Link href={`/blog/${post.slug}`}>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-primary-600 transition-colors duration-200 cursor-pointer">
-                      {post.title}
-                    </h3>
-                  </Link>
+                  <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                    {post.title}
+                  </h2>
                   
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                  <p className="text-gray-600 mb-4 line-clamp-3">
                     {post.excerpt}
                   </p>
                   
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                    <div className="flex items-center">
-                      <UserIcon className="w-3 h-3 mr-1" />
-                      {post.author}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <UserIcon className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-600">{post.author}</span>
                     </div>
-                    <div className="flex items-center">
-                      <CalendarDaysIcon className="w-3 h-3 mr-1" />
-                      {new Date(post.date || post.publishDate).toLocaleDateString()}
-                    </div>
+                    
+                    {post.category && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                        {post.category}
+                      </span>
+                    )}
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {post.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="flex items-center text-xs text-gray-500">
-                          <TagIcon className="w-3 h-3 mr-1" />
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {post.tags.slice(0, 3).map((tag, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-gray-100 text-gray-600"
+                        >
+                          <TagIcon className="h-3 w-3" />
                           {tag}
                         </span>
                       ))}
                     </div>
-                    
-                    <Link 
+                  )}
+                  
+                  <div className="mt-6">
+                    <Link
                       href={`/blog/${post.slug}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium text-sm transition-colors duration-200"
+                      className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium"
                     >
-                      Read More →
+                      Read More
+                      <ArrowRightIcon className="h-4 w-4" />
                     </Link>
                   </div>
                 </div>
               </motion.article>
-            ))}
-          </div>
+            ))
+          )}
+        </div>
         </div>
       </section>
 
-      {/* Newsletter Subscription */}
-      <section className="py-20 gradient-bg text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Stay Updated with NextGen Insights
-            </h2>
-            <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              Subscribe to our newsletter and get the latest updates on RTA services, regulations, and industry trends delivered to your inbox.
-            </p>
-            
-            <NewsletterForm />
-          </motion.div>
+      {/* Newsletter Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <NewsletterForm />
         </div>
       </section>
     </div>

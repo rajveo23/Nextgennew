@@ -14,27 +14,27 @@ const milestones = [
   {
     year: '1968',
     title: 'Foundation Years',
-    description: 'Our Visionaries put up the foundation stone of a Major Stock Exchange '
+    description: 'Our Visionaries put up the foundation stone of a Major Stock Exchange.'
   },
   {
-    year: '1990s',
+    year: '1990',
     title: 'Capital markets',
-    description: 'Our Group ventured into Broking Operations along with DP opertaions through our flagship group'
+    description: 'Our Group ventured into Broking Operations along with DP opertaions through our flagship group.'
   },
   {
-    year: '2010s',
+    year: '2010',
     title: 'Appointment',
-    description: 'Formal Induction of our Director Mr Shaivi Bansal as a Director at our Flagship Firm'
+    description: 'Formal Induction of our Director Mr Shaivi Bansal as a Director at our Flagship Firm.'
   },
   {
     year: '2020',
     title: 'Sensed Opportunity',
-    description: 'Extensive R&D and technical overhaul - NEXTGEN Idea was born'
+    description: 'Extensive R&D and technical overhaul - NEXTGEN Idea was born.'
   },
   {
     year: '2024',
     title: 'NextGen Registry',
-    description: 'NEXTGEN SHARE REGISTRY PRIVATE LIMITED was formulated and started it's operations as a SEBI Registered RTA'
+    description: 'NEXTGEN SHARE REGISTRY PRIVATE LIMITED was formulated and started its operations as a SEBI Registered RTA.'
   }
 ]
 
