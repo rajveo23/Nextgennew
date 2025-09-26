@@ -12,29 +12,29 @@ import {
 
 const milestones = [
   {
-    year: '1997',
+    year: '1968',
     title: 'Foundation Years',
-    description: 'Started our journey in capital markets with a vision to transform the RTA industry.'
+    description: 'Our Visionaries put up the foundation stone of a Major Stock Exchange '
   },
   {
-    year: '2010',
-    title: 'SEBI Registration',
-    description: 'Obtained SEBI registration as Registrar & Share Transfer Agent (INR000004422).'
+    year: '1990s',
+    title: 'Capital markets',
+    description: 'Our Group ventured into Broking Operations along with DP opertaions through our flagship group'
   },
   {
-    year: '2015',
-    title: 'Technology Integration',
-    description: 'Implemented advanced technology solutions for faster and more accurate services.'
+    year: '2010s',
+    title: 'Appointment',
+    description: 'Formal Induction of our Director Mr Shaivi Bansal as a Director at our Flagship Firm'
   },
   {
     year: '2020',
-    title: 'Digital Transformation',
-    description: 'Launched comprehensive digital platforms for seamless client experience.'
+    title: 'Sensed Opportunity',
+    description: 'Extensive R&D and technical overhaul - NEXTGEN Idea was born'
   },
   {
     year: '2024',
     title: 'NextGen Registry',
-    description: 'Established NextGen Share Registry Pvt Ltd to lead the next generation of RTA services.'
+    description: 'NEXTGEN SHARE REGISTRY PRIVATE LIMITED was formulated and started it's operations as a SEBI Registered RTA'
   }
 ]
 
