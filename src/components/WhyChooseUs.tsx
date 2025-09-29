@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { 
   ClockIcon, 
   ShieldCheckIcon, 
@@ -62,6 +63,42 @@ const values = [
 ]
 
 export default function WhyChooseUs() {
+  // Counter animation that starts only when active is true (in-view)
+  const useCounter = (end: number, duration: number, active: boolean) => {
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+      if (!active) {
+        setCount(0)
+        return
+      }
+
+      let startTime: number
+      let animationFrame: number
+
+      const animate = (currentTime: number) => {
+        if (!startTime) startTime = currentTime
+        const progress = Math.min((currentTime - startTime) / duration, 1)
+        setCount(Math.floor(progress * end))
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(animate)
+        }
+      }
+
+      animationFrame = requestAnimationFrame(animate)
+      return () => cancelAnimationFrame(animationFrame)
+    }, [end, duration, active])
+
+    return count
+  }
+
+  // Observe stats section visibility
+  const statsRef = useRef<HTMLDivElement | null>(null)
+  const statsInView = useInView(statsRef, { once: true, margin: '-100px' })
+
+  const yearsCount = useCounter(27, 2000, statsInView)
+  const clientsCount = useCounter(1500, 2500, statsInView)
+  const accuracyCount = useCounter(100, 2000, statsInView) // animate to 100, show 99.9%
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -146,6 +183,7 @@ export default function WhyChooseUs() {
 
         {/* Stats Section */}
         <motion.div 
+          ref={statsRef}
           className="mt-20 bg-gray-50 rounded-2xl p-8"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -154,15 +192,15 @@ export default function WhyChooseUs() {
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">27+</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{yearsCount}+</div>
               <div className="text-gray-600">Years Experience</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">1500+</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{clientsCount}+</div>
               <div className="text-gray-600">Clients Served</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">99.9%</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{Math.min(99.9, accuracyCount)}%</div>
               <div className="text-gray-600">Accuracy Rate</div>
             </div>
             <div>
