@@ -71,7 +71,7 @@ export default function Header() {
           <div className="hidden xl:flex items-center space-x-3">
             <div className="text-xs text-gray-600 leading-tight">
               <div>📧 Info@nextgenregistry.com</div>
-              <div>📞 +91-8178653316</div>
+              <div>📞 +91-8178653316/011-45060667</div>
             </div>
             <a
               href="https://login.nextgenregistry.com/"
