@@ -11,9 +11,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   ...generateSEOMetadata(),
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: '/assets/images/nextgen-logo.svg',
+    shortcut: '/assets/images/nextgen-logo.svg',
+    apple: '/assets/images/nextgen-logo.svg',
   },
   verification: {
     google: 'your-google-verification-code', // Add your Google Search Console verification code

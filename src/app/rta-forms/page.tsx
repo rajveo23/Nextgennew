@@ -593,7 +593,7 @@ startxref
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="font-semibold text-green-900">NextGen Registry Office</p>
                 <p className="text-sm text-green-700 mt-2">
-                  [Office Address]<br />
+                301, 3RD FLOOR, PRATAP CHAMBERS, GURUDWARA ROAD, KAROL BAGH, New Delhi, 110005<br />
                   Business Hours: 9:00 AM - 6:00 PM<br />
                   Monday to Friday
                 </p>

@@ -19,7 +19,7 @@ const milestones = [
   {
     year: '1990',
     title: 'Capital markets',
-    description: 'Our Group ventured into Broking Operations along with DP opertaions through our flagship group.'
+    description: 'Our Group ventured into Broking Operations along with DP operations through our flagship group.'
   },
   {
     year: '2010',

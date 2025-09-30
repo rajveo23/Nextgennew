@@ -21,7 +21,7 @@ export const seoConfig = {
   ],
   author: 'NextGen Share Registry Pvt Ltd',
   siteUrl: 'https://www.nextgenregistry.com',
-  image: '/assets/images/nextgen-og-image.jpg',
+  image: '/assets/images/new-logo.png',
   twitterHandle: '@nextgenregistry',
   
   // Company Information
@@ -59,7 +59,7 @@ export const seoConfig = {
     description: 'SEBI Registered Registrar & Share Transfer Agent specializing in ISIN generation, demat services, and corporate actions with 27+ years of experience.',
     url: 'https://www.nextgenregistry.com',
     logo: 'https://www.nextgenregistry.com/assets/images/new-logo.png',
-    image: 'https://www.nextgenregistry.com/assets/images/nextgen-og-image.jpg',
+    image: 'https://www.nextgenregistry.com/assets/images/new-logo.png',
     telephone: '+91-8178653316',
     email: 'Info@nextgenregistry.com',
     address: {
@@ -155,7 +155,8 @@ export const generateMetadata = (page?: {
           url: image,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: `${seoConfig.company.name} - ${title}`,
+          type: 'image/png',
         },
       ],
     },

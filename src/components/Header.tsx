@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Bars3Icon, XMarkIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { PhoneIcon } from '@heroicons/react/24/solid'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -69,9 +70,13 @@ export default function Header() {
 
           {/* Contact Info and Client Login */}
           <div className="hidden xl:flex items-center space-x-3">
-            <div className="text-xs text-gray-600 leading-tight">
+            <div className="text-xs text-gray-600 leading-tight space-y-0.5">
               <div>📧 Info@nextgenregistry.com</div>
-              <div>📞 +91-8178653316/011-45060667</div>
+              <div>📞 +91-8178653316</div>
+              <div className="flex items-center">
+                <PhoneIcon className="w-3 h-3 mr-1" />
+                <span>011-45060667</span>
+              </div>
             </div>
             <a
               href="https://login.nextgenregistry.com/"
@@ -130,7 +135,11 @@ export default function Header() {
             ))}
             <div className="px-3 py-2 text-sm text-gray-600 border-t border-gray-200 mt-4">
               <div className="mb-1">📧 Info@nextgenregistry.com</div>
-              <div className="mb-3">📞 +91-8178653316</div>
+              <div className="mb-1">📞 +91-8178653316</div>
+              <div className="mb-3 flex items-center">
+                <PhoneIcon className="w-3.5 h-3.5 mr-1" />
+                <span>011-45060667</span>
+              </div>
               <a
                 href="https://login.nextgenregistry.com/"
                 target="_blank"
