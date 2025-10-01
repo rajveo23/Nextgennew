@@ -137,12 +137,12 @@ function SpecialPersonWebContent() {
             <div className="container mx-auto px-4">
               <div className="max-w-4xl relative">
                 {/* Language Switcher and Text-to-Speech in Top Right */}
-                <div className="absolute top-0 right-0 flex items-center gap-3">
+                <div className="absolute top-0 right-0 flex items-center gap-2 flex-wrap justify-end">
                   <LanguageSwitcher />
                   <TextToSpeech />
                 </div>
                 
-                <h2 id="hero-heading" className="text-4xl md:text-5xl font-bold mb-6">
+                <h2 id="hero-heading" className="text-4xl md:text-5xl font-bold mb-6 pt-16 md:pt-0">
                   {t('heroHeading')}
                 </h2>
                 <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
