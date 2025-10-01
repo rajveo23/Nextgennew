@@ -52,8 +52,8 @@ function SpecialPersonWebContent() {
         <header role="banner" className="bg-gradient-to-r from-blue-900 to-blue-800 text-white pt-24">
           <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold mb-2">{t('pageTitle')}</h1>
-            <p className="text-xl text-blue-100">{t('pageSubtitle')}</p>
-            <p className="mt-2 text-blue-200">{t('complianceNote')}</p>
+            <p className="text-xl text-white">{t('pageSubtitle')}</p>
+            <p className="mt-2 text-white">{t('complianceNote')}</p>
           </div>
         </header>
 
@@ -65,6 +65,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#mainContent" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to home section"
                 >
                   {t('navHome')}
                 </a>
@@ -73,6 +74,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#services" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to services section"
                 >
                   {t('navServices')}
                 </a>
@@ -81,6 +83,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#why-choose-us" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to why choose us section"
                 >
                   {t('navWhyChooseUs')}
                 </a>
@@ -89,6 +92,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#team" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to team section"
                 >
                   {t('navTeam')}
                 </a>
@@ -97,6 +101,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#testimonials" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to testimonials section"
                 >
                   {t('navTestimonials')}
                 </a>
@@ -105,6 +110,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#contact" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to contact form section"
                 >
                   {t('navContact')}
                 </a>
@@ -113,6 +119,7 @@ function SpecialPersonWebContent() {
                 <a 
                   href="#accessibility" 
                   className="hover:text-blue-200 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:rounded px-3 py-2 inline-block"
+                  aria-label="Navigate to accessibility statement section"
                 >
                   {t('navAccessibility')}
                 </a>
@@ -145,21 +152,23 @@ function SpecialPersonWebContent() {
                 <h2 id="hero-heading" className="text-4xl md:text-5xl font-bold mb-6 pt-16 md:pt-0">
                   {t('heroHeading')}
                 </h2>
-                <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+                <p className="text-xl md:text-2xl text-white mb-8 leading-relaxed">
                   {t('heroDescription')}
                 </p>
                 
-                {/* CTA Buttons */}
+                {/* CTA Buttons - WCAG 2.4.4 descriptive link text */}
                 <div className="flex flex-wrap gap-4 mb-12">
                   <a 
                     href="#contact" 
-                    className="px-8 py-4 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 focus:outline-2 focus:outline-offset-2 focus:outline-white transition-colors min-h-[44px] inline-flex items-center"
+                    className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-2 focus:outline-offset-2 focus:outline-white transition-colors min-h-[44px] inline-flex items-center"
+                    aria-label="Get started with NextGen Registry services - Contact us"
                   >
                     {t('getStarted')}
                   </a>
                   <a 
                     href="#services" 
                     className="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-white transition-colors min-h-[44px] inline-flex items-center"
+                    aria-label="Learn more about our share registry services"
                   >
                     {t('learnMore')}
                   </a>
@@ -171,25 +180,25 @@ function SpecialPersonWebContent() {
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label={`${yearsCount} plus years experience`}>
                       {yearsCount}+
                     </div>
-                    <p className="text-sm text-blue-200">{t('yearsExperience')}</p>
+                    <p className="text-sm text-white">{t('yearsExperience')}</p>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label={`${clientsCount} plus clients served`}>
                       {clientsCount}+
                     </div>
-                    <p className="text-sm text-blue-200">{t('clientsServed')}</p>
+                    <p className="text-sm text-white">{t('clientsServed')}</p>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label="99.9 percent accuracy rate">
                       {accuracyCount}.9%
                     </div>
-                    <p className="text-sm text-blue-200">{t('accuracyRate')}</p>
+                    <p className="text-sm text-white">{t('accuracyRate')}</p>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label="24/7 support available">
                       24/7
                     </div>
-                    <p className="text-sm text-blue-200">{t('supportAvailable')}</p>
+                    <p className="text-sm text-white">{t('supportAvailable')}</p>
                   </div>
                 </div>
               </div>
@@ -202,14 +211,14 @@ function SpecialPersonWebContent() {
               <h2 id="services-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('servicesHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-700 text-center mb-12 max-w-3xl mx-auto">
                 {t('servicesSubheading')}
               </p>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <article className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service1Title')}</h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-800 mb-4">
                     {t('service1Desc')}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
@@ -228,9 +237,9 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service2Title')}</h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-800 mb-4">
                     {t('service2Desc')}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
@@ -249,9 +258,9 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service3Title')}</h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-800 mb-4">
                     {t('service3Desc')}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
@@ -270,9 +279,9 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service4Title')}</h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-800 mb-4">
                     {t('service4Desc')}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
@@ -300,7 +309,7 @@ function SpecialPersonWebContent() {
               <h2 id="why-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('whyHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-700 text-center mb-12 max-w-3xl mx-auto">
                 {t('whySubheading')}
               </p>
 
@@ -380,7 +389,7 @@ function SpecialPersonWebContent() {
               <h2 id="team-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('teamHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-700 text-center mb-12 max-w-3xl mx-auto">
                 {t('teamSubheading')}
               </p>
 
@@ -484,47 +493,47 @@ function SpecialPersonWebContent() {
               <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('testimonialsHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12">
+              <p className="text-xl text-gray-700 text-center mb-12">
                 {t('testimonialsSubheading')}
               </p>
 
               <div className="grid md:grid-cols-3 gap-8">
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
                   <div className="flex mb-4" aria-label="5 star rating">
                     <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
                   </div>
-                  <p className="text-gray-700 mb-4 italic leading-relaxed">
+                  <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial1')}"
                   </p>
-                  <div className="border-t border-gray-300 pt-4">
+                  <div className="border-t-2 border-gray-400 pt-4">
                     <p className="font-semibold text-gray-900">{t('testimonial1Company')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonial1Industry')}</p>
+                    <p className="text-sm text-gray-700">{t('testimonial1Industry')}</p>
                   </div>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
                   <div className="flex mb-4" aria-label="5 star rating">
                     <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
                   </div>
-                  <p className="text-gray-700 mb-4 italic leading-relaxed">
+                  <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial2')}"
                   </p>
-                  <div className="border-t border-gray-300 pt-4">
+                  <div className="border-t-2 border-gray-400 pt-4">
                     <p className="font-semibold text-gray-900">{t('testimonial2Company')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonial2Industry')}</p>
+                    <p className="text-sm text-gray-700">{t('testimonial2Industry')}</p>
                   </div>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
                   <div className="flex mb-4" aria-label="5 star rating">
                     <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
                   </div>
-                  <p className="text-gray-700 mb-4 italic leading-relaxed">
+                  <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial3')}"
                   </p>
-                  <div className="border-t border-gray-300 pt-4">
+                  <div className="border-t-2 border-gray-400 pt-4">
                     <p className="font-semibold text-gray-900">{t('testimonial3Company')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonial3Industry')}</p>
+                    <p className="text-sm text-gray-700">{t('testimonial3Industry')}</p>
                   </div>
                 </article>
               </div>
@@ -537,7 +546,7 @@ function SpecialPersonWebContent() {
               <h2 id="contact-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('contactHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12">
+              <p className="text-xl text-gray-700 text-center mb-12">
                 {t('contactSubheading')}
               </p>
               <AccessibleForm />
@@ -550,7 +559,7 @@ function SpecialPersonWebContent() {
               <h2 id="accessibility-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
                 {t('accessibilityHeading')}
               </h2>
-              <p className="text-xl text-gray-600 text-center mb-12">
+              <p className="text-xl text-gray-700 text-center mb-12">
                 {t('accessibilitySubheading')}
               </p>
               <AccessibilityStatement />
@@ -580,9 +589,9 @@ function SpecialPersonWebContent() {
               <div>
                 <h3 className="text-lg font-semibold mb-4">{t('footerQuickLinks')}</h3>
                 <ul className="space-y-2 text-gray-300">
-                  <li><a href="#services" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white">{t('navServices')}</a></li>
-                  <li><a href="#contact" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white">{t('navContact')}</a></li>
-                  <li><a href="#accessibility" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white">{t('navAccessibility')}</a></li>
+                  <li><a href="#services" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white" aria-label="Navigate to services section">{t('navServices')}</a></li>
+                  <li><a href="#contact" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white" aria-label="Navigate to contact form section">{t('navContact')}</a></li>
+                  <li><a href="#accessibility" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white" aria-label="Navigate to accessibility statement section">{t('navAccessibility')}</a></li>
                 </ul>
               </div>
               <div>

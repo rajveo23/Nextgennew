@@ -93,9 +93,9 @@ export default function AccessibleForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-gray-50 p-6 rounded-lg border border-gray-300">
-      <form onSubmit={handleSubmit} noValidate>
-        {/* Name Field */}
+    <div className="max-w-2xl mx-auto bg-gray-50 p-6 rounded-lg border-2 border-gray-400">
+      <form onSubmit={handleSubmit} noValidate aria-label="Contact form">
+        {/* Name Field - WCAG 3.3.1 & 3.3.2 compliant */}
         <div className="mb-6">
           <label 
             htmlFor="name" 
@@ -112,19 +112,19 @@ export default function AccessibleForm() {
             aria-required="true"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
-              errors.name ? 'border-red-600' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
+              errors.name ? 'border-red-600' : 'border-gray-400'
             }`}
             autoComplete="name"
           />
           {errors.name && (
-            <p id="name-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.name}
+            <p id="name-error" role="alert" className="mt-2 text-sm text-red-700 font-medium">
+              ✗ {errors.name}
             </p>
           )}
         </div>
 
-        {/* Email Field */}
+        {/* Email Field - WCAG 3.3.3 Error Suggestion */}
         <div className="mb-6">
           <label 
             htmlFor="email" 
@@ -132,6 +132,9 @@ export default function AccessibleForm() {
           >
             {t('emailAddress')} <span className="text-red-600" aria-label="required">*</span>
           </label>
+          <p id="email-hint" className="text-sm text-gray-700 mb-1">
+            Format: name@example.com
+          </p>
           <input
             type="email"
             id="email"
@@ -140,20 +143,20 @@ export default function AccessibleForm() {
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             aria-required="true"
             aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? 'email-error' : undefined}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
-              errors.email ? 'border-red-600' : 'border-gray-300'
+            aria-describedby={errors.email ? 'email-error email-hint' : 'email-hint'}
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
+              errors.email ? 'border-red-600' : 'border-gray-400'
             }`}
             autoComplete="email"
           />
           {errors.email && (
-            <p id="email-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.email}
+            <p id="email-error" role="alert" className="mt-2 text-sm text-red-700 font-medium">
+              ✗ {errors.email}
             </p>
           )}
         </div>
 
-        {/* Phone Field */}
+        {/* Phone Field - WCAG 3.3.3 Error Suggestion */}
         <div className="mb-6">
           <label 
             htmlFor="phone" 
@@ -161,6 +164,9 @@ export default function AccessibleForm() {
           >
             {t('phoneNumber')} <span className="text-red-600" aria-label="required">*</span>
           </label>
+          <p id="phone-hint" className="text-sm text-gray-700 mb-1">
+            Enter 10-digit phone number (e.g., 9876543210)
+          </p>
           <input
             type="tel"
             id="phone"
@@ -169,21 +175,21 @@ export default function AccessibleForm() {
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             aria-required="true"
             aria-invalid={!!errors.phone}
-            aria-describedby={errors.phone ? 'phone-error' : undefined}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
-              errors.phone ? 'border-red-600' : 'border-gray-300'
+            aria-describedby={errors.phone ? 'phone-error phone-hint' : 'phone-hint'}
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
+              errors.phone ? 'border-red-600' : 'border-gray-400'
             }`}
             autoComplete="tel"
             placeholder={t('phonePlaceholder')}
           />
           {errors.phone && (
-            <p id="phone-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.phone}
+            <p id="phone-error" role="alert" className="mt-2 text-sm text-red-700 font-medium">
+              ✗ {errors.phone}
             </p>
           )}
         </div>
 
-        {/* Service Selection */}
+        {/* Service Selection - WCAG 3.3.1 & 3.3.2 compliant */}
         <div className="mb-6">
           <label 
             htmlFor="service" 
@@ -199,8 +205,8 @@ export default function AccessibleForm() {
             aria-required="true"
             aria-invalid={!!errors.service}
             aria-describedby={errors.service ? 'service-error' : undefined}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
-              errors.service ? 'border-red-600' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
+              errors.service ? 'border-red-600' : 'border-gray-400'
             }`}
           >
             <option value="">{t('selectService')}</option>
@@ -211,13 +217,13 @@ export default function AccessibleForm() {
             <option value="other">{t('serviceOther')}</option>
           </select>
           {errors.service && (
-            <p id="service-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.service}
+            <p id="service-error" role="alert" className="mt-2 text-sm text-red-700 font-medium">
+              ✗ {errors.service}
             </p>
           )}
         </div>
 
-        {/* Message Field */}
+        {/* Message Field - WCAG 3.3.1 & 3.3.2 compliant */}
         <div className="mb-6">
           <label 
             htmlFor="message" 
@@ -234,14 +240,14 @@ export default function AccessibleForm() {
             aria-required="true"
             aria-invalid={!!errors.message}
             aria-describedby={errors.message ? 'message-error' : undefined}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
-              errors.message ? 'border-red-600' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
+              errors.message ? 'border-red-600' : 'border-gray-400'
             }`}
             placeholder={t('messagePlaceholder')}
           />
           {errors.message && (
-            <p id="message-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.message}
+            <p id="message-error" role="alert" className="mt-2 text-sm text-red-700 font-medium">
+              ✗ {errors.message}
             </p>
           )}
         </div>
