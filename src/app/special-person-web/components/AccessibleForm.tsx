@@ -140,7 +140,7 @@ export default function AccessibleForm() {
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             aria-required="true"
             aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? 'email-error email-hint' : 'email-hint'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
               errors.email ? 'border-red-600' : 'border-gray-400'
             }`}
@@ -169,7 +169,7 @@ export default function AccessibleForm() {
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             aria-required="true"
             aria-invalid={!!errors.phone}
-            aria-describedby={errors.phone ? 'phone-error phone-hint' : 'phone-hint'}
+            aria-describedby={errors.phone ? 'phone-error' : undefined}
             className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 text-gray-900 ${
               errors.phone ? 'border-red-600' : 'border-gray-400'
             }`}
