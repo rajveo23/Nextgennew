@@ -132,7 +132,7 @@ Enhanced CSS for:
 - **Section 508** - US Accessibility Standards (compatible)
 
 ## Contact for Accessibility Issues
-- Email: accessibility@nextgenregistry.com
+- Email: info@nextgenregistry.com
 - Phone: +91-8178653316
 - Response Time: Within 2 business days
 

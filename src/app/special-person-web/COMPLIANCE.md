@@ -220,7 +220,7 @@
 
 For accessibility issues, feedback, or alternative format requests:
 
-- **Email**: accessibility@nextgenregistry.com
+- **Email**: info@nextgenregistry.com
 - **Phone**: +91-8178653316
 - **Office Hours**: Monday to Friday, 9:30 AM to 6:00 PM IST
 - **Response Time**: Within 2 business days

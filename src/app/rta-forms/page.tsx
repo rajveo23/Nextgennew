@@ -194,6 +194,8 @@ export default function RTAFormsPage() {
 
   const handleDownload = async (formName: string, fileUrl?: string) => {
     try {
+      // Detect Safari browser
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
       
       // If we have a file URL from the database, use it directly
       if (fileUrl && fileUrl.trim() !== '') {
@@ -203,14 +205,20 @@ export default function RTAFormsPage() {
           const testResponse = await fetch(fileUrl, { method: 'HEAD' })
           
           if (testResponse.ok) {
-            const link = document.createElement('a')
-            link.href = fileUrl
-            link.download = formName
-            link.target = '_blank'
-            
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
+            if (isSafari) {
+              // Safari-specific download method
+              window.open(fileUrl, '_blank')
+            } else {
+              const link = document.createElement('a')
+              link.href = fileUrl
+              link.download = formName
+              link.target = '_blank'
+              link.rel = 'noopener noreferrer'
+              
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+            }
             
             return
           } else {
@@ -229,14 +237,20 @@ export default function RTAFormsPage() {
       
       if (response.ok) {
         // File exists, proceed with download
-        const link = document.createElement('a')
-        link.href = formPath
-        link.download = fileName
-        link.target = '_blank'
-        
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+        if (isSafari) {
+          // Safari-specific download method
+          window.open(formPath, '_blank')
+        } else {
+          const link = document.createElement('a')
+          link.href = formPath
+          link.download = fileName
+          link.target = '_blank'
+          link.rel = 'noopener noreferrer'
+          
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
         
         // Show success message
         alert(`Downloading ${formName} form...`)
@@ -317,16 +331,26 @@ startxref
         const blob = new Blob([pdfContent], { type: 'application/pdf' })
         const url = URL.createObjectURL(blob)
         
-        const link = document.createElement('a')
-        link.href = url
-        link.download = fileName
-        
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        
-        // Clean up
-        URL.revokeObjectURL(url)
+        if (isSafari) {
+          // Safari-specific: Open in new tab instead of download
+          const newWindow = window.open(url, '_blank')
+          if (newWindow) {
+            // Clean up after a delay
+            setTimeout(() => URL.revokeObjectURL(url), 1000)
+          }
+        } else {
+          const link = document.createElement('a')
+          link.href = url
+          link.download = fileName
+          link.rel = 'noopener noreferrer'
+          
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+          
+          // Clean up
+          setTimeout(() => URL.revokeObjectURL(url), 100)
+        }
         
         alert(`📄 ${formName}\n\nDemo version downloaded. To upload actual forms:\n1. Go to /admin/forms\n2. Edit the form\n3. Upload the actual file`)
       }

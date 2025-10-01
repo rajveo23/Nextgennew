@@ -592,10 +592,10 @@ function SpecialPersonWebContent() {
                 </p>
                 <p>
                   <a 
-                    href="mailto:accessibility@nextgenregistry.com" 
+                    href="mailto:info@nextgenregistry.com" 
                     className="text-blue-400 hover:text-blue-300 focus:outline-2 focus:outline-offset-2 focus:outline-white"
                   >
-                    accessibility@nextgenregistry.com
+                    info@nextgenregistry.com
                   </a>
                 </p>
               </div>
