@@ -26,8 +26,8 @@ export default function LanguageSwitcher() {
     <button
       onClick={toggleLanguage}
       className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px] text-white font-medium shrink-0"
-      aria-label={language === 'en' ? t('switchToHindi') : t('switchToEnglish')}
       title={language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+      type="button"
     >
       <Languages className="w-4 h-4 md:w-5 md:h-5" aria-hidden="true" />
       <span className="text-xs md:text-sm whitespace-nowrap">

@@ -119,10 +119,12 @@ export default function TextToSpeech() {
     <button
       onClick={toggleSpeech}
       className="p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
-      aria-label={isSpeaking ? t('stopReading') : t('readAloud')}
+      aria-label={isSpeaking ? 'Stop Reading' : 'Read Aloud'}
       aria-pressed={isSpeaking}
-      title={isSpeaking ? t('stopReading') : t('readAloud')}
+      title={isSpeaking ? 'Stop reading' : 'Read aloud'}
+      type="button"
     >
+      <span className="sr-only">{isSpeaking ? 'Stop Reading' : 'Read Aloud'}</span>
       {isSpeaking ? (
         <VolumeX className="w-5 h-5 md:w-6 md:h-6 text-white" aria-hidden="true" />
       ) : (

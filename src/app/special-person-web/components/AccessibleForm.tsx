@@ -132,9 +132,6 @@ export default function AccessibleForm() {
           >
             {t('emailAddress')} <span className="text-red-600" aria-label="required">*</span>
           </label>
-          <p id="email-hint" className="text-sm text-gray-700 mb-1">
-            Format: name@example.com
-          </p>
           <input
             type="email"
             id="email"
@@ -164,9 +161,6 @@ export default function AccessibleForm() {
           >
             {t('phoneNumber')} <span className="text-red-600" aria-label="required">*</span>
           </label>
-          <p id="phone-hint" className="text-sm text-gray-700 mb-1">
-            Enter 10-digit phone number (e.g., 9876543210)
-          </p>
           <input
             type="tel"
             id="phone"

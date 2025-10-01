@@ -160,7 +160,7 @@ function SpecialPersonWebContent() {
                 <div className="flex flex-wrap gap-4 mb-12">
                   <a 
                     href="#contact" 
-                    className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-2 focus:outline-offset-2 focus:outline-white transition-colors min-h-[44px] inline-flex items-center"
+                    className="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-white transition-colors min-h-[44px] inline-flex items-center"
                     aria-label="Get started with NextGen Registry services - Contact us"
                   >
                     {t('getStarted')}
@@ -176,25 +176,25 @@ function SpecialPersonWebContent() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-blue-600">
-                  <div className="text-center">
+                  <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-2" tabIndex={0}>
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label={`${yearsCount} plus years experience`}>
                       {yearsCount}+
                     </div>
                     <p className="text-sm text-white">{t('yearsExperience')}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-2" tabIndex={0}>
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label={`${clientsCount} plus clients served`}>
                       {clientsCount}+
                     </div>
                     <p className="text-sm text-white">{t('clientsServed')}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-2" tabIndex={0}>
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label="99.9 percent accuracy rate">
                       {accuracyCount}.9%
                     </div>
                     <p className="text-sm text-white">{t('accuracyRate')}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-2" tabIndex={0}>
                     <div className="text-3xl font-bold text-green-400 mb-2" aria-label="24/7 support available">
                       24/7
                     </div>
@@ -216,7 +216,7 @@ function SpecialPersonWebContent() {
               </p>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service1Title')}</h3>
                   <p className="text-gray-800 mb-4">
                     {t('service1Desc')}
@@ -237,7 +237,7 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service2Title')}</h3>
                   <p className="text-gray-800 mb-4">
                     {t('service2Desc')}
@@ -258,7 +258,7 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service3Title')}</h3>
                   <p className="text-gray-800 mb-4">
                     {t('service3Desc')}
@@ -279,7 +279,7 @@ function SpecialPersonWebContent() {
                   </ul>
                 </article>
 
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 hover:shadow-lg transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('service4Title')}</h3>
                   <p className="text-gray-800 mb-4">
                     {t('service4Desc')}
@@ -314,42 +314,42 @@ function SpecialPersonWebContent() {
               </p>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why1Title')}</h3>
                   <p className="text-gray-700">
                     {t('why1Desc')}
                   </p>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why2Title')}</h3>
                   <p className="text-gray-700">
                     {t('why2Desc')}
                   </p>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why3Title')}</h3>
                   <p className="text-gray-700">
                     {t('why3Desc')}
                   </p>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why4Title')}</h3>
                   <p className="text-gray-700">
                     {t('why4Desc')}
                   </p>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why5Title')}</h3>
                   <p className="text-gray-700">
                     {t('why5Desc')}
                   </p>
                 </article>
 
-                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <article className="bg-gray-50 border border-gray-200 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('why6Title')}</h3>
                   <p className="text-gray-700">
                     {t('why6Desc')}
@@ -359,21 +359,21 @@ function SpecialPersonWebContent() {
 
               {/* Mission, Vision, Values */}
               <div className="grid md:grid-cols-3 gap-8">
-                <article className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-lg p-8">
+                <article className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-lg p-8 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white" tabIndex={0}>
                   <h3 className="text-2xl font-bold mb-4">{t('missionTitle')}</h3>
                   <p className="text-blue-50">
                     {t('missionDesc')}
                   </p>
                 </article>
 
-                <article className="bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-lg p-8">
+                <article className="bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-lg p-8 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white" tabIndex={0}>
                   <h3 className="text-2xl font-bold mb-4">{t('valuesTitle')}</h3>
                   <p className="text-purple-50">
                     {t('valuesDesc')}
                   </p>
                 </article>
 
-                <article className="bg-gradient-to-br from-green-600 to-green-800 text-white rounded-lg p-8">
+                <article className="bg-gradient-to-br from-green-600 to-green-800 text-white rounded-lg p-8 focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white" tabIndex={0}>
                   <h3 className="text-2xl font-bold mb-4">{t('visionTitle')}</h3>
                   <p className="text-green-50">
                     {t('visionDesc')}
@@ -394,7 +394,7 @@ function SpecialPersonWebContent() {
               </p>
 
               <div className="grid md:grid-cols-2 gap-8 mb-12">
-                <article className="bg-white border border-gray-300 rounded-lg p-8">
+                <article className="bg-white border border-gray-300 rounded-lg p-8 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <div className="mb-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('name1')}</h3>
                     <p className="text-lg text-blue-600 font-semibold mb-4">{t('directorFounder')}</p>
@@ -428,7 +428,7 @@ function SpecialPersonWebContent() {
                   </div>
                 </article>
 
-                <article className="bg-white border border-gray-300 rounded-lg p-8">
+                <article className="bg-white border border-gray-300 rounded-lg p-8 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
                   <div className="mb-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('name2')}</h3>
                     <p className="text-lg text-blue-600 font-semibold mb-4">{t('executiveDirector')}</p>
@@ -498,9 +498,9 @@ function SpecialPersonWebContent() {
               </p>
 
               <div className="grid md:grid-cols-3 gap-8">
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
-                  <div className="flex mb-4" aria-label="5 star rating">
-                    <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
+                  <div className="mb-4">
+                    <span className="text-gray-900 text-lg font-bold">5 Star</span>
                   </div>
                   <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial1')}"
@@ -511,9 +511,9 @@ function SpecialPersonWebContent() {
                   </div>
                 </article>
 
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
-                  <div className="flex mb-4" aria-label="5 star rating">
-                    <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
+                  <div className="mb-4">
+                    <span className="text-gray-900 text-lg font-bold">5 Star</span>
                   </div>
                   <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial2')}"
@@ -524,9 +524,9 @@ function SpecialPersonWebContent() {
                   </div>
                 </article>
 
-                <article className="bg-white border-2 border-gray-400 rounded-lg p-6">
-                  <div className="flex mb-4" aria-label="5 star rating">
-                    <span className="text-yellow-500 text-2xl" aria-hidden="true">★★★★★</span>
+                <article className="bg-white border-2 border-gray-400 rounded-lg p-6 focus:outline-2 focus:outline-offset-2 focus:outline-blue-600 focus:ring-2 focus:ring-blue-600" tabIndex={0}>
+                  <div className="mb-4">
+                    <span className="text-gray-900 text-lg font-bold">5 Star</span>
                   </div>
                   <p className="text-gray-800 mb-4 italic leading-relaxed">
                     "{t('testimonial3')}"
@@ -571,7 +571,7 @@ function SpecialPersonWebContent() {
         <footer role="contentinfo" className="bg-gray-900 text-white mt-12">
           <div className="container mx-auto px-4 py-8">
             <div className="grid md:grid-cols-3 gap-8">
-              <div>
+              <div className="focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-4" tabIndex={0}>
                 <h3 className="text-lg font-semibold mb-4">{t('footerContact')}</h3>
                 <address className="not-italic text-gray-300">
                   <p>NextGen Share Registry Pvt Ltd</p>
@@ -586,7 +586,7 @@ function SpecialPersonWebContent() {
                   </p>
                 </address>
               </div>
-              <div>
+              <div className="focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-4" tabIndex={0}>
                 <h3 className="text-lg font-semibold mb-4">{t('footerQuickLinks')}</h3>
                 <ul className="space-y-2 text-gray-300">
                   <li><a href="#services" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white" aria-label="Navigate to services section">{t('navServices')}</a></li>
@@ -594,7 +594,7 @@ function SpecialPersonWebContent() {
                   <li><a href="#accessibility" className="hover:text-blue-400 focus:outline-2 focus:outline-offset-2 focus:outline-white" aria-label="Navigate to accessibility statement section">{t('navAccessibility')}</a></li>
                 </ul>
               </div>
-              <div>
+              <div className="focus:outline-2 focus:outline-offset-2 focus:outline-white focus:ring-2 focus:ring-white rounded-lg p-4" tabIndex={0}>
                 <h3 className="text-lg font-semibold mb-4">{t('footerAccessibilitySupport')}</h3>
                 <p className="text-gray-300 mb-2">
                   {t('footerAccessibilityText')}
