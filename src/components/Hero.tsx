@@ -84,7 +84,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              NextGen RTA<br />
+              NextGen - RTA<br />
               <span className="text-green-400">SEBI Registered</span>
             </motion.h1>
             
@@ -94,7 +94,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              Registrar & Share Transfer Agent specializing in ISIN generation, demat services, and e-voting events with unmatched speed and accuracy
+              Premier Registrar & Share Transfer Agent for Demat & ISIN Services. Specializing in ISIN generation, demat services, corporate actions, and e-voting with 27+ years experience
             </motion.p>
             
             {/* CTA Buttons */}

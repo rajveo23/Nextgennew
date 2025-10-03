@@ -65,6 +65,9 @@ export default function Services() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.05 }}
+              tabIndex={0}
+              role="article"
+              aria-label={service.title}
             >
               <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <service.icon className="w-8 h-8 text-white" />

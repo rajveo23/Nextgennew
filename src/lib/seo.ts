@@ -1,6 +1,6 @@
 export const seoConfig = {
-  title: 'NextGen Registry: BEST RTA in Delhi For Demat & ISIN Services',
-  description: 'At NextGen Share Registry, we specialize in ISIN generation for equities, preference shares, debentures, and AIFs with unmatched speed and accuracy. SEBI Registered RTA with 27+ years experience.',
+  title: 'NextGen Registry - SEBI Registered RTA for Demat & ISIN Services',
+  description: 'SEBI Registered RTA specializing in ISIN generation, demat services, and corporate actions. 27+ years experience in share registry services across India.',
   keywords: [
     'NextGen RTA',
     'NextGen Registry',

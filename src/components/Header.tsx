@@ -108,11 +108,14 @@ export default function Header() {
               type="button"
               className="text-gray-700 hover:text-primary-600 p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
+              <span className="sr-only">Menu</span>
               {mobileMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               ) : (
-                <Bars3Icon className="h-6 w-6" />
+                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
