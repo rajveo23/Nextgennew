@@ -8,8 +8,8 @@ import ContactCTA from '../components/ContactCTA'
 import { generateMetadata as generateSEOMetadata } from '../lib/seo'
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Home',
-  description: 'SEBI Registered RTA specializing in ISIN generation, demat services, and corporate actions. 27+ years experience in share registry services across India.',
+  title: 'NextGen Registry: SEBI Registered RTA for ISIN & Demat Services',
+  description: 'Your trusted RTA in Delhi with 27+ years of experience. We provide fast, accurate ISIN generation for equities, debentures, AIFs, and all Demat services.',
   keywords: ['NextGen RTA', 'ISIN creation Delhi', 'RTA services', 'Demat services', 'SEBI registered', 'Share registry'],
   url: '/'
 })
