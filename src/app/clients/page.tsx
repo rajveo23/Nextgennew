@@ -101,7 +101,10 @@ export default function ClientsPage() {
         // Load clients
         await AdminDataManager.initializeData()
         const clientData: Client[] = await AdminDataManager.getClients()
-        setClients(clientData.filter((client: Client) => client.isActive))
+        const sortedClients = clientData
+          .filter((client: Client) => client.isActive)
+          .sort((a, b) => b.serialNumber - a.serialNumber)
+        setClients(sortedClients)
 
         // Load client logos
         const logosResponse = await fetch('/api/client-logos', {

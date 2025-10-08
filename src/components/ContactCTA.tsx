@@ -64,7 +64,7 @@ export default function ContactCTA() {
             viewport={{ once: true }}
           >
             <div className="space-y-8 max-w-md mx-auto lg:mx-0">
-              <div className="flex items-start space-x-4 justify-center lg:justify-start">
+              <div className="flex items-start space-x-4 lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <PhoneIcon className="w-6 h-6 text-white" />
                 </div>
@@ -75,7 +75,7 @@ export default function ContactCTA() {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4 justify-center lg:justify-start">
+              <div className="flex items-start space-x-4 lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <EnvelopeIcon className="w-6 h-6 text-white" />
                 </div>
@@ -88,7 +88,7 @@ export default function ContactCTA() {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4 justify-center lg:justify-start">
+              <div className="flex items-start space-x-4 lg:justify-start">
                 <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <MapPinIcon className="w-6 h-6 text-white" />
                 </div>
