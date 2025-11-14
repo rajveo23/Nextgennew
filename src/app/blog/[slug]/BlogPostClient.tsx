@@ -1,0 +1,190 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import {
+  CalendarDaysIcon,
+  UserIcon,
+  TagIcon,
+  ClockIcon,
+  ArrowLeftIcon,
+  ShareIcon
+} from '@heroicons/react/24/outline'
+
+interface BlogPost {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  status: 'published' | 'draft' | 'scheduled'
+  author: string
+  publishDate: string
+  category: string
+  views: number
+  image?: string
+  tags: string[]
+}
+
+interface BlogPostClientProps {
+  blog: BlogPost
+}
+
+export default function BlogPostClient({ blog }: BlogPostClientProps) {
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: blog.title,
+        text: blog.excerpt,
+        url: window.location.href,
+      })
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href)
+      alert('Link copied to clipboard!')
+    }
+  }
+
+  return (
+    <div className="pt-16">
+      {/* Hero Section */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Breadcrumb */}
+            <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+              <Link href="/" className="hover:text-primary-600">Home</Link>
+              <span>/</span>
+              <Link href="/blog" className="hover:text-primary-600">Blog</Link>
+              <span>/</span>
+              <span className="text-gray-900">{blog.title}</span>
+            </nav>
+
+            {/* Category Badge */}
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+                {blog.category}
+              </span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              {blog.title}
+            </h1>
+
+            {/* Meta Information */}
+            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+              <div className="flex items-center">
+                <UserIcon className="h-4 w-4 mr-2" />
+                <span>By {blog.author}</span>
+              </div>
+              <div className="flex items-center">
+                <CalendarDaysIcon className="h-4 w-4 mr-2" />
+                <span>{new Date(blog.publishDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}</span>
+              </div>
+              <div className="flex items-center">
+                <ClockIcon className="h-4 w-4 mr-2" />
+                <span>{Math.ceil(blog.content.length / 1000)} min read</span>
+              </div>
+            </div>
+
+            {/* Share Button */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex flex-wrap gap-2">
+                {blog.tags.map((tag) => (
+                  <span key={tag} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
+                    <TagIcon className="h-3 w-3 mr-1" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={handleShare}
+                className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                <ShareIcon className="h-4 w-4 mr-2" />
+                Share
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured Image */}
+      {blog.image && (
+        <section className="py-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="rounded-lg overflow-hidden shadow-lg"
+            >
+              <img
+                src={blog.image}
+                alt={blog.title}
+                className="w-full h-64 md:h-96 object-cover"
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Content */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.article
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="prose prose-lg max-w-none"
+          >
+            <div 
+              className="text-gray-700 leading-relaxed space-y-4"
+              dangerouslySetInnerHTML={{ 
+                __html: blog.content
+                  // Handle headings first
+                  .replace(/^### (.*$)/gim, '<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">$1</h3>')
+                  .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
+                  .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-5">$1</h1>')
+                  // Handle bold and italic
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em class="italic text-gray-800">$1</em>')
+                  // Handle lists
+                  .replace(/^- (.*$)/gim, '<li class="ml-6 list-disc text-gray-700 mb-2">$1</li>')
+                  // Handle links
+                  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:text-primary-800 underline">$1</a>')
+                  // Handle line breaks and paragraphs
+                  .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed mb-4">')
+                  .replace(/\n/g, '<br>')
+                  // Wrap in paragraph tags
+                  .replace(/^(.*)/, '<p class="text-gray-700 leading-relaxed mb-4">$1</p>')
+              }} 
+            />
+          </motion.article>
+        </div>
+      </section>
+
+      {/* Back to Blog */}
+      <section className="py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/blog"
+            className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
+          >
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
+            Back to All Posts
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}

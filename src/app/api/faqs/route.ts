@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { DatabaseService } from '../../../lib/database'
 
 // GET /api/faqs - Get all FAQs
@@ -53,6 +54,14 @@ export async function POST(request: NextRequest) {
       updatedAt: newFAQ.updated_at
     }
     
+    // Revalidate FAQ page to include new FAQ
+    try {
+      revalidatePath('/faq')
+      revalidatePath('/', 'layout') // Revalidate sitemap if FAQs are included
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
+    
     return NextResponse.json(legacyFAQ, { status: 201 })
   } catch (error) {
     console.error('Error creating FAQ:', error)
@@ -99,6 +108,13 @@ export async function PUT(request: NextRequest) {
       updatedAt: updatedFAQ.updated_at
     }
     
+    // Revalidate FAQ page to reflect updates
+    try {
+      revalidatePath('/faq')
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
+    
     return NextResponse.json(legacyFAQ)
   } catch (error) {
     console.error('Error updating FAQ:', error)
@@ -127,6 +143,13 @@ export async function DELETE(request: NextRequest) {
     }
     
     await DatabaseService.deleteFAQ(existingFAQ.id)
+    
+    // Revalidate FAQ page to remove deleted FAQ
+    try {
+      revalidatePath('/faq')
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
     
     return NextResponse.json({ success: true })
   } catch (error) {

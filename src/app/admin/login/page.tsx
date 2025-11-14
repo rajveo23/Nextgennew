@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { supabase } from '../../../lib/supabase'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -19,23 +20,38 @@ export default function AdminLogin() {
     setIsLoading(true)
     setError('')
 
-    // Simple authentication - in production, use proper authentication
-    if (email === 'admin@nextgenregistry.com' && password === 'admin123') {
-      // Set authentication in localStorage
-      localStorage.setItem('adminAuth', 'true')
-      localStorage.setItem('adminUser', JSON.stringify({
+    try {
+      // Use Supabase authentication
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
-        name: 'Admin User',
-        loginTime: new Date().toISOString()
-      }))
-      
-      // Small delay for better UX
-      setTimeout(() => {
-        router.push('/admin')
+        password: password,
+      })
+
+      if (error) {
+        setError('Invalid email or password')
         setIsLoading(false)
-      }, 500)
-    } else {
-      setError('Invalid email or password')
+        return
+      }
+
+      if (data.user) {
+        // Set authentication in localStorage for compatibility
+        localStorage.setItem('adminAuth', 'true')
+        localStorage.setItem('adminUser', JSON.stringify({
+          email: data.user.email,
+          name: data.user.user_metadata?.name || 'Admin User',
+          loginTime: new Date().toISOString(),
+          id: data.user.id
+        }))
+        
+        // Small delay for better UX
+        setTimeout(() => {
+          router.push('/admin')
+          setIsLoading(false)
+        }, 500)
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setError('An error occurred during login')
       setIsLoading(false)
     }
   }

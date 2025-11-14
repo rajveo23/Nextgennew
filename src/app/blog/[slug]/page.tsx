@@ -1,9 +1,10 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { DatabaseService } from '../../../lib/database'
+import BlogPostClient from './BlogPostClient'
+
 interface BlogPost {
   id: number
   title: string
@@ -18,225 +19,111 @@ interface BlogPost {
   image?: string
   tags: string[]
 }
-import {
-  CalendarDaysIcon,
-  UserIcon,
-  TagIcon,
-  ClockIcon,
-  ArrowLeftIcon,
-  ShareIcon
-} from '@heroicons/react/24/outline'
 
-export default function BlogPostPage() {
-  const params = useParams()
-  const slug = params.slug as string
-  const [blog, setBlog] = useState<BlogPost | null>(null)
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    const loadBlog = async () => {
-      if (slug) {
-        try {
-          // Fetch all blogs from API
-          const response = await fetch('/api/blogs')
-          if (response.ok) {
-            const blogs: BlogPost[] = await response.json()
-            
-            // Find the blog by slug
-            const foundBlog = blogs.find((b: BlogPost) => b.slug === slug && b.status === 'published')
-            setBlog(foundBlog || null)
-          }
-        } catch (error) {
-          console.error('Error loading blog:', error)
-          setBlog(null)
-        } finally {
-          setLoading(false)
-        }
+interface PageProps {
+  params: { slug: string }
+}
+
+// Generate static params for all blog posts
+export async function generateStaticParams() {
+  try {
+    const blogs = await DatabaseService.getAllBlogPosts()
+    const publishedBlogs = blogs.filter(blog => blog.status === 'published')
+    
+    return publishedBlogs.map((blog) => ({
+      slug: blog.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  try {
+    const blogs = await DatabaseService.getAllBlogPosts()
+    const blog = blogs.find(b => b.slug === params.slug && b.status === 'published')
+    
+    if (!blog) {
+      return {
+        title: 'Blog Post Not Found | NextGen Registry',
+        description: 'The requested blog post could not be found.'
       }
     }
-    loadBlog()
-  }, [slug])
 
-  if (loading) {
-    return (
-      <div className="pt-16 min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    )
-  }
-
-  if (!blog) {
-    return (
-      <div className="pt-16 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog Post Not Found</h1>
-          <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist or has been removed.</p>
-          <Link 
-            href="/blog"
-            className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-          >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Blog
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
+    return {
+      title: `${blog.title} | NextGen Registry Blog`,
+      description: blog.excerpt || blog.content.substring(0, 160) + '...',
+      keywords: blog.tags.join(', '),
+      authors: [{ name: blog.author }],
+      openGraph: {
         title: blog.title,
-        text: blog.excerpt,
-        url: window.location.href,
-      })
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href)
-      alert('Link copied to clipboard!')
+        description: blog.excerpt || blog.content.substring(0, 160) + '...',
+        type: 'article',
+        publishedTime: blog.publish_date || blog.created_at,
+        authors: [blog.author],
+        tags: blog.tags,
+        images: blog.featured_image_url ? [{
+          url: blog.featured_image_url,
+          width: 1200,
+          height: 630,
+          alt: blog.title
+        }] : []
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: blog.title,
+        description: blog.excerpt || blog.content.substring(0, 160) + '...',
+        images: blog.featured_image_url ? [blog.featured_image_url] : []
+      },
+      alternates: {
+        canonical: `/blog/${blog.slug}`
+      }
+    }
+  } catch (error) {
+    console.error('Error generating metadata:', error)
+    return {
+      title: 'Blog | NextGen Registry',
+      description: 'NextGen Registry Blog'
     }
   }
-
-  return (
-    <div className="pt-16">
-      {/* Hero Section */}
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Breadcrumb */}
-            <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-              <Link href="/" className="hover:text-primary-600">Home</Link>
-              <span>/</span>
-              <Link href="/blog" className="hover:text-primary-600">Blog</Link>
-              <span>/</span>
-              <span className="text-gray-900">{blog.title}</span>
-            </nav>
-
-            {/* Category Badge */}
-            <div className="mb-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
-                {blog.category}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              {blog.title}
-            </h1>
-
-            {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
-              <div className="flex items-center">
-                <UserIcon className="h-4 w-4 mr-2" />
-                <span>By {blog.author}</span>
-              </div>
-              <div className="flex items-center">
-                <CalendarDaysIcon className="h-4 w-4 mr-2" />
-                <span>{new Date(blog.publishDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}</span>
-              </div>
-              <div className="flex items-center">
-                <ClockIcon className="h-4 w-4 mr-2" />
-                <span>{Math.ceil(blog.content.length / 1000)} min read</span>
-              </div>
-            </div>
-
-            {/* Share Button */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex flex-wrap gap-2">
-                {blog.tags.map((tag) => (
-                  <span key={tag} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
-                    <TagIcon className="h-3 w-3 mr-1" />
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={handleShare}
-                className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                <ShareIcon className="h-4 w-4 mr-2" />
-                Share
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Image */}
-      {blog.image && (
-        <section className="py-8">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="rounded-lg overflow-hidden shadow-lg"
-            >
-              <img
-                src={blog.image}
-                alt={blog.title}
-                className="w-full h-64 md:h-96 object-cover"
-              />
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* Content */}
-      <section className="py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.article
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="prose prose-lg max-w-none"
-          >
-            <div 
-              className="text-gray-700 leading-relaxed space-y-4"
-              dangerouslySetInnerHTML={{ 
-                __html: blog.content
-                  // Handle headings first
-                  .replace(/^### (.*$)/gim, '<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">$1</h3>')
-                  .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
-                  .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-5">$1</h1>')
-                  // Handle bold and italic
-                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>')
-                  .replace(/\*(.*?)\*/g, '<em class="italic text-gray-800">$1</em>')
-                  // Handle lists
-                  .replace(/^- (.*$)/gim, '<li class="ml-6 list-disc text-gray-700 mb-2">$1</li>')
-                  // Handle links
-                  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:text-primary-800 underline">$1</a>')
-                  // Handle line breaks and paragraphs
-                  .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed mb-4">')
-                  .replace(/\n/g, '<br>')
-                  // Wrap in paragraph tags
-                  .replace(/^(.*)/, '<p class="text-gray-700 leading-relaxed mb-4">$1</p>')
-              }} 
-            />
-          </motion.article>
-        </div>
-      </section>
-
-
-      {/* Back to Blog */}
-      <section className="py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/blog"
-            className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
-          >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to All Posts
-          </Link>
-        </div>
-      </section>
-    </div>
-  )
 }
+
+// Server component for static generation
+export default async function BlogPostPage({ params }: PageProps) {
+  try {
+    const blogs = await DatabaseService.getAllBlogPosts()
+    const blog = blogs.find(b => b.slug === params.slug && b.status === 'published')
+    
+    if (!blog) {
+      notFound()
+    }
+
+    // Convert to legacy format for compatibility
+    const legacyBlog: BlogPost = {
+      id: parseInt(blog.id.replace(/-/g, '').substring(0, 8), 16),
+      title: blog.title,
+      slug: blog.slug,
+      excerpt: blog.excerpt || '',
+      content: blog.content,
+      status: blog.status as 'published' | 'draft' | 'scheduled',
+      author: blog.author,
+      publishDate: blog.publish_date || blog.created_at.split('T')[0],
+      category: blog.category || 'General',
+      views: blog.views,
+      image: blog.featured_image_url || undefined,
+      tags: blog.tags || []
+    }
+
+    // Return the client component with the blog data
+    return <BlogPostClient blog={legacyBlog} />
+  } catch (error) {
+    console.error('Error loading blog post:', error)
+    notFound()
+  }
+}
+
+// Force static generation
+export const dynamic = 'force-static'
+export const revalidate = 3600 // Revalidate every hour

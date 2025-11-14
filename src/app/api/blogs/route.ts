@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { DatabaseService } from '../../../lib/database'
 
 // GET /api/blogs - Get all blogs
@@ -74,6 +75,15 @@ export async function POST(request: NextRequest) {
       featured: newBlog.published
     }
     
+    // Revalidate blog pages to include new post
+    try {
+      revalidatePath('/blog')
+      revalidatePath('/blog/[slug]', 'page')
+      revalidatePath('/', 'layout') // Revalidate sitemap
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
+    
     return NextResponse.json(legacyBlog, { status: 201 })
   } catch (error) {
     console.error('Error creating blog:', error)
@@ -134,6 +144,15 @@ export async function PUT(request: NextRequest) {
       featured: updatedBlog.published
     }
     
+    // Revalidate blog pages to reflect updates
+    try {
+      revalidatePath('/blog')
+      revalidatePath(`/blog/${updatedBlog.slug}`)
+      revalidatePath('/blog/[slug]', 'page')
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
+    
     return NextResponse.json(legacyBlog)
   } catch (error) {
     console.error('Error updating blog:', error)
@@ -162,6 +181,15 @@ export async function DELETE(request: NextRequest) {
     }
     
     await DatabaseService.deleteBlogPost(existingBlog.id)
+    
+    // Revalidate blog pages to remove deleted post
+    try {
+      revalidatePath('/blog')
+      revalidatePath(`/blog/${existingBlog.slug}`)
+      revalidatePath('/blog/[slug]', 'page')
+    } catch (revalidateError) {
+      console.warn('Revalidation failed:', revalidateError)
+    }
     
     return NextResponse.json({ success: true })
   } catch (error) {
