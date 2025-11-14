@@ -52,11 +52,21 @@ export class DatabaseService {
   // Check if Supabase is configured before operations
   private static checkConfiguration() {
     if (!isSupabaseConfigured()) {
+      // During build time, return empty data instead of throwing error
+      if (process.env.NODE_ENV === 'production' || process.env.NEXT_PHASE === 'phase-production-build') {
+        console.warn('Supabase not configured during build - returning empty data')
+        return false
+      }
       throw new Error('Supabase is not configured. Please check environment variables.')
     }
     if (!db) {
+      if (process.env.NODE_ENV === 'production' || process.env.NEXT_PHASE === 'phase-production-build') {
+        console.warn('Database client not available during build - returning empty data')
+        return false
+      }
       throw new Error('Database client is not available')
     }
+    return true
   }
   // Client operations
   static async getClients(): Promise<Client[]> {

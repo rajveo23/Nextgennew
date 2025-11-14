@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { supabase } from '../lib/supabase'
 
 interface User {
   email: string
@@ -62,11 +63,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user, pathname, router, isLoading])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simple authentication - in production, use proper authentication
-    if (email === 'admin@nextgenregistry.com' && password === 'admin123') {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error || !data.user) {
+        return false
+      }
+
       const userData = {
-        email: email,
-        name: 'Admin User',
+        email: data.user.email || email,
+        name: data.user.user_metadata?.name || 'Admin User',
         loginTime: new Date().toISOString()
       }
       
@@ -74,8 +83,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('adminUser', JSON.stringify(userData))
       setUser(userData)
       return true
+    } catch (error) {
+      console.error('Login error:', error)
+      return false
     }
-    return false
   }
 
   const logout = () => {
