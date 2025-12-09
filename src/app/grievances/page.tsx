@@ -16,41 +16,41 @@ const escalationLevels = [
     {
         level: 1,
         title: 'First Escalation',
-        responseTime: '4 Hours',
+        responseTime: '15 Days',
         name: 'Ravi Ranjan Kumar',
         position: 'Head of Customer Care',
         email: 'Nextgen.reachus@gmail.com',
         phone: '011-45060667',
         description: 'For initial grievances and general inquiries. Our customer care team will address your concerns promptly.',
-        color: 'from-blue-500 to-blue-600',
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200'
+        color: 'from-primary-500 to-primary-600',
+        bgColor: 'bg-primary-50',
+        borderColor: 'border-primary-200'
     },
     {
         level: 2,
         title: 'Second Escalation',
-        responseTime: '8 Hours',
+        responseTime: '15 Days',
         name: 'Shivansh Bansal',
         position: 'Compliance Officer',
         email: 'Info@nextgenregistry.com',
         phone: '011-45060667',
         description: 'If your concern is not resolved at Level 1 within the specified time, please escalate to our Compliance Officer.',
-        color: 'from-amber-500 to-amber-600',
-        bgColor: 'bg-amber-50',
-        borderColor: 'border-amber-200'
+        color: 'from-secondary-500 to-secondary-600',
+        bgColor: 'bg-secondary-50',
+        borderColor: 'border-secondary-200'
     },
     {
         level: 3,
         title: 'Third Escalation',
-        responseTime: '24 Hours',
+        responseTime: '15 Days',
         name: 'Shaivi Bansal',
         position: 'Chief Executive Officer',
         email: 'Shaivi.bansal@nextgenregistry.com',
         phone: '011-45060668',
         description: 'For matters requiring executive attention after Level 2 escalation. Reserved for critical unresolved issues.',
-        color: 'from-red-500 to-red-600',
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200'
+        color: 'from-purple-500 to-purple-600',
+        bgColor: 'bg-purple-50',
+        borderColor: 'border-purple-200'
     }
 ]
 
@@ -192,19 +192,19 @@ export default function GrievancesPage() {
                         viewport={{ once: true }}
                         className="hidden lg:flex items-center justify-center gap-4"
                     >
-                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full text-blue-700 font-medium border border-blue-300">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-primary-100 rounded-full text-primary-700 font-medium border border-primary-300">
                             <span>Level 1</span>
-                            <span className="text-xs">(4 Hrs)</span>
+                            <span className="text-xs">(15 Days)</span>
                         </div>
                         <ArrowRightIcon className="w-6 h-6 text-gray-400" />
-                        <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full text-amber-700 font-medium border border-amber-300">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-secondary-100 rounded-full text-secondary-700 font-medium border border-secondary-300">
                             <span>Level 2</span>
-                            <span className="text-xs">(8 Hrs)</span>
+                            <span className="text-xs">(15 Days)</span>
                         </div>
                         <ArrowRightIcon className="w-6 h-6 text-gray-400" />
-                        <div className="flex items-center gap-2 px-4 py-2 bg-red-100 rounded-full text-red-700 font-medium border border-red-300">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full text-purple-700 font-medium border border-purple-300">
                             <span>Level 3</span>
-                            <span className="text-xs">(24 Hrs)</span>
+                            <span className="text-xs">(15 Days)</span>
                         </div>
                     </motion.div>
                 </div>
@@ -348,7 +348,7 @@ export default function GrievancesPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <motion.a
-                                href="mailto:Nextgen.reachus@gmail.com"
+                                href="mailto:Info@nextgenregistry.com"
                                 className="btn-secondary text-lg px-8 py-4 inline-block"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}

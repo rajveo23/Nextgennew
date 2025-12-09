@@ -12,26 +12,9 @@ const tabs = [
     { id: 'vision', name: 'VISION', color: 'bg-amber-400', hoverColor: 'hover:bg-amber-500' },
     { id: 'mission', name: 'MISSION', color: 'bg-sky-400', hoverColor: 'hover:bg-sky-500' },
     { id: 'services', name: 'SERVICES PROVIDED', color: 'bg-blue-400', hoverColor: 'hover:bg-blue-500' },
-    { id: 'standards', name: 'INVESTOR SERVICE STANDARDS', color: 'bg-lime-400', hoverColor: 'hover:bg-lime-500' },
     { id: 'rights', name: 'RIGHTS OF INVESTOR', color: 'bg-emerald-400', hoverColor: 'hover:bg-emerald-500' },
     { id: 'dos-donts', name: "DO'S AND DON'TS FOR INVESTOR", color: 'bg-orange-400', hoverColor: 'hover:bg-orange-500' },
     { id: 'grievance', name: 'GRIEVANCE / COMPLAINTS REDRESSAL – ESCALATION MECHANISM', color: 'bg-rose-300', hoverColor: 'hover:bg-rose-400' },
-]
-
-// Service standards data for table
-const serviceStandardsData = [
-    { service: 'Transmission', timeline: '21 days' },
-    { service: 'Duplicate certificate', timeline: '30 days' },
-    { service: 'Demat', timeline: '15 days' },
-    { service: 'Remat', timeline: '30 days' },
-    { service: 'Transposition', timeline: '15 days' },
-    { service: 'Name/Signature change', timeline: '30 days' },
-    { service: 'Nomination/Contact/Bank/PAN updates', timeline: '15–30 days' },
-    { service: 'Revalidation of instruments', timeline: '15 days' },
-    { service: 'Grievance response', timeline: '21 days' },
-    { service: 'IPO allotment', timeline: '3 days' },
-    { service: 'Corporate benefit intimation (Email)', timeline: '15 days' },
-    { service: 'Corporate benefit intimation (Physical)', timeline: '30 days' },
 ]
 
 // Content for each section
@@ -61,40 +44,11 @@ const content = {
         body: (
             <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg leading-relaxed">
                 <li>Providing allotment details and clarifications.</li>
-                <li>Processing KYC updates: address, bank, email, mobile, nomination, PAN.</li>
-                <li>Processing holding/title changes: name deletion, transmission, transposition, duplicate certificates, demat/remat.</li>
-                <li>Processing tax declaration requests, dividend/interest revalidation.</li>
                 <li>Processing investor service requests with complete discrepancy reporting.</li>
                 <li>Corporate actions: ESOPs, dividend, stock split, bonus, merger/demerger.</li>
-                <li>Communicating rights issue entitlements.</li>
                 <li>Communicating buyback, exit offers, takeovers.</li>
                 <li>Executing IEPF transfers and suspense account transfers.</li>
-                <li>Processing grievances via email, letters, SCORES.</li>
             </ul>
-        )
-    },
-    standards: {
-        title: 'INVESTOR SERVICE STANDARDS',
-        body: (
-            <div className="overflow-x-auto">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Service Timelines:</h3>
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="bg-primary-600 text-white">
-                            <th className="border border-primary-700 px-6 py-3 text-left font-semibold">Service Type</th>
-                            <th className="border border-primary-700 px-6 py-3 text-left font-semibold">Timeline</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {serviceStandardsData.map((item, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                <td className="border border-gray-300 px-6 py-3 text-gray-700">{item.service}</td>
-                                <td className="border border-gray-300 px-6 py-3 text-gray-700 font-medium">{item.timeline}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
         )
     },
     rights: {
