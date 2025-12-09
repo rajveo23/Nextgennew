@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { AdminDataManager } from '../../lib/adminData'
-import { 
-  PhoneIcon, 
-  EnvelopeIcon, 
+import {
+  PhoneIcon,
+  EnvelopeIcon,
   MapPinIcon,
   ClockIcon,
   BuildingOfficeIcon,
@@ -74,7 +74,7 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus('idle')
-    
+
     try {
       // Submit to Google Sheets via the provided Google Apps Script URL
       const response = await fetch('https://script.google.com/macros/s/AKfycbw7mmyszKKSjBNwuGF3VIdEktkY46EIF4IOz-iY1wUh9n08VI0h1fKHpqdOZjs5C9mBTg/exec', {
@@ -130,18 +130,18 @@ export default function ContactPage() {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section className="py-20 gradient-bg text-white">
+      <section aria-labelledby="contact-heading" className="py-20 gradient-bg text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Contact <span className="text-secondary-300">Us</span>
+            <h1 id="contact-heading" className="text-4xl md:text-6xl font-bold mb-6">
+              Contact <span className="text-emerald-300">Us</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Get in touch with our expert team for all your RTA service requirements
             </p>
           </motion.div>
@@ -151,7 +151,7 @@ export default function ContactPage() {
       {/* Contact Information */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -176,15 +176,18 @@ export default function ContactPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05 }}
+                tabIndex={0}
+                role="article"
+                aria-label={info.title}
               >
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <info.icon className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                  <info.icon className="w-8 h-8 text-white" aria-hidden="true" />
                 </div>
-                
+
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {info.title}
                 </h3>
-                
+
                 <div className="space-y-1 mb-3">
                   {info.details.map((detail, idx) => (
                     <p key={idx} className="text-gray-700 font-medium">
@@ -192,7 +195,7 @@ export default function ContactPage() {
                     </p>
                   ))}
                 </div>
-                
+
                 <p className="text-sm text-gray-500">
                   {info.description}
                 </p>
@@ -217,7 +220,7 @@ export default function ContactPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Send us a Message
                 </h3>
-                
+
                 {submitStatus === 'success' && (
                   <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <p className="text-green-700">
@@ -225,7 +228,7 @@ export default function ContactPage() {
                     </p>
                   </div>
                 )}
-                
+
                 {submitStatus === 'error' && (
                   <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-red-700">
@@ -251,7 +254,7 @@ export default function ContactPage() {
                         placeholder="Enter your full name"
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                         Email Address *
@@ -284,7 +287,7 @@ export default function ContactPage() {
                         placeholder="Enter your phone number"
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
                         Company Name
@@ -340,11 +343,10 @@ export default function ContactPage() {
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 ${
-                      isSubmitting 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 transform hover:scale-105'
-                    }`}
+                    className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 ${isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 transform hover:scale-105'
+                      }`}
                     whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                     whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                   >
@@ -428,7 +430,7 @@ export default function ContactPage() {
                   </h3>
                 </div>
                 <p className="text-gray-600 mb-4">
-                  We understand the importance of timely communication in business. 
+                  We understand the importance of timely communication in business.
                   Our commitment to you:
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
@@ -490,7 +492,7 @@ export default function ContactPage() {
       {/* Map Section (Placeholder) */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -525,7 +527,7 @@ export default function ContactPage() {
                 className="rounded-lg absolute inset-0"
               />
             </div>
-            
+
             {/* Map Info Overlay */}
             <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-xs">
               <div className="flex items-start">

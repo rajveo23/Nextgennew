@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { 
-  ChevronDownIcon, 
+import {
+  ChevronDownIcon,
   QuestionMarkCircleIcon,
   DocumentTextIcon,
   ShieldCheckIcon,
@@ -21,8 +21,8 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null)
 
   const categories = ['All', ...Array.from(new Set(faqs.map(faq => faq.category)))]
-  
-  const filteredFAQs = selectedCategory === 'All' 
+
+  const filteredFAQs = selectedCategory === 'All'
     ? faqs.filter(faq => faq.isActive)
     : faqs.filter(faq => faq.category === selectedCategory && faq.isActive)
 
@@ -31,18 +31,18 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section className="py-20 gradient-bg text-white">
+      <section aria-labelledby="faq-heading" className="py-20 gradient-bg text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Frequently Asked <span className="text-secondary-300">Questions</span>
+            <h1 id="faq-heading" className="text-4xl md:text-6xl font-bold mb-6">
+              Frequently Asked <span className="text-emerald-300">Questions</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Find answers to common questions about our RTA services, ISIN creation, and compliance requirements
             </p>
           </motion.div>
@@ -57,11 +57,11 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                }`}
+                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] ${selectedCategory === category
+                  ? 'bg-primary-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                  }`}
+                aria-pressed={selectedCategory === category}
               >
                 {category}
               </button>
@@ -89,15 +89,15 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 >
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+                    aria-expanded={expandedFAQ === faq.id}
                   >
                     <h3 className="text-lg font-semibold text-gray-900 pr-4">
                       {faq.question}
                     </h3>
-                    <ChevronDownIcon 
-                      className={`h-5 w-5 text-gray-500 transition-transform ${
-                        expandedFAQ === faq.id ? 'rotate-180' : ''
-                      }`}
+                    <ChevronDownIcon
+                      className={`h-5 w-5 text-gray-500 transition-transform ${expandedFAQ === faq.id ? 'rotate-180' : ''
+                        }`}
                     />
                   </button>
                   <AnimatePresence>
@@ -152,7 +152,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link 
+                <Link
                   href="/contact"
                   className="btn-primary text-lg px-8 py-4 inline-block"
                 >
@@ -163,7 +163,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link 
+                <Link
                   href="/contact#contact-form"
                   className="btn-outline text-lg px-8 py-4 inline-block"
                 >
@@ -171,7 +171,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 </Link>
               </motion.div>
             </div>
-            
+
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h4 className="font-semibold text-gray-900 mb-4">Quick Contact</h4>
               <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm text-gray-600">

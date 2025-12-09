@@ -1,25 +1,24 @@
-'use client'
+import { Metadata } from 'next'
+import { DatabaseService } from '../../lib/database'
+import RTAFormsPageClient from './RTAFormsPageClient'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { 
-  DocumentTextIcon, 
-  ArrowDownTrayIcon, 
-  ClipboardDocumentListIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  BanknotesIcon,
-  CloudArrowUpIcon,
-  FolderIcon
-} from '@heroicons/react/24/outline'
-
-// Icon mapping for form categories
-const iconMap = {
-  DocumentTextIcon,
-  UserGroupIcon,
-  BanknotesIcon,
-  ClipboardDocumentListIcon,
-  FolderIcon
+export const metadata: Metadata = {
+  title: 'RTA Forms & Documents | NextGen Registry',
+  description: 'Download all necessary RTA forms and documents for compliance, ISIN creation, demat services, and investor relations. Essential forms for companies registered with NextGen Registry.',
+  keywords: 'RTA forms, ISIN forms, demat forms, compliance documents, investor forms, share transfer forms, NextGen Registry',
+  openGraph: {
+    title: 'RTA Forms & Documents | NextGen Registry',
+    description: 'Download all necessary RTA forms and documents for compliance, ISIN creation, demat services, and investor relations.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RTA Forms & Documents | NextGen Registry',
+    description: 'Download all necessary RTA forms and documents for compliance, ISIN creation, demat services, and investor relations.',
+  },
+  alternates: {
+    canonical: '/rta-forms'
+  }
 }
 
 interface Form {
@@ -39,647 +38,87 @@ interface FormCategory {
   description: string
   icon_name: string
   color_gradient: string
+  is_important_document?: boolean
   forms: Form[]
 }
 
-const documents = [
+// Fallback important documents for when database is empty
+const fallbackImportantDocuments: FormCategory[] = [
   {
-    category: 'Investor Charter',
-    items: [
-      { name: 'RTA Investor Charter', description: 'Rights and responsibilities of investors', type: 'PDF' },
-      { name: 'Grievance Redressal Policy', description: 'Process for handling investor grievances', type: 'PDF' }
+    id: 'investor-charter',
+    title: 'Investor Charter',
+    description: '',
+    icon_name: 'DocumentTextIcon',
+    color_gradient: 'from-blue-500 to-blue-700',
+    is_important_document: true,
+    forms: [
+      { id: '1', name: 'RTA Investor Charter', file_type: 'PDF', file_size: '245 KB', category_id: 'investor-charter', order_index: 0 },
+      { id: '2', name: 'Grievance Redressal Policy', file_type: 'PDF', file_size: '180 KB', category_id: 'investor-charter', order_index: 1 }
     ]
   },
   {
-    category: 'Regulatory Documents',
-    items: [
-      { name: 'SEBI Registration Certificate', description: 'Our SEBI registration certificate', type: 'PDF' },
-      { name: 'Service Level Agreement', description: 'Standard SLA for RTA services', type: 'PDF' }
+    id: 'regulatory-docs',
+    title: 'Regulatory Documents',
+    description: '',
+    icon_name: 'DocumentTextIcon',
+    color_gradient: 'from-green-500 to-green-700',
+    is_important_document: true,
+    forms: [
+      { id: '3', name: 'SEBI Registration Certificate', file_type: 'PDF', file_size: '320 KB', category_id: 'regulatory-docs', order_index: 0 },
+      { id: '4', name: 'Service Level Agreement', file_type: 'PDF', file_size: '275 KB', category_id: 'regulatory-docs', order_index: 1 }
     ]
   },
   {
-    category: 'Process Guides',
-    items: [
-      { name: 'ISIN Creation Process Guide', description: 'Step-by-step guide for ISIN creation', type: 'PDF' },
-      { name: 'Demat Process Guide', description: 'Guide for dematerialization process', type: 'PDF' }
+    id: 'process-guides',
+    title: 'Process Guides',
+    description: '',
+    icon_name: 'DocumentTextIcon',
+    color_gradient: 'from-purple-500 to-purple-700',
+    is_important_document: true,
+    forms: [
+      { id: '5', name: 'ISIN Creation Process Guide', file_type: 'PDF', file_size: '450 KB', category_id: 'process-guides', order_index: 0 },
+      { id: '6', name: 'Demat Process Guide', file_type: 'PDF', file_size: '380 KB', category_id: 'process-guides', order_index: 1 }
     ]
   }
 ]
 
-const instructions = [
-  {
-    step: '1',
-    title: 'Select Required Forms',
-    description: 'Choose the forms you need from the categories below based on your requirements.'
-  },
-  {
-    step: '2',
-    title: 'Download & Fill',
-    description: 'Download the forms and fill them completely with accurate information.'
-  },
-  {
-    step: '3',
-    title: 'Submit Documents',
-    description: 'Submit the completed forms along with required supporting documents.'
-  },
-  {
-    step: '4',
-    title: 'Processing',
-    description: 'Our team will process your request and provide updates on the status.'
+// Server component for static generation
+export default async function RTAFormsPage() {
+  try {
+    // Fetch form categories with forms at build time
+    const categoriesWithForms = await DatabaseService.getFormCategoriesWithForms()
+
+    // Separate regular forms and important documents
+    const formCategories = categoriesWithForms.filter(
+      (category) => !category.is_important_document
+    )
+
+    const importantDocuments = categoriesWithForms.filter(
+      (category) => category.is_important_document
+    )
+
+    // Use fallback if no important documents in database
+    const finalImportantDocs = importantDocuments.length > 0
+      ? importantDocuments
+      : fallbackImportantDocuments
+
+    return (
+      <RTAFormsPageClient
+        formCategories={formCategories}
+        importantDocuments={finalImportantDocs}
+      />
+    )
+  } catch (error) {
+    console.error('Error loading RTA forms:', error)
+    return (
+      <RTAFormsPageClient
+        formCategories={[]}
+        importantDocuments={fallbackImportantDocuments}
+      />
+    )
   }
-]
-
-// Force dynamic rendering for real-time data
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
-export default function RTAFormsPage() {
-  const [formCategories, setFormCategories] = useState<FormCategory[]>([])
-  const [importantDocuments, setImportantDocuments] = useState<FormCategory[]>([])
-  const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
-
-  useEffect(() => {
-    fetchFormCategories()
-    fetchImportantDocuments()
-  }, [])
-
-  const fetchFormCategories = async () => {
-    try {
-      // Add cache busting parameter
-      const timestamp = new Date().getTime()
-      const response = await fetch(`/api/form-categories-with-forms?t=${timestamp}`, {
-        cache: 'no-cache',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache'
-        }
-      })
-      const data = await response.json()
-      setFormCategories(data)
-    } catch (error) {
-      console.error('Error fetching form categories:', error)
-      // Fallback to empty array if API fails
-      setFormCategories([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchImportantDocuments = async () => {
-    try {
-      // Add cache busting parameter
-      const timestamp = new Date().getTime()
-      const response = await fetch(`/api/important-documents?t=${timestamp}`, {
-        cache: 'no-cache',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache'
-        }
-      })
-      const data = await response.json()
-      setImportantDocuments(data)
-    } catch (error) {
-      console.error('Error fetching important documents:', error)
-      // Fallback to hardcoded documents if API fails
-      setImportantDocuments([
-        {
-          id: 'investor-charter',
-          title: 'Investor Charter',
-          description: '',
-          icon_name: 'DocumentTextIcon',
-          color_gradient: 'from-blue-500 to-blue-700',
-          forms: [
-            { id: '1', name: 'RTA Investor Charter', file_type: 'PDF', file_size: '245 KB', category_id: 'investor-charter', order_index: 0 },
-            { id: '2', name: 'Grievance Redressal Policy', file_type: 'PDF', file_size: '180 KB', category_id: 'investor-charter', order_index: 1 }
-          ]
-        },
-        {
-          id: 'regulatory-docs',
-          title: 'Regulatory Documents',
-          description: '',
-          icon_name: 'DocumentTextIcon',
-          color_gradient: 'from-green-500 to-green-700',
-          forms: [
-            { id: '3', name: 'SEBI Registration Certificate', file_type: 'PDF', file_size: '320 KB', category_id: 'regulatory-docs', order_index: 0 },
-            { id: '4', name: 'Service Level Agreement', file_type: 'PDF', file_size: '275 KB', category_id: 'regulatory-docs', order_index: 1 }
-          ]
-        },
-        {
-          id: 'process-guides',
-          title: 'Process Guides',
-          description: '',
-          icon_name: 'DocumentTextIcon',
-          color_gradient: 'from-purple-500 to-purple-700',
-          forms: [
-            { id: '5', name: 'ISIN Creation Process Guide', file_type: 'PDF', file_size: '450 KB', category_id: 'process-guides', order_index: 0 },
-            { id: '6', name: 'Demat Process Guide', file_type: 'PDF', file_size: '380 KB', category_id: 'process-guides', order_index: 1 }
-          ]
-        }
-      ])
-    }
-  }
-
-  const handleRefresh = async () => {
-    setRefreshing(true)
-    try {
-      await Promise.all([
-        fetchFormCategories(),
-        fetchImportantDocuments()
-      ])
-    } finally {
-      setRefreshing(false)
-    }
-  }
-
-  const handleDownload = async (formName: string, fileUrl?: string) => {
-    try {
-      // Detect Safari browser
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-      
-      // If we have a file URL from the database, use it directly
-      if (fileUrl && fileUrl.trim() !== '') {
-        
-        // Test if URL is accessible
-        try {
-          const testResponse = await fetch(fileUrl, { method: 'HEAD' })
-          
-          if (testResponse.ok) {
-            if (isSafari) {
-              // Safari-specific download method
-              window.open(fileUrl, '_blank')
-            } else {
-              const link = document.createElement('a')
-              link.href = fileUrl
-              link.download = formName
-              link.target = '_blank'
-              link.rel = 'noopener noreferrer'
-              
-              document.body.appendChild(link)
-              link.click()
-              document.body.removeChild(link)
-            }
-            
-            return
-          } else {
-          }
-        } catch (urlError) {
-        }
-      } else {
-      }
-
-      // Fallback: try to find file by name
-      const fileName = formName.replace(/\s+/g, '_').toLowerCase() + '.pdf'
-      const formPath = `/forms/${fileName}`
-      
-      // Check if file exists by trying to fetch it
-      const response = await fetch(formPath, { method: 'HEAD' })
-      
-      if (response.ok) {
-        // File exists, proceed with download
-        if (isSafari) {
-          // Safari-specific download method
-          window.open(formPath, '_blank')
-        } else {
-          const link = document.createElement('a')
-          link.href = formPath
-          link.download = fileName
-          link.target = '_blank'
-          link.rel = 'noopener noreferrer'
-          
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
-        
-        // Show success message
-        alert(`Downloading ${formName} form...`)
-      } else {
-        // File doesn't exist, use fallback
-        console.warn(`Form not found: ${formPath}`)
-        
-        // Create a sample PDF content for demo
-        const pdfContent = `%PDF-1.4
-1 0 obj
-<<
-/Type /Catalog
-/Pages 2 0 R
->>
-endobj
-
-2 0 obj
-<<
-/Type /Pages
-/Kids [3 0 R]
-/Count 1
->>
-endobj
-
-3 0 obj
-<<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Contents 4 0 R
-/Resources <<
-/Font <<
-/F1 5 0 R
->>
->>
->>
-endobj
-
-4 0 obj
-<<
-/Length 44
->>
-stream
-BT
-/F1 12 Tf
-72 720 Td
-(${formName} Form) Tj
-ET
-endstream
-endobj
-
-5 0 obj
-<<
-/Type /Font
-/Subtype /Type1
-/BaseFont /Helvetica
->>
-endobj
-
-xref
-0 6
-0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000274 00000 n 
-0000000369 00000 n 
-trailer
-<<
-/Size 6
-/Root 1 0 R
->>
-startxref
-466
-%%EOF`
-        
-        // Create blob and download
-        const blob = new Blob([pdfContent], { type: 'application/pdf' })
-        const url = URL.createObjectURL(blob)
-        
-        if (isSafari) {
-          // Safari-specific: Open in new tab instead of download
-          const newWindow = window.open(url, '_blank')
-          if (newWindow) {
-            // Clean up after a delay
-            setTimeout(() => URL.revokeObjectURL(url), 1000)
-          }
-        } else {
-          const link = document.createElement('a')
-          link.href = url
-          link.download = fileName
-          link.rel = 'noopener noreferrer'
-          
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-          
-          // Clean up
-          setTimeout(() => URL.revokeObjectURL(url), 100)
-        }
-        
-        alert(`📄 ${formName}\n\nDemo version downloaded. To upload actual forms:\n1. Go to /admin/forms\n2. Edit the form\n3. Upload the actual file`)
-      }
-    } catch (error) {
-      console.error('Download error:', error)
-      alert(`📄 ${formName}\n\nDownload failed. Please:\n1. Check if file is uploaded in admin panel\n2. Contact us at info@nextgenregistry.com\n\nError: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
-  }
-
-  return (
-    <div className="pt-16">
-      {/* Hero Section */}
-      <section className="py-20 gradient-bg text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              RTA <span className="text-secondary-300">Forms</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
-              Download all necessary forms and documents for RTA services and compliance requirements
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Instructions */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              How to <span className="text-gradient">Use Forms</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Simple steps to download and submit RTA forms
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {instructions.map((instruction, index) => (
-              <motion.div
-                key={instruction.step}
-                className="text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  {instruction.step}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {instruction.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {instruction.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Form Categories */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Form <span className="text-gradient">Categories</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Organized forms by service category for easy access
-            </p>
-          </motion.div>
-
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            </div>
-          ) : (
-            <div className="space-y-12">
-              {formCategories
-                .filter((category: FormCategory) => !(category as any).is_important_document)
-                .map((category: FormCategory, categoryIndex: number) => {
-                const IconComponent = iconMap[category.icon_name as keyof typeof iconMap] || DocumentTextIcon
-                
-                return (
-                  <motion.div
-                    key={category.id}
-                    className="card p-8"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="flex items-center mb-6">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${category.color_gradient} rounded-lg flex items-center justify-center mr-4`}>
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
-                        <p className="text-gray-600">{category.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {category.forms.map((form: Form, formIndex: number) => (
-                        <motion.div
-                          key={form.id}
-                          className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all duration-200 group"
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.4, delay: formIndex * 0.05 }}
-                          viewport={{ once: true }}
-                        >
-                          <div className="flex items-start justify-between mb-3">
-                            <DocumentTextIcon className="w-8 h-8 text-gray-400 group-hover:text-primary-500 transition-colors duration-200" />
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                              {form.file_type}
-                            </span>
-                          </div>
-                          
-                          <h4 className="font-semibold text-gray-900 mb-2 text-sm leading-tight">
-                            {form.name}
-                          </h4>
-                          
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">{form.file_size}</span>
-                            <button
-                              onClick={() => handleDownload(form.name, form.file_url)}
-                              className="flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors duration-200"
-                            >
-                              <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
-                              Download
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Important Documents */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Important <span className="text-gradient">Documents</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Essential documents and guides for investors and companies
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {importantDocuments.map((docCategory, index) => (
-              <motion.div
-                key={docCategory.id}
-                className="card p-6"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {docCategory.title}
-                </h3>
-                
-                <div className="space-y-4">
-                  {docCategory.forms.map((form, formIndex) => (
-                    <div key={form.id} className="border-b border-gray-100 pb-3 last:border-b-0">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-1">{form.name}</h4>
-                          <p className="text-sm text-gray-600">{form.file_size}</p>
-                        </div>
-                        <button
-                          onClick={() => handleDownload(form.name, form.file_url)}
-                          className="ml-3 text-primary-600 hover:text-primary-700 transition-colors duration-200"
-                        >
-                          <ArrowDownTrayIcon className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Document Submission Information */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <CloudArrowUpIcon className="w-16 h-16 mx-auto mb-6 text-primary-600" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Submit Your <span className="text-gradient">Documents</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              After downloading and filling the forms, submit them through the following methods
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
-          >
-            <div className="card p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">📧 Email Submission</h3>
-              <p className="text-gray-600 mb-4">
-                Send your completed forms and documents to:
-              </p>
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="font-semibold text-blue-900">info@nextgenregistry.com</p>
-                <p className="text-sm text-blue-700 mt-2">
-                  Subject: [Service Type] - [Company Name] - Document Submission
-                </p>
-              </div>
-            </div>
-
-            <div className="card p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">📍 Physical Submission</h3>
-              <p className="text-gray-600 mb-4">
-                Visit our office or send documents by post:
-              </p>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <p className="font-semibold text-green-900">NextGen Registry Office</p>
-                <p className="text-sm text-green-700 mt-2">
-                301, 3RD FLOOR, PRATAP CHAMBERS, GURUDWARA ROAD, KAROL BAGH, New Delhi, 110005<br />
-                  Business Hours: 9:00 AM - 6:00 PM<br />
-                  Monday to Friday
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200"
-          >
-            <h4 className="font-semibold text-blue-900 mb-3">📋 Submission Guidelines:</h4>
-            <ul className="text-sm text-blue-800 space-y-2">
-              <li>• Ensure all forms are completely filled and signed</li>
-              <li>• Include all required supporting documents</li>
-              <li>• File names should be descriptive (e.g., "ISIN_Application_CompanyName.pdf")</li>
-              <li>• For email submissions, compress large files into ZIP format</li>
-              <li>• Keep copies of all submitted documents for your records</li>
-              <li>• You will receive an acknowledgment within 24 hours of submission</li>
-            </ul>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-20 gradient-bg text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <ShieldCheckIcon className="w-16 h-16 mx-auto mb-6 text-secondary-300" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Need Help with Forms?
-            </h2>
-            <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              Our expert team is here to assist you with form completion and submission processes
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button 
-                className="btn-secondary text-lg px-8 py-4"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Contact Support
-              </motion.button>
-              <motion.button 
-                className="btn-outline text-white border-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Schedule Consultation
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </div>
-  )
 }
+
+// Force static generation with ISR
+export const dynamic = 'force-static'
+export const revalidate = 3600 // Revalidate every hour

@@ -25,16 +25,16 @@ const testimonials = [
 
 export default function ClientTestimonials() {
   return (
-    <section className="py-20 bg-white">
+    <section aria-labelledby="testimonials-heading" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg" tabIndex={0}>
             Client <span className="text-gradient">Testimonials</span>
           </h2>
           <p className="text-xl text-gray-600">
@@ -46,22 +46,25 @@ export default function ClientTestimonials() {
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.company}
-              className="card p-6"
+              className="card p-6 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
+              tabIndex={0}
+              role="article"
+              aria-label={`Testimonial from ${testimonial.company}`}
             >
               <div className="flex mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              
+
               <p className="text-gray-600 mb-4 italic leading-relaxed">
                 "{testimonial.testimonial}"
               </p>
-              
+
               <div className="border-t pt-4">
                 <div className="font-semibold text-gray-900">{testimonial.company}</div>
                 <div className="text-sm text-gray-500">{testimonial.industry}</div>

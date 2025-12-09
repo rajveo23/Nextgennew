@@ -40,9 +40,13 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        {/* Skip to main content link for keyboard/screen reader users */}
+        <a href="#mainContent" className="skip-link">
+          Skip to main content
+        </a>
         <Header />
         <PageTransitionProvider>
-          <main className="min-h-screen">
+          <main id="mainContent" className="min-h-screen" tabIndex={-1}>
             {children}
           </main>
         </PageTransitionProvider>
