@@ -26,16 +26,16 @@ const teamMembers = [
 
 export default function TeamProfile() {
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section aria-labelledby="leadership-heading" className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 id="leadership-heading" className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg" tabIndex={0}>
             Meet Our <span className="text-gradient">Leadership</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -47,12 +47,15 @@ export default function TeamProfile() {
           {teamMembers.map((member, index) => (
             <motion.div
               key={member.name}
-              className="card p-8 group"
+              className="card p-8 group focus:outline-2 focus:outline-offset-2 focus:outline-primary-600"
               initial={{ opacity: 0, x: index === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.02 }}
+              tabIndex={0}
+              role="article"
+              aria-label={`${member.name}, ${member.role}`}
             >
               <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-6">
                 {/* Profile Image */}
@@ -67,18 +70,18 @@ export default function TeamProfile() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {member.name}
                   </h3>
-                  
+
                   <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
                     <div className="flex items-center text-primary-600">
-                      <BriefcaseIcon className="w-4 h-4 mr-1" />
+                      <BriefcaseIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                       <span className="text-sm font-medium">{member.role}</span>
                     </div>
                     <div className="flex items-center text-secondary-600">
-                      <TrophyIcon className="w-4 h-4 mr-1" />
+                      <TrophyIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                       <span className="text-sm font-medium">{member.experience}</span>
                     </div>
                     <div className="flex items-center text-purple-600">
-                      <AcademicCapIcon className="w-4 h-4 mr-1" />
+                      <AcademicCapIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                       <span className="text-sm font-medium">{member.education}</span>
                     </div>
                   </div>
@@ -92,7 +95,7 @@ export default function TeamProfile() {
                     <h4 className="text-sm font-semibold text-gray-900 mb-3">Key Certifications & Expertise:</h4>
                     <div className="flex flex-wrap gap-2">
                       {member.certifications.map((cert, idx) => (
-                        <span 
+                        <span
                           key={idx}
                           className="px-3 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full"
                         >
@@ -108,14 +111,14 @@ export default function TeamProfile() {
         </div>
 
         {/* Company Info */}
-        <motion.div 
+        <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-2xl p-8 text-white focus:outline-2 focus:outline-offset-2 focus:outline-white" tabIndex={0} role="region" aria-label="About NextGen Share Registry Pvt Ltd">
             <h3 className="text-2xl font-bold mb-4">About NextGen Share Registry Pvt Ltd</h3>
             <p className="text-lg mb-6 max-w-4xl mx-auto leading-relaxed">
               With over 27 years of cumulative Capital Market Experience, NextGen RTA strives to bring a change in the RTA industry by making it more transparent and easier for companies to operate in this space by appointing a reputable and capable RTA.

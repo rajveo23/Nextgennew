@@ -34,18 +34,24 @@ export default function Header() {
   }, [])
 
   return (
-    <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white/98 backdrop-blur-md shadow-xl border-b border-gray-200' : 'bg-white/90 backdrop-blur-sm shadow-md'
-    }`}>
+    <header
+      role="banner"
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/98 backdrop-blur-md shadow-xl border-b border-gray-200' : 'bg-white/90 backdrop-blur-sm shadow-md'
+        }`}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center group">
+            <Link
+              href="/"
+              className="flex items-center group focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg"
+              aria-label="NextGen Share Registry - Go to homepage"
+            >
               <div className="relative">
                 <Image
                   src="/assets/images/new-logo.png"
-                  alt="NextGen Share Registry Pvt Ltd"
+                  alt="NextGen Share Registry Pvt Ltd - SEBI Registered RTA"
                   width={200}
                   height={65}
                   className="h-16 w-auto transition-transform duration-200 group-hover:scale-105"
@@ -55,36 +61,58 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex space-x-4">
+          <nav
+            role="navigation"
+            aria-label="Main navigation"
+            className="hidden lg:flex space-x-4"
+          >
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-800 hover:text-primary-600 px-3 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg hover:bg-primary-50 whitespace-nowrap"
+                className="text-gray-800 hover:text-primary-600 px-3 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg hover:bg-primary-50 whitespace-nowrap focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center"
+                aria-label={`Navigate to ${item.name}`}
               >
                 {item.name}
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" aria-hidden="true"></span>
               </Link>
             ))}
           </nav>
 
           {/* Contact Info and Client Login */}
           <div className="hidden xl:flex items-center space-x-3">
-            <div className="text-xs text-gray-600 leading-tight space-y-0.5">
-              <div>📧 Info@nextgenregistry.com</div>
-              <div>📞 +91-8178653316</div>
-              <div className="flex items-center">
-                <PhoneIcon className="w-3 h-3 mr-1" />
+            <div className="text-xs text-gray-600 leading-tight">
+              <a
+                href="mailto:Info@nextgenregistry.com"
+                className="block hover:text-primary-600 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded py-0.5"
+                aria-label="Email us at Info@nextgenregistry.com"
+              >
+                📧 Info@nextgenregistry.com
+              </a>
+              <a
+                href="tel:+918178653316"
+                className="block hover:text-primary-600 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded py-0.5"
+                aria-label="Call us at +91-8178653316"
+              >
+                📞 +91-8178653316
+              </a>
+              <a
+                href="tel:01145060667"
+                className="flex items-center hover:text-primary-600 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded py-0.5"
+                aria-label="Call us at 011-45060667"
+              >
+                <PhoneIcon className="w-3 h-3 mr-1" aria-hidden="true" />
                 <span>011-45060667</span>
-              </div>
+              </a>
             </div>
             <a
               href="https://login.nextgenregistry.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap"
+              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+              aria-label="Client Login - Opens in new window"
             >
-              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" />
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" aria-hidden="true" />
               Client Login
             </a>
           </div>
@@ -95,9 +123,10 @@ export default function Header() {
               href="https://login.nextgenregistry.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap"
+              className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold rounded-lg shadow-md hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 transform hover:scale-105 border border-primary-600 whitespace-nowrap focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+              aria-label="Client Login - Opens in new window"
             >
-              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" />
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" aria-hidden="true" />
               Client Login
             </a>
           </div>
@@ -106,7 +135,7 @@ export default function Header() {
           <div className="lg:hidden">
             <button
               type="button"
-              className="text-gray-700 hover:text-primary-600 p-2"
+              className="text-gray-700 hover:text-primary-600 p-2 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
@@ -124,14 +153,15 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
+        <nav role="navigation" aria-label="Mobile navigation" className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary-600 hover:bg-gray-50 block px-3 py-2 text-base font-medium rounded-md transition-colors duration-200"
+                className="text-gray-700 hover:text-primary-600 hover:bg-gray-50 block px-3 py-2 text-base font-medium rounded-md transition-colors duration-200 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
+                aria-label={`Navigate to ${item.name}`}
               >
                 {item.name}
               </Link>
@@ -155,8 +185,9 @@ export default function Header() {
               </a>
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        </nav>
+      )
+      }
+    </header >
   )
 }

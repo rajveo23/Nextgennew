@@ -9,7 +9,7 @@ export default function ContactCTA() {
     <section className="py-20 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 gradient-bg"></div>
-      
+
       {/* Animated background elements */}
       <div className="absolute inset-0">
         <motion.div
@@ -39,7 +39,7 @@ export default function ContactCTA() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,7 +49,7 @@ export default function ContactCTA() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Get Started?
           </h2>
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
             Contact NextGen Share Registry for expert RTA services and experience the difference of working with industry leaders
           </p>
         </motion.div>
@@ -70,8 +70,8 @@ export default function ContactCTA() {
                 </div>
                 <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Phone</h3>
-                  <p className="text-gray-200">+91-8178653316</p>
-                  <p className="text-gray-200">011-45060667</p>
+                  <p className="text-white">+91-8178653316</p>
+                  <p className="text-white">011-45060667</p>
                 </div>
               </div>
 
@@ -81,8 +81,8 @@ export default function ContactCTA() {
                 </div>
                 <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
-                  <p className="text-gray-200">Info@nextgenregistry.com</p>
-                  <p className="text-gray-200 text-sm mt-1">
+                  <p className="text-white">Info@nextgenregistry.com</p>
+                  <p className="text-white/90 text-sm mt-1">
                     Grievances: nextgen.rta.investor@gmail.com
                   </p>
                 </div>
@@ -94,7 +94,7 @@ export default function ContactCTA() {
                 </div>
                 <div className="text-left">
                   <h3 className="text-xl font-semibold text-white mb-2">Address</h3>
-                  <p className="text-gray-200 leading-relaxed">
+                  <p className="text-white leading-relaxed">
                     301, 3RD FLOOR, PRATAP CHAMBERS,<br />
                     GURUDWARA ROAD, KAROL BAGH,<br />
                     New Delhi, 110005
@@ -118,7 +118,7 @@ export default function ContactCTA() {
                   Contact Us Today
                 </Link>
               </motion.div>
-              
+
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href="/rta-forms" className="btn-outline text-white border-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4 inline-block w-full sm:w-auto">
                   Download RTA Forms
@@ -128,16 +128,16 @@ export default function ContactCTA() {
               <div className="pt-6 border-t border-white/20">
                 <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <Link href="https://scores.sebi.gov.in/" className="text-gray-200 hover:text-white transition-colors">
+                  <Link href="https://scores.sebi.gov.in/" className="text-white hover:text-gray-200 transition-colors">
                     SEBI SCORES
                   </Link>
-                  <Link href="https://smartodr.in/login" className="text-gray-200 hover:text-white transition-colors">
+                  <Link href="https://smartodr.in/login" className="text-white hover:text-gray-200 transition-colors">
                     Smart ODR
                   </Link>
-                  <Link href="/faq" className="text-gray-200 hover:text-white transition-colors">
+                  <Link href="/faq" className="text-white hover:text-gray-200 transition-colors">
                     FAQ
                   </Link>
-                  <Link href="/blog" className="text-gray-200 hover:text-white transition-colors">
+                  <Link href="/blog" className="text-white hover:text-gray-200 transition-colors">
                     Blog
                   </Link>
                 </div>
@@ -147,7 +147,7 @@ export default function ContactCTA() {
         </div>
 
         {/* Regulatory Links */}
-        <motion.div 
+        <motion.div
           className="mt-16 pt-8 border-t border-white/20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -164,10 +164,10 @@ export default function ContactCTA() {
               { name: 'MCX', url: 'https://www.mcxindia.com/' },
               { name: 'RBI', url: 'https://www.rbi.org.in/' }
             ].map((link) => (
-              <Link 
+              <Link
                 key={link.name}
                 href={link.url}
-                className="text-gray-200 hover:text-white transition-colors px-3 py-1 border border-white/20 rounded-full hover:border-white/40"
+                className="text-white hover:text-gray-200 transition-colors px-3 py-1 border border-white/30 rounded-full hover:border-white/50"
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { 
-  DocumentTextIcon, 
-  ChartBarIcon, 
-  CogIcon, 
-  ShieldCheckIcon 
+import {
+  DocumentTextIcon,
+  ChartBarIcon,
+  CogIcon,
+  ShieldCheckIcon
 } from '@heroicons/react/24/outline'
 
 const services = [
@@ -38,16 +38,16 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section aria-labelledby="services-heading" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 id="services-heading" className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our <span className="text-gradient">RTA Services</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -69,22 +69,22 @@ export default function Services() {
               role="article"
               aria-label={service.title}
             >
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <service.icon className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                <service.icon className="w-8 h-8 text-white" aria-hidden="true" />
               </div>
-              
+
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {service.title}
               </h3>
-              
+
               <p className="text-gray-600 mb-4 leading-relaxed">
                 {service.description}
               </p>
-              
+
               <ul className="space-y-2">
                 {service.features.map((feature, idx) => (
                   <li key={idx} className="text-sm text-primary-600 flex items-center justify-center">
-                    <span className="w-1.5 h-1.5 bg-primary-600 rounded-full mr-2"></span>
+                    <span className="w-1.5 h-1.5 bg-primary-600 rounded-full mr-2" aria-hidden="true"></span>
                     {feature}
                   </li>
                 ))}
@@ -93,7 +93,7 @@ export default function Services() {
           ))}
         </div>
 
-        <motion.div 
+        <motion.div
           className="text-center mt-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -107,9 +107,10 @@ export default function Services() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link 
+            <Link
               href="/contact#contact-form"
-              className="btn-primary text-lg px-8 py-4 inline-block"
+              className="btn-primary text-lg px-8 py-4 inline-block focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+              aria-label="Get Started Today - Contact us for RTA services"
             >
               Get Started Today
             </Link>

@@ -2,10 +2,10 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { 
-  ClockIcon, 
-  ShieldCheckIcon, 
-  UserGroupIcon, 
+import {
+  ClockIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
   ChartBarIcon,
   GlobeAltIcon,
   AcademicCapIcon
@@ -100,17 +100,17 @@ export default function WhyChooseUs() {
   const clientsCount = useCounter(1500, 2500, statsInView)
   const accuracyCount = useCounter(100, 2000, statsInView) // animate to 100, show 99.9%
   return (
-    <section className="py-20 bg-white">
+    <section aria-labelledby="whychoose-heading" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Why Choose Us Section */}
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 id="whychoose-heading" className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Why Choose <span className="text-gradient">NextGen</span>?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -128,15 +128,15 @@ export default function WhyChooseUs() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <div className="card p-6 h-full">
-                <div className="w-12 h-12 mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <reason.icon className="w-6 h-6 text-white" />
+              <div className="card p-6 h-full focus:outline-2 focus:outline-offset-2 focus:outline-primary-600" tabIndex={0} role="article" aria-label={reason.title}>
+                <div className="w-12 h-12 mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                  <reason.icon className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
-                
+
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {reason.title}
                 </h3>
-                
+
                 <p className="text-gray-600 leading-relaxed">
                   {reason.description}
                 </p>
@@ -146,7 +146,7 @@ export default function WhyChooseUs() {
         </div>
 
         {/* Mission, Values, Vision Section */}
-        <motion.div 
+        <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -169,20 +169,20 @@ export default function WhyChooseUs() {
               viewport={{ once: true }}
               whileHover={{ scale: 1.02 }}
             >
-              <div className={`bg-gradient-to-br ${value.color} p-8 text-white h-full`}>
+              <div className={`bg-gradient-to-br ${value.color} p-8 text-white h-full focus:outline-2 focus:outline-offset-2 focus:outline-white rounded-xl`} tabIndex={0} role="article" aria-label={value.title}>
                 <h3 className="text-2xl font-bold mb-4">{value.title}</h3>
                 <p className="text-white/90 leading-relaxed">{value.description}</p>
-                
+
                 {/* Decorative element */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
-                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-8 -translate-x-8"></div>
+                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10" aria-hidden="true"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-8 -translate-x-8" aria-hidden="true"></div>
               </div>
             </motion.div>
           ))}
         </div>
 
         {/* Stats Section */}
-        <motion.div 
+        <motion.div
           ref={statsRef}
           className="mt-20 bg-gray-50 rounded-2xl p-8"
           initial={{ opacity: 0, y: 30 }}
@@ -191,19 +191,19 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div>
+            <div className="focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg p-2" tabIndex={0} role="group" aria-label="27 plus years experience">
               <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{yearsCount}+</div>
               <div className="text-gray-600">Years Experience</div>
             </div>
-            <div>
+            <div className="focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg p-2" tabIndex={0} role="group" aria-label="1500 plus clients served">
               <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{clientsCount}+</div>
               <div className="text-gray-600">Clients Served</div>
             </div>
-            <div>
+            <div className="focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg p-2" tabIndex={0} role="group" aria-label="99.9 percent accuracy rate">
               <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">{Math.min(99.9, accuracyCount)}%</div>
               <div className="text-gray-600">Accuracy Rate</div>
             </div>
-            <div>
+            <div className="focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 rounded-lg p-2" tabIndex={0} role="group" aria-label="24/7 support available">
               <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">24/7</div>
               <div className="text-gray-600">Support Available</div>
             </div>
