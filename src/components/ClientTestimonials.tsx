@@ -57,7 +57,7 @@ export default function ClientTestimonials() {
             >
               <div className="flex mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                  <span key={i} className="text-xl" style={{ color: '#8D7102' }}>★</span>
                 ))}
               </div>
 

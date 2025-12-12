@@ -74,25 +74,25 @@ export default function Hero() {
           {/* Left Content */}
           <motion.div
             className="text-left"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
           >
             <motion.h1
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
               NextGen - RTA<br />
-              <span className="text-emerald-300">SEBI Registered</span>
+              <span style={{ color: '#008550' }}>SEBI Registered</span>
             </motion.h1>
 
             <motion.p
-              className="text-lg md:text-xl text-white/90 mb-8 max-w-lg"
-              initial={{ opacity: 0, y: 30 }}
+              className="text-lg md:text-xl text-white mb-8 max-w-lg"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
               Premier Registrar & Share Transfer Agent for Demat & ISIN Services. Specializing in ISIN generation, demat services, corporate actions, and e-voting with 27+ years experience
             </motion.p>
@@ -100,13 +100,16 @@ export default function Hero() {
             {/* CTA Buttons */}
             <motion.div
               className="flex flex-col sm:flex-row gap-4 mb-12"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
               <Link
                 href="/contact"
-                className="px-8 py-4 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors text-center focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px] flex items-center justify-center"
+                className="px-8 py-4 text-white rounded-lg font-semibold transition-colors text-center focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px] flex items-center justify-center"
+                style={{ backgroundColor: '#12823B' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
                 aria-label="Get Started - Contact us for RTA services"
               >
                 Get Started
@@ -134,7 +137,7 @@ export default function Hero() {
                   </svg>
                   <span className="text-2xl font-bold text-white">{yearsCount}+</span>
                 </div>
-                <p className="text-xs text-gray-100">Years Experience</p>
+                <p className="text-xs text-white">Years Experience</p>
               </div>
               <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white rounded-lg p-2" tabIndex={0} role="group" aria-label="1500 plus clients served">
                 <div className="flex items-center justify-center mb-2">
@@ -143,7 +146,7 @@ export default function Hero() {
                   </svg>
                   <span className="text-2xl font-bold text-white">{clientsCount}+</span>
                 </div>
-                <p className="text-xs text-gray-100">Clients Served</p>
+                <p className="text-xs text-white">Clients Served</p>
               </div>
               <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white rounded-lg p-2" tabIndex={0} role="group" aria-label="99 percent accuracy rate">
                 <div className="flex items-center justify-center mb-2">
@@ -152,7 +155,7 @@ export default function Hero() {
                   </svg>
                   <span className="text-2xl font-bold text-white">{accuracyCount}%</span>
                 </div>
-                <p className="text-xs text-gray-100">Accuracy Rate</p>
+                <p className="text-xs text-white">Accuracy Rate</p>
               </div>
               <div className="text-center focus:outline-2 focus:outline-offset-2 focus:outline-white rounded-lg p-2" tabIndex={0} role="group" aria-label="24/7 support available">
                 <div className="flex items-center justify-center mb-2">
@@ -161,7 +164,7 @@ export default function Hero() {
                   </svg>
                   <span className="text-2xl font-bold text-white">24/7</span>
                 </div>
-                <p className="text-xs text-gray-100">Support Available</p>
+                <p className="text-xs text-white">Support Available</p>
               </div>
             </motion.div>
           </motion.div>
@@ -288,7 +291,7 @@ export default function Hero() {
               </div>
 
               {/* Dollar Sign Circle - Positioned like in reference */}
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-green-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white z-20">
+              <div className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white z-20" style={{ backgroundColor: '#047752' }}>
                 <span className="text-3xl font-bold text-white">$</span>
               </div>
 

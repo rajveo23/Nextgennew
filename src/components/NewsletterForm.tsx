@@ -12,19 +12,19 @@ export default function NewsletterForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!email) {
       setMessage('Please enter your email address')
       return
     }
-    
+
     setIsSubmitting(true)
     setSubmitStatus('idle')
-    
+
     try {
       // Initialize data manager
       await AdminDataManager.initializeData()
-      
+
       // Save newsletter subscription
       await AdminDataManager.saveNewsletterSubscription({
         email: email,
@@ -32,7 +32,7 @@ export default function NewsletterForm() {
         status: 'active',
         source: 'blog_page'
       })
-      
+
       // Also save as contact submission for admin panel
       await AdminDataManager.saveContactSubmission({
         name: 'Newsletter Subscriber',
@@ -43,7 +43,7 @@ export default function NewsletterForm() {
         source: 'newsletter',
         newsletter: true
       })
-      
+
       setSubmitStatus('success')
       setEmail('')
     } catch (error) {
@@ -80,20 +80,23 @@ export default function NewsletterForm() {
           required
           disabled={isSubmitting}
           className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary-400 disabled:opacity-50"
+          aria-label="Email address for newsletter subscription"
         />
-        <motion.button 
+        <motion.button
           type="submit"
           disabled={isSubmitting}
-          className={`btn-secondary px-6 py-3 whitespace-nowrap ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`px-6 py-3 whitespace-nowrap rounded-lg font-semibold text-white transition-all duration-300 transform shadow-lg hover:shadow-xl ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          style={{ backgroundColor: '#12823B' }}
+          onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = '#0f6b2f')}
+          onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = '#12823B')}
           whileHover={!isSubmitting ? { scale: 1.05 } : {}}
           whileTap={!isSubmitting ? { scale: 0.95 } : {}}
         >
           {isSubmitting ? 'Subscribing...' : 'Subscribe'}
         </motion.button>
       </form>
-      
+
       {submitStatus === 'error' && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -105,8 +108,8 @@ export default function NewsletterForm() {
           </p>
         </motion.div>
       )}
-      
-      <p className="text-sm text-gray-300 mt-3 text-center">
+
+      <p className="text-sm mt-3 text-center" style={{ color: '#46494e' }}>
         No spam, unsubscribe at any time.
       </p>
     </div>

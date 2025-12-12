@@ -76,7 +76,7 @@ export default function TeamProfile() {
                       <BriefcaseIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                       <span className="text-sm font-medium">{member.role}</span>
                     </div>
-                    <div className="flex items-center text-secondary-600">
+                    <div className="flex items-center" style={{ color: '#047752' }}>
                       <TrophyIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                       <span className="text-sm font-medium">{member.experience}</span>
                     </div>

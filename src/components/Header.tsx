@@ -70,11 +70,19 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-800 hover:text-primary-600 px-3 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg hover:bg-primary-50 whitespace-nowrap focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center"
+                className={`px-3 py-2 text-sm font-semibold transition-all duration-200 relative group rounded-lg whitespace-nowrap focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center ${pathname === item.href
+                    ? 'text-primary-600 bg-primary-50 font-bold'
+                    : 'text-gray-800 hover:text-primary-600 hover:bg-primary-50'
+                  }`}
                 aria-label={`Navigate to ${item.name}`}
+                aria-current={pathname === item.href ? 'page' : undefined}
               >
                 {item.name}
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" aria-hidden="true"></span>
+                <span
+                  className={`absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 transition-transform duration-300 ${pathname === item.href ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}
+                  aria-hidden="true"
+                ></span>
               </Link>
             ))}
           </nav>
@@ -159,9 +167,13 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary-600 hover:bg-gray-50 block px-3 py-2 text-base font-medium rounded-md transition-colors duration-200 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center"
+                className={`block px-3 py-2 text-base font-medium rounded-md transition-colors duration-200 focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px] flex items-center ${pathname === item.href
+                    ? 'text-primary-600 bg-primary-50 font-bold'
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                  }`}
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label={`Navigate to ${item.name}`}
+                aria-current={pathname === item.href ? 'page' : undefined}
               >
                 {item.name}
               </Link>

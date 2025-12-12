@@ -114,7 +114,13 @@ export default function ContactCTA() {
           >
             <div className="space-y-6 max-w-md mx-auto">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link href="/contact" className="btn-secondary text-lg px-8 py-4 inline-block w-full sm:w-auto">
+                <Link
+                  href="/contact"
+                  className="text-white text-lg px-8 py-4 inline-block w-full sm:w-auto rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+                  style={{ backgroundColor: '#12823B' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
+                >
                   Contact Us Today
                 </Link>
               </motion.div>
