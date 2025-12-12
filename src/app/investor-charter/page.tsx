@@ -10,10 +10,10 @@ import {
 // Tab definitions
 const tabs = [
     { id: 'vision', name: 'VISION', color: 'bg-amber-400', hoverColor: 'hover:bg-amber-500' },
-    { id: 'mission', name: 'MISSION', color: 'bg-sky-400', hoverColor: 'hover:bg-sky-500' },
-    { id: 'services', name: 'SERVICES PROVIDED', color: 'bg-blue-400', hoverColor: 'hover:bg-blue-500' },
+    { id: 'mission', name: 'MISSION', color: '', hoverColor: '', customColor: '#39a7db' },
+    { id: 'services', name: 'SERVICES PROVIDED', color: '', hoverColor: '', customColor: '#789ac4' },
     { id: 'rights', name: 'RIGHTS OF INVESTOR', color: 'bg-emerald-400', hoverColor: 'hover:bg-emerald-500' },
-    { id: 'dos-donts', name: "DO'S AND DON'TS FOR INVESTOR", color: 'bg-orange-400', hoverColor: 'hover:bg-orange-500' },
+    { id: 'dos-donts', name: "DO'S AND DON'TS FOR INVESTOR", color: '', hoverColor: '', customColor: '#df8a43' },
     { id: 'grievance', name: 'GRIEVANCE / COMPLAINTS REDRESSAL – ESCALATION MECHANISM', color: 'bg-rose-300', hoverColor: 'hover:bg-rose-400' },
 ]
 
@@ -133,7 +133,7 @@ export default function InvestorCharterPage() {
                         transition={{ duration: 0.8 }}
                     >
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                            Investor <span className="text-emerald-300">Charter</span>
+                            Investor <span style={{ color: '#008550' }}>Charter</span>
                         </h1>
                         <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
                             Our commitment to transparency, integrity, and investor protection
@@ -150,10 +150,18 @@ export default function InvestorCharterPage() {
                             <motion.button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`px-4 py-3 text-sm font-semibold rounded-md transition-all duration-300 ${activeTab === tab.id
-                                    ? `${tab.color} text-gray-900 shadow-lg transform scale-105`
-                                    : `${tab.color} ${tab.hoverColor} text-gray-900 opacity-80 hover:opacity-100`
+                                className={`px-4 py-3 text-sm font-semibold rounded-md transition-all duration-300 ${tab.customColor
+                                        ? 'text-white'
+                                        : activeTab === tab.id
+                                            ? `${tab.color} text-gray-900 shadow-lg transform scale-105`
+                                            : `${tab.color} ${tab.hoverColor} text-gray-900 opacity-80 hover:opacity-100`
                                     }`}
+                                style={tab.customColor ? {
+                                    backgroundColor: tab.customColor,
+                                    opacity: activeTab === tab.id ? 1 : 0.8,
+                                    transform: activeTab === tab.id ? 'scale(1.05)' : 'scale(1)',
+                                    boxShadow: activeTab === tab.id ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none'
+                                } : {}}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >

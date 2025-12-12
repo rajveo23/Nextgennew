@@ -40,7 +40,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             transition={{ duration: 0.8 }}
           >
             <h1 id="faq-heading" className="text-4xl md:text-6xl font-bold mb-6">
-              Frequently Asked <span className="text-emerald-300">Questions</span>
+              Frequently Asked <span style={{ color: '#008550' }}>Questions</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Find answers to common questions about our RTA services, ISIN creation, and compliance requirements
@@ -89,7 +89,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 >
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-none focus:bg-blue-50 min-h-[44px] border-b-4 border-transparent focus:border-primary-600"
                     aria-expanded={expandedFAQ === faq.id}
                   >
                     <h3 className="text-lg font-semibold text-gray-900 pr-4">

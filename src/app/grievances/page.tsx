@@ -23,8 +23,9 @@ const escalationLevels = [
         phone: '011-45060667',
         description: 'For initial grievances and general inquiries. Our customer care team will address your concerns promptly.',
         color: 'from-primary-500 to-primary-600',
-        bgColor: 'bg-primary-50',
-        borderColor: 'border-primary-200'
+        bgColor: '',
+        borderColor: 'border-primary-200',
+        customBgColor: '#4f6fd8'
     },
     {
         level: 2,
@@ -36,8 +37,9 @@ const escalationLevels = [
         phone: '011-45060667',
         description: 'If your concern is not resolved at Level 1 within the specified time, please escalate to our Compliance Officer.',
         color: 'from-secondary-500 to-secondary-600',
-        bgColor: 'bg-secondary-50',
-        borderColor: 'border-secondary-200'
+        bgColor: '',
+        borderColor: 'border-secondary-200',
+        customBgColor: '#028849'
     },
     {
         level: 3,
@@ -49,8 +51,9 @@ const escalationLevels = [
         phone: '011-45060668',
         description: 'For matters requiring executive attention after Level 2 escalation. Reserved for critical unresolved issues.',
         color: 'from-purple-500 to-purple-600',
-        bgColor: 'bg-purple-50',
-        borderColor: 'border-purple-200'
+        bgColor: '',
+        borderColor: 'border-purple-200',
+        customBgColor: '#8f5fbf'
     }
 ]
 
@@ -78,7 +81,7 @@ export default function GrievancesPage() {
                         transition={{ duration: 0.8 }}
                     >
                         <h1 id="grievances-heading" className="text-4xl md:text-5xl font-bold mb-4">
-                            Grievance <span className="text-emerald-300">Escalation Matrix</span>
+                            Grievance <span style={{ color: '#008550' }}>Escalation Matrix</span>
                         </h1>
                         <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
                             Our commitment to resolving your concerns efficiently and transparently
@@ -100,7 +103,7 @@ export default function GrievancesPage() {
                         viewport={{ once: true }}
                         className="text-center mb-12"
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 id="escalation-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                             NextGen Registry <span className="text-gradient">Escalation Matrix</span>
                         </h2>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -117,10 +120,10 @@ export default function GrievancesPage() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: index * 0.2 }}
                                 viewport={{ once: true }}
-                                className={`relative overflow-hidden rounded-2xl border-2 ${level.borderColor} ${level.bgColor} shadow-lg hover:shadow-xl transition-shadow duration-300`}
+                                className={`relative overflow-hidden rounded-2xl border-2 ${level.borderColor} bg-white shadow-lg hover:shadow-xl transition-shadow duration-300`}
                             >
                                 {/* Header with Level */}
-                                <div className={`bg-gradient-to-r ${level.color} px-6 py-4 text-white`}>
+                                <div className="px-6 py-4 text-white" style={level.customBgColor ? { backgroundColor: level.customBgColor } : {}}>
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-medium uppercase tracking-wider">Level {level.level}</span>
                                         <div className="flex items-center gap-2">
@@ -132,10 +135,10 @@ export default function GrievancesPage() {
                                 </div>
 
                                 {/* Content */}
-                                <div className="p-6">
+                                <div className="p-6 bg-gradient-to-b from-gray-50 to-white">
                                     {/* Person Info */}
                                     <div className="flex items-center gap-4 mb-4">
-                                        <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${level.color} flex items-center justify-center`}>
+                                        <div className="w-14 h-14 rounded-full flex items-center justify-center" style={level.customBgColor ? { backgroundColor: level.customBgColor } : {}}>
                                             <UserIcon className="w-7 h-7 text-white" />
                                         </div>
                                         <div>
@@ -174,7 +177,8 @@ export default function GrievancesPage() {
                                     {/* CTA */}
                                     <Link
                                         href={`mailto:${level.email}?subject=Grievance Escalation - Level ${level.level}`}
-                                        className={`mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r ${level.color} text-white font-medium text-sm hover:opacity-90 transition-opacity`}
+                                        className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium text-sm hover:opacity-90 transition-opacity"
+                                        style={level.customBgColor ? { backgroundColor: level.customBgColor } : {}}
                                     >
                                         <span>Escalate to Level {level.level}</span>
                                         <ArrowRightIcon className="w-4 h-4" />
@@ -267,23 +271,23 @@ export default function GrievancesPage() {
 
                             <ul className="space-y-3 text-gray-700">
                                 <li className="flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                                    <span className="w-6 h-6 rounded-full text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#094EBE' }}>1</span>
                                     <span>Start with Level 1 escalation and allow the specified response time before escalating further</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                                    <span className="w-6 h-6 rounded-full text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#094EBE' }}>2</span>
                                     <span>Include your Folio Number/DP ID/Client ID in all communications for quick reference</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                                    <span className="w-6 h-6 rounded-full text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#094EBE' }}>3</span>
                                     <span>Attach relevant documents and previous correspondence (if any) when escalating</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+                                    <span className="w-6 h-6 rounded-full text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#094EBE' }}>4</span>
                                     <span>Quote the complaint reference number while escalating to a higher level</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
+                                    <span className="w-6 h-6 rounded-full text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#094EBE' }}>5</span>
                                     <span>Response times are calculated in business hours (9:30 AM to 6:00 PM, Mon-Fri)</span>
                                 </li>
                             </ul>
@@ -316,7 +320,10 @@ export default function GrievancesPage() {
                                 href="https://scores.sebi.gov.in/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg transition-colors"
+                                style={{ backgroundColor: '#12823B' }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -349,7 +356,10 @@ export default function GrievancesPage() {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <motion.a
                                 href="mailto:Info@nextgenregistry.com"
-                                className="btn-secondary text-lg px-8 py-4 inline-block"
+                                className="text-white text-lg px-8 py-4 inline-block rounded-lg font-semibold transition-all duration-300 transform shadow-lg hover:shadow-xl"
+                                style={{ backgroundColor: '#12823B' }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >

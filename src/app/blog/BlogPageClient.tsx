@@ -55,7 +55,7 @@ export default function BlogPageClient({ blogs }: BlogPageClientProps) {
             transition={{ duration: 0.8 }}
           >
             <h1 id="blog-heading" className="text-4xl md:text-6xl font-bold mb-6">
-              RTA <span className="text-emerald-300">Insights</span> & Updates
+              RTA <span style={{ color: '#008550' }}>Insights</span> & Updates
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Stay informed with the latest insights, regulatory updates, and industry trends in RTA services

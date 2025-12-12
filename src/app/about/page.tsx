@@ -84,7 +84,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 id="about-heading" className="text-4xl md:text-6xl font-bold mb-6 focus:outline-2 focus:outline-offset-2 focus:outline-white rounded-lg" tabIndex={0}>
-              About <span className="text-emerald-300">NextGen Registry</span>
+              About <span style={{ color: '#008550' }}>NextGen Registry</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Transforming the RTA industry with 27+ years of capital market experience,
@@ -292,7 +292,10 @@ export default function AboutPage() {
               href="https://api.whatsapp.com/send/?phone=8178653316&text=Hi%2C+I+am+interested+in+RTA+Services&type=phone_number&app_absent=0"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary text-lg px-8 py-4 inline-block focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px]"
+              className="text-white text-lg px-8 py-4 inline-block rounded-lg font-semibold transition-all duration-300 transform shadow-lg hover:shadow-xl focus:outline-2 focus:outline-offset-2 focus:outline-white min-h-[44px]"
+              style={{ backgroundColor: '#12823B' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Contact Us Today - Opens WhatsApp in new window"

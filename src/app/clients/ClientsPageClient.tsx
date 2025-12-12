@@ -119,7 +119,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
     return (
         <div className="pt-16">
             {/* Hero Section */}
-            <section className="py-20 gradient-bg text-white">
+            <section role="banner" aria-labelledby="clients-heading" className="py-20 gradient-bg text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className="text-center"
@@ -127,8 +127,8 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                            Our <span className="text-emerald-300">Clients</span>
+                        <h1 id="clients-heading" className="text-4xl md:text-6xl font-bold mb-6">
+                            Our <span style={{ color: '#008550' }}>Clients</span>
                         </h1>
                         <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
                             Trusted by 1500+ companies across India for reliable and efficient RTA services
@@ -138,7 +138,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
             </section>
 
             {/* Client Categories */}
-            <section className="py-20 bg-white">
+            <section aria-labelledby="categories-heading" className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className="text-center mb-16"
@@ -147,7 +147,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 id="categories-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                             Client <span className="text-gradient">Categories</span>
                         </h2>
                         <p className="text-xl text-gray-600">
@@ -159,16 +159,19 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                         {clientCategories.map((category, index) => (
                             <motion.div
                                 key={category.title}
-                                className="relative overflow-hidden rounded-xl group"
+                                className="relative overflow-hidden rounded-xl group focus:outline-2 focus:outline-offset-2 focus:outline-primary-600"
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 viewport={{ once: true }}
                                 whileHover={{ scale: 1.05 }}
+                                tabIndex={0}
+                                role="article"
+                                aria-label={`${category.title}: ${category.count} clients`}
                             >
                                 <div className={`bg-gradient-to-br ${category.color} p-8 text-white h-full`}>
                                     <div className="flex items-center justify-between mb-4">
-                                        <category.icon className="w-12 h-12" />
+                                        <category.icon className="w-12 h-12" aria-hidden="true" />
                                         <div className="text-3xl font-bold">{category.count}</div>
                                     </div>
 
@@ -176,7 +179,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                                     <p className="text-white/90 text-sm leading-relaxed">{category.description}</p>
 
                                     {/* Decorative elements */}
-                                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+                                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300" aria-hidden="true"></div>
                                 </div>
                             </motion.div>
                         ))}
@@ -185,7 +188,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
             </section>
 
             {/* Some of Our Esteemed Clients */}
-            <section className="py-20 bg-gray-50">
+            <section aria-labelledby="esteemed-clients-heading" className="py-20 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className="text-center mb-16"
@@ -194,7 +197,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 id="esteemed-clients-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                             Some Of Our <span className="text-gradient">Esteemed Clients</span>
                         </h2>
                         <p className="text-xl text-gray-600">
@@ -214,7 +217,7 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                             {clientLogos.map((logo, index) => (
                                 <motion.div
                                     key={logo.id}
-                                    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center justify-center h-24 cursor-pointer"
+                                    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center justify-center min-h-[96px] cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-primary-600"
                                     whileHover={{ scale: 1.05 }}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -222,6 +225,15 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                                     viewport={{ once: true }}
                                     onClick={() => {
                                         if (logo.website_url) {
+                                            window.open(logo.website_url, '_blank', 'noopener,noreferrer')
+                                        }
+                                    }}
+                                    tabIndex={0}
+                                    role="button"
+                                    aria-label={`${logo.company_name}${logo.website_url ? ' - Visit website' : ''}`}
+                                    onKeyDown={(e) => {
+                                        if ((e.key === 'Enter' || e.key === ' ') && logo.website_url) {
+                                            e.preventDefault()
                                             window.open(logo.website_url, '_blank', 'noopener,noreferrer')
                                         }
                                     }}
@@ -338,14 +350,16 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
                                         disabled={currentPage === 1}
-                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+                                        aria-label="Previous page"
                                     >
                                         Previous
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
                                         disabled={currentPage === totalPages}
-                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-2 focus:outline-offset-2 focus:outline-primary-600 min-h-[44px]"
+                                        aria-label="Next page"
                                     >
                                         Next
                                     </button>
@@ -524,7 +538,10 @@ export default function ClientsPageClient({ clients, clientLogos }: ClientsPageC
                             href="https://api.whatsapp.com/send/?phone=8178653316&text=Hi%2C+I+am+interested+in+RTA+Services&type=phone_number&app_absent=0"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn-secondary text-lg px-8 py-4 inline-block"
+                            className="text-white text-lg px-8 py-4 inline-block rounded-lg font-semibold transition-all duration-300 transform shadow-lg hover:shadow-xl"
+                            style={{ backgroundColor: '#12823B' }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f6b2f'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#12823B'}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >

@@ -119,6 +119,4 @@ export default async function RTAFormsPage() {
   }
 }
 
-// Force static generation with ISR
-export const dynamic = 'force-static'
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 60

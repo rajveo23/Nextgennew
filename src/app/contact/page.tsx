@@ -130,7 +130,7 @@ export default function ContactPage() {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section aria-labelledby="contact-heading" className="py-20 gradient-bg text-white">
+      <section role="banner" aria-labelledby="contact-heading" className="py-20 gradient-bg text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center"
@@ -139,7 +139,7 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 id="contact-heading" className="text-4xl md:text-6xl font-bold mb-6">
-              Contact <span className="text-emerald-300">Us</span>
+              Contact <span style={{ color: '#008550' }}>Us</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               Get in touch with our expert team for all your RTA service requirements
@@ -149,7 +149,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Information */}
-      <section className="py-20 bg-white">
+      <section aria-labelledby="contact-info-heading" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -158,7 +158,7 @@ export default function ContactPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 id="contact-info-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Get in <span className="text-gradient">Touch</span>
             </h2>
             <p className="text-xl text-gray-600">
@@ -170,7 +170,7 @@ export default function ContactPage() {
             {contactInfo.map((info, index) => (
               <motion.div
                 key={info.title}
-                className="card p-6 text-center group"
+                className="card p-6 text-center group focus:outline-2 focus:outline-offset-2 focus:outline-primary-600"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -178,7 +178,7 @@ export default function ContactPage() {
                 whileHover={{ scale: 1.05 }}
                 tabIndex={0}
                 role="article"
-                aria-label={info.title}
+                aria-label={`${info.title}: ${info.description}`}
               >
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
                   <info.icon className="w-8 h-8 text-white" aria-hidden="true" />
@@ -365,7 +365,7 @@ export default function ContactPage() {
               className="space-y-8"
             >
               {/* Why Choose Us */}
-              <div className="card p-8">
+              <div className="card p-8" tabIndex={0}>
                 <div className="flex items-center mb-4">
                   <UserIcon className="w-8 h-8 text-primary-600 mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">
@@ -393,7 +393,7 @@ export default function ContactPage() {
               </div>
 
               {/* Office Information */}
-              <div className="card p-8">
+              <div className="card p-8" tabIndex={0}>
                 <div className="flex items-center mb-4">
                   <BuildingOfficeIcon className="w-8 h-8 text-primary-600 mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">
@@ -422,7 +422,7 @@ export default function ContactPage() {
               </div>
 
               {/* Quick Response */}
-              <div className="card p-8 bg-gradient-to-br from-primary-50 to-secondary-50">
+              <div className="card p-8 bg-gradient-to-br from-primary-50 to-secondary-50" tabIndex={0}>
                 <div className="flex items-center mb-4">
                   <ChatBubbleLeftRightIcon className="w-8 h-8 text-primary-600 mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">
@@ -442,7 +442,7 @@ export default function ContactPage() {
               </div>
 
               {/* Bank Details */}
-              <div className="card p-8 bg-gradient-to-br from-green-50 to-blue-50">
+              <div className="card p-8 bg-gradient-to-br from-green-50 to-blue-50" tabIndex={0}>
                 <div className="flex items-center mb-4">
                   <BuildingOfficeIcon className="w-8 h-8 text-green-600 mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">
